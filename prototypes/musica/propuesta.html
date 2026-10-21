@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi música · propuesta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../E2/device.css">
+<style>
+  /* Proposal page only: static mock screens drawn inside the approved Slate hardware.
+     Nothing here changes the E2 prototype; the real build happens in E4. */
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
+  header.top { padding: 32px 0 0; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+  header.top h1 { font-size: 15px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
+  .meta { font-size: 12px; color: var(--ink-2); }
+  section { padding: 72px 0 8px; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: 0; padding-bottom: 72px; }
+  .num { font: 500 11px/1 var(--font-mono); color: var(--ink-2); }
+  h2 { font-size: 22px; font-weight: 500; letter-spacing: -.02em; margin: 8px 0 10px; }
+  .lede { font-size: 14px; color: var(--ink-2); line-height: 1.55; max-width: 640px; margin: 0 0 40px; }
+  .row { display: flex; gap: 56px; align-items: flex-start; flex-wrap: wrap; }
+  .fig { display: grid; justify-items: center; gap: 18px; }
+  .cap { font-size: 12.5px; color: var(--ink-2); text-align: center; max-width: 340px; line-height: 1.45; }
+  .cap b { color: var(--ink); font-weight: 500; }
+  .notes { flex: 1; min-width: 300px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.45; }
+  th { text-align: left; font-weight: 500; color: var(--ink-2); font-size: 12px; padding: 0 12px 8px 0; }
+  td { padding: 9px 12px 9px 0; border-top: 1px solid var(--line); vertical-align: top; }
+  td:first-child { color: var(--ink-2); width: 32%; }
+  .ok { color: var(--accent-ink); font-weight: 500; }
+  ul.plain { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
+  ul.plain li { margin-bottom: 6px; }
+  code { font-family: var(--font-mono); font-size: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 0; cursor: pointer;
+    background: var(--ink); color: #fff; font: 500 13px/1 var(--font-sans); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* ── device + accessory rig ── */
+  .rig { container-type: inline-size; position: relative; width: var(--w); }
+  .rig .pocket { width: 100%; }
+  /* room for the cable loop above and the earbuds at the side (desktop) or below (mobile) */
+  .rig.acc-room { margin: calc(var(--w) * .22) calc(var(--w) * .48) calc(var(--w) * .1) 0; }
+  .rig.acc-room[data-acc="behind"] { margin: calc(var(--w) * .22) 0 calc(var(--w) * .26); }
+  .rig .pocket { z-index: 1; }
+  .pocket[inert] { pointer-events: none; }
+  /* mobile: the reflection gives way to the earbuds while in Mi música */
+  .rig.is-plugged[data-acc="behind"] .pocket__tilt { -webkit-box-reflect: unset; }
+
+  /* headphone socket on the top edge: a discreet dark slot, always part of the hardware */
+  .jack {
+    position: absolute; left: 77.9cqw; top: -.4cqw; width: 4.2cqw; height: .95cqw; border-radius: .5cqw; z-index: 3;
+    background: linear-gradient(180deg, #24272B, #4A4E54);
+    box-shadow: 0 0 0 .2cqw #ECEEF0, 0 0 0 .32cqw rgba(0, 0, 0, .12);
+  }
+
+  /* plug + cable + earbud: drawn in device units (device = 100 × 124) */
+  .acc { position: absolute; left: -10cqw; top: -30cqw; width: 160cqw; height: 182cqw; pointer-events: none; z-index: 5; overflow: visible; }
+  .acc--behind { z-index: 0; }   /* the cable passes behind the body */
+  .acc .cable path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .6s cubic-bezier(.5, 0, .2, 1) .1s; }
+  .acc .cable--pair path { transition-delay: .55s; transition-duration: .3s; }
+  .acc .plug { transform: translateY(-7px); opacity: 0; transition: transform .25s var(--ease-out) .65s, opacity .15s .6s; }
+  .acc .bud { opacity: 0; transform: translateY(-4px); transition: opacity .3s .7s, transform .45s var(--ease-out) .7s; }
+  .rig.is-plugged .acc .cable path { stroke-dashoffset: 0; }
+  .rig.is-plugged .acc .plug { transform: none; opacity: 1; }
+  .rig.is-plugged .acc .bud { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .acc .cable path, .acc .plug, .acc .bud { transition: opacity .2s; transform: none; }
+    .acc .cable { opacity: 0; transition: opacity .2s; }
+    .rig.is-plugged .acc .cable { opacity: 1; }
+    .acc .cable path { stroke-dashoffset: 0; }
+  }
+
+  /* ── OS screens for "Mi música" ── */
+  .os__list.is-8 { --row-h: 6.6cqw; }
+  .pm__k { font-size: 2.1cqw; color: var(--ink-2); margin-bottom: 1.6cqw; }
+  .cov {
+    display: grid; place-items: center; flex: none; border-radius: 1cqw; color: #9AA0A7;
+    background: linear-gradient(135deg, #ECEEF1, #D6DADF);
+    box-shadow: 0 0 0 .18cqw rgba(0, 0, 0, .08);
+  }
+  .cov svg { width: 40%; height: 40%; }
+  .pm__cov { width: 19cqw; aspect-ratio: 1; box-shadow: 0 0 0 .18cqw rgba(0,0,0,.08), 0 .8cqw 1.6cqw -.6cqw rgba(0,0,0,.25); }
+  .pm__t { margin-top: 2.2cqw; font-size: 2.9cqw; font-weight: 600; letter-spacing: -.01em; }
+  .pm__a { font-size: 2.4cqw; color: var(--ink-2); margin-top: .3cqw; }
+
+  .songs { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0; overflow: hidden; }
+  .song { height: 9.4cqw; display: flex; align-items: center; gap: 2.2cqw; padding: 0 2.4cqw; }
+  .song .cov { width: 6.6cqw; height: 6.6cqw; border-radius: .6cqw; }
+  .song b { display: block; font-size: 3cqw; font-weight: 500; }
+  .song small { display: block; font-size: 2.4cqw; color: var(--ink-2); margin-top: .2cqw; }
+  .song.is-sel { background: linear-gradient(180deg, #4F75AD, #3F649C); color: #fff; }
+  .song.is-sel small { color: #fff; }
+  .song .chev { margin-left: auto; width: 2.4cqw; height: 2.4cqw; }
+
+  .np { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 2cqw; padding: 2.4cqw 2.6cqw; }
+  .np__top { flex: 1; min-height: 0; display: flex; gap: 2.8cqw; }
+  .np__cov { height: 100%; max-height: 25cqw; aspect-ratio: 1; }
+  .np__meta { min-width: 0; display: flex; flex-direction: column; }
+  .np__k { font-size: max(2.1cqw, 9px); color: var(--ink-2); }
+  .np__t { font-size: 3.6cqw; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin: .7cqw 0 .2cqw; }
+  .np__a { font-size: max(2.5cqw, 10px); color: var(--ink-2); }
+  .np__q { font-size: max(2.5cqw, 10px); line-height: 1.4; margin-top: 1.4cqw; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .np__link { margin-top: auto; font-size: max(2.3cqw, 10px); color: var(--accent-ink); text-decoration: underline; text-underline-offset: .3em; }
+  .sp {
+    flex: none; height: 80px; border-radius: 12px; background: #282828; color: #B3B3B3;
+    display: grid; place-items: center; text-align: center; padding: 0 14px; font: 500 11px/1.35 var(--font-sans);
+  }
+
+  /* detail crop of the top edge */
+  .crop { width: 380px; height: 300px; overflow: hidden; position: relative; border-radius: 14px; box-shadow: 0 0 0 1px var(--line); background: #fff; }
+  .crop .rig { position: absolute; left: -640px; top: 210px; }
+
+  @media (max-width: 900px) {
+    .wrap { padding: 0 16px; }
+    .row { gap: 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <h1>Mi música · propuesta visual (antes de implementar)</h1>
+  <span class="meta">Maqueta estática sobre el Slate aprobado · los datos de canciones son huecos <code>TODO(content)</code></span>
+</header>
+
+<!-- 1 ─────────────────────────── -->
+<section>
+  <span class="num">01</span>
+  <h2>Cómo cabe la 8.ª entrada</h2>
+  <p class="lede">La lista del menú dispone de 54 unidades de alto (en % del ancho del dispositivo). Con 8 filas de 7 serían 56: no caben. <b>En escritorio</b> bajo la fila a 6,6 (8 × 6,6 = 52,8) y las 8 entradas quedan a la vista. <b>En móvil</b> la fila no baja: el menú se desplaza para mantener la selección visible, y la lista de enlaces bajo el dispositivo ofrece las 8 entradas con áreas táctiles de 52 px.</p>
+  <div class="row">
+    <div class="fig"><div class="rig" style="--w: 330px"><div data-dev="menu-start"></div></div>
+      <p class="cap"><b>Al iniciar:</b> Proyectos seleccionado, en 3.ª posición como hasta ahora.</p></div>
+    <div class="fig"><div class="rig" style="--w: 330px"><div data-dev="menu-music"></div></div>
+      <p class="cap"><b>Mi música, última entrada:</b> la vista previa muestra portada, artista y pista seleccionada.</p></div>
+    <div class="notes">
+      <table>
+        <tr><th>Opción</th><th>Por qué</th></tr>
+        <tr><td><span class="ok">Filas de 7 → 6,6</span></td><td>Las 8 entradas a la vista. Se pierde un 6 % de alto de fila; en la home sigue habiendo 28 px por fila.</td></tr>
+        <tr><td>Menú con desplazamiento</td><td>Escondería una entrada. En un menú principal es peor que una fila algo más baja.</td></tr>
+        <tr><td>Quitar la barra de estado</td><td>Pierde la hora, el título y la batería, que dan carácter de sistema.</td></tr>
+        <tr><td>Agrupar secciones</td><td>Rompería las 7 secciones de tu web antigua, que ya están aprobadas.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ─────────────────────────── -->
+<section>
+  <span class="num">02</span>
+  <h2>Al abrir Mi música: se conectan los auriculares</h2>
+  <p class="lede">La entrada del canto superior se mantiene. Cambian los auriculares: ahora son dos de botón, pequeños, con cuerpo ovalado blanco. El cable sigue la foto de referencia: blanco, redondo y liso, con uniones blancas cilíndricas. Cae en una línea larga y suave, separada del aparato, y se divide en dos ramales. Quedan apoyados a la derecha del dispositivo, lejos del reflejo y del botón. Solo aparecen dentro de Mi música.</p>
+  <div class="row">
+    <div class="fig">
+      <div class="rig is-plugged acc-room" id="heroRig" style="--w: 400px"><div data-dev="list" data-reflect></div></div>
+      <button class="btn" id="plugBtn" aria-pressed="true">Salir de Mi música</button>
+    </div>
+    <div class="notes">
+      <table>
+        <tr><th>Detalle</th><th>Cómo</th></tr>
+        <tr><td>Lista</td><td>Las canciones que elijas, cada fila con portada, título y artista. El anillo recorre la lista; ▶ o el centro abren «Sonando». Si hay más de las que caben, la lista se desplaza como la de Formación.</td></tr>
+        <tr><td>Auriculares</td><td>Dos de botón, con volumen: carcasa ovalada blanca brillante con un reflejo contenido arriba a la izquierda, cara acústica gris satinada algo inclinada y ligeramente hundida, y cuello cónico con una unión blanca cilíndrica donde entra el cable. Sombra de contacto con el suelo. Sin logos ni parecido a un modelo comercial.</td></tr>
+        <tr><td>Cable</td><td>Como en la foto de referencia: blanco, redondo y algo grueso, con un borde gris muy suave, un brillo amplio en el lado iluminado y una sombra ligera. La clavija es de plástico blanco con un manguito cilíndrico. El cable cuelga en una línea larga lejos del canto, llega al suelo y se divide en una pieza blanca alargada. Los dos ramales tienen curvas distintas. Sin mando ni letras, y con clavija de 3,5 mm, para no copiar un modelo comercial.</td></tr>
+        <tr><td>Posición</td><td>Apoyados en el suelo a la derecha del cuerpo, a la altura de su base: fuera del reflejo, que está debajo, y lejos de los botones. En la home quedan entre el dispositivo y la columna de «Ver proyectos», por debajo del botón.</td></tr>
+        <tr><td>Movimiento</td><td>Conectar: el cable se dibuja (0,6 s), la clavija entra y los ramales y los auriculares aparecen al final. Desconectar: al revés, en 0,3 s. Con movimiento reducido, solo un fundido.</td></tr>
+        <tr><td>Inclinación y Girar</td><td>Los auriculares están en el suelo y no se inclinan; la clavija y el cable sí acompañan al dispositivo. Pulsar «Girar» primero los desconecta.</td></tr>
+        <tr><td>Accesibilidad</td><td>Son decorativos (<code>aria-hidden</code>). El título de la pantalla ya dice que estás en Mi música.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ─────────────────────────── -->
+<section>
+  <span class="num">03</span>
+  <h2>«Sonando»: la pista elegida y el reproductor oficial</h2>
+  <p class="lede">Al elegir una pista se abre esta vista: portada, posición en la lista, título, artista, tu frase y un enlace directo a Spotify. Debajo va el reproductor oficial de Spotify, el único elemento que reproduce. No dibujo botones de reproducir, pausa ni barra de progreso propios: los únicos controles de audio son los del reproductor de Spotify.</p>
+  <div class="row">
+    <div class="fig"><div class="rig is-plugged acc-room" style="--w: 420px"><div data-dev="playing"></div></div>
+      <p class="cap">El rectángulo oscuro es el sitio del reproductor de Spotify (80 px de alto, el tamaño compacto oficial).</p></div>
+    <div class="notes">
+      <table>
+        <tr><th>Entrada</th><th>En «Sonando»</th></tr>
+        <tr><td>⏮ · ⏭</td><td>Pista anterior o siguiente de tu selección, como indican sus símbolos. Cambia la vista y el reproductor, pero <b>no reproduce</b>.</td></tr>
+        <tr><td>+ · − · girar</td><td>Igual que en las listas: suben y bajan, es decir, pista anterior o siguiente. No cambian el volumen, porque el reproductor de Spotify no lo permite.</td></tr>
+        <tr><td>ATRÁS · Esc</td><td>Vuelve a la lista.</td></tr>
+        <tr><td>Centro</td><td>Se probará en E4: reproducir o pausar mediante la API oficial de Spotify, y solo se activa si funciona de forma fiable. Hasta entonces no hace nada y la reproducción queda en el reproductor oficial.</td></tr>
+        <tr><td>Teclado</td><td>Tab entra en los controles del reproductor de Spotify; Mayús+Tab vuelve al dispositivo.</td></tr>
+        <tr><td>Carga</td><td>El reproductor no se carga hasta que eliges una pista. Así, nada de Spotify se ejecuta en la home y no hay reproducción automática.</td></tr>
+        <tr><td>Si Spotify falla</td><td>Siguen visibles el título, el artista, la frase y «Abrir en Spotify ↗». Si el reproductor no carga en unos segundos, en su lugar aparece «No se ha podido cargar el reproductor» con el mismo enlace.</td></tr>
+        <tr><td>Lector de pantalla</td><td>Anuncia «Pista seleccionada: título, artista». Nunca dice «sonando» si no sabemos que suena.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ─────────────────────────── -->
+<section>
+  <span class="num">04</span>
+  <h2>Entrada de auriculares en el canto superior</h2>
+  <p class="lede">Una ranura oscura de 4,2 × 1, a la altura de la columna de teclas (x = 80), con un filo de luz alrededor. Va en el canto, no en el frontal: no hay rejilla, LED ni marcas nuevas. El canto derecho ya tiene el botón lateral, así que la entrada va arriba, sin que coincidan.</p>
+  <div class="row">
+    <div class="fig"><div class="crop"><div class="rig" style="--w: 1000px"><div data-dev="crop"></div></div></div>
+      <p class="cap"><b>Home y lienzo:</b> solo la entrada.</p></div>
+    <div class="fig"><div class="crop"><div class="rig is-plugged" style="--w: 1000px"><div data-dev="crop"></div></div></div>
+      <p class="cap"><b>Mi música:</b> clavija conectada y cable.</p></div>
+  </div>
+</section>
+
+<!-- 5 ─────────────────────────── -->
+<section>
+  <span class="num">05</span>
+  <h2>Móvil</h2>
+  <p class="lede">En el teléfono no hay sitio a la derecha: el margen es de 16 px. Por eso el cable cae por detrás del aparato, como lo haría uno de verdad, y los auriculares quedan apoyados debajo, a la derecha. Mientras estás en Mi música se oculta el reflejo para que no se mezclen, y el dispositivo baja 40 px para dejar sitio al bucle del cable. En «Sonando», la portada se encoge para que quepa el reproductor de 80 px.</p>
+  <div class="row">
+    <div class="fig"><div class="rig is-plugged acc-room" data-acc="behind" style="--w: 342px"><div data-dev="playing"></div></div>
+      <p class="cap">Teléfono de 390 px de ancho, «Sonando».</p></div>
+    <div class="notes">
+      <ul class="plain">
+        <li>La lista de enlaces bajo el dispositivo muestra las 8 entradas, con «Mi música» al final.</li>
+        <li>La ruta <code>/mi-musica</code> se publica ya renderizada, con la lista completa (título, artista, frase y enlace a Spotify) y sin reproductores. Funciona sin el dispositivo y sin JavaScript.</li>
+        <li>Nota para E4 (no es de esta sección): las teclas ATRÁS e INICIO miden 36 px en móvil. Tendrán un área táctil invisible de 44 px, como pide el brief.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ─────────────────────────── -->
+<section>
+  <span class="num">06</span>
+  <h2>Navegación, lienzo y transición</h2>
+  <div class="row"><div class="notes">
+    <ul class="plain">
+      <li><b>Arriba, en escritorio, solo una selección de enlaces:</b> Proyectos · Sobre mí · Contacto · CV · GitHub ↗ · Mi música. Son los cinco atajos que pide el brief más Mi música. Trayectoria, Habilidades y Formación se abren desde el dispositivo, la lista móvil y el pie de cada página interior, que sí lleva las 8 entradas.</li>
+      <li><b>Las 8 entradas</b> están en el menú del dispositivo y en la lista móvil, con Mi música al final.</li>
+      <li><b>De Mi música a Proyectos:</b> primero se desconectan los auriculares (0,3 s) y después empieza la transición de la pantalla al lienzo. El cable nunca viaja con el dispositivo a la esquina.</li>
+      <li><b>Desde el dispositivo acoplado en el lienzo</b>, al elegir Mi música se hace la transición inversa (vuelta a la home) y allí se conectan los auriculares. En el lienzo no aparecen nunca.</li>
+      <li><b>Al salir de Mi música se descarga el reproductor y la música se para.</b> Nunca sigue sonando sin un control visible.</li>
+      <li>La entrada de auriculares también se ve en el dispositivo acoplado, porque forma parte del aparato, pero a 200 px es casi imperceptible.</li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 7 ─────────────────────────── -->
+<section>
+  <span class="num">07</span>
+  <h2>Lo que necesito de ti</h2>
+  <p class="lede">No invento canciones ni frases. Hasta tenerlas, la sección no se publica: el brief pide omitir secciones sin contenido real.</p>
+  <table>
+    <tr><th>Dato</th><th>Formato</th></tr>
+    <tr><td>Canciones</td><td>Las que quieras, en el orden en que quieras que aparezcan. Las vas añadiendo y se colocan al final de la lista.</td></tr>
+    <tr><td>Por canción</td><td>Enlace de Spotify a la pista (<code>open.spotify.com/track/…</code>), título, artista y una frase tuya (como máximo 140 caracteres para que quepa en 3 líneas).</td></tr>
+    <tr><td>Portadas</td><td>No hace falta enviarlas. Se usa la imagen oficial que da Spotify para cada pista, sin modificarla y siempre enlazada a ella.</td></tr>
+    <tr><td>Opcional</td><td>Una frase de entrada para la sección.</td></tr>
+  </table>
+</section>
+</div>
+
+<script src="../E2/device.js"></script>
+<script>
+  const ic = {
+    note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>',
+    chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg>',
+  };
+  const BATT = '<svg class="os__batt" viewBox="0 0 26 13" aria-hidden="true"><rect x=".7" y=".7" width="22" height="11.6" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="2.6" y="2.6" width="16" height="7.8" rx=".8" fill="currentColor"/><rect x="23.6" y="4.2" width="1.8" height="4.6" rx=".6" fill="currentColor"/></svg>';
+  const now = new Date(), time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const status = t => `<div class="os__status"><span class="os__time">${time}</span><span class="os__title">${t}</span>${BATT}</div>`;
+  const cov = cls => `<span class="cov ${cls}">${ic.note}</span>`;
+
+  const MENU = ['Sobre mí', 'Trayectoria', 'Proyectos', 'Habilidades', 'Formación', 'Contacto', 'CV', 'Mi música'];
+  const menu = (sel, peek) => status('Pocket OS') + `<div class="os__view os__split"><div class="os__main"><ul class="os__list is-8">${MENU.map((m, i) =>
+    `<li class="os__item${i === sel ? ' is-sel' : ''}"><span>${m}</span>${ic.chev}</li>`).join('')}</ul></div><div class="os__peek">${peek}</div></div>`;
+  const PEEK_PROJ = `<div class="peek__map">${['01', '02', '03', '04'].map((n, i) => `<i class="${i ? '' : 'on'}">${n}</i>`).join('')}</div><div class="peek__big">13</div><div class="peek__label">proyectos en<br>4 colecciones</div>`;
+  const PEEK_MUSIC = `<div class="pm__k">Pista seleccionada</div>${cov('pm__cov')}<div class="pm__t">Canción 1</div><div class="pm__a">Artista · TODO</div>`;
+
+  const SCREENS = {
+    'menu-start': () => menu(2, PEEK_PROJ),
+    'menu-music': () => menu(7, PEEK_MUSIC),
+    list: () => status('Mi música') + `<div class="os__view"><div class="os__main"><ul class="songs">${[1, 2, 3, 4, 5].map(i =>
+      `<li class="song${i === 2 ? ' is-sel' : ''}">${cov('')}<span><b>Canción ${i}</b><small>Artista · TODO</small></span>${i === 2 ? ic.chev : ''}</li>`).join('')}</ul></div></div>`,
+    playing: () => status('Sonando') + `<div class="os__view"><div class="np">
+      <div class="np__top">${cov('np__cov')}<div class="np__meta">
+        <span class="np__k">2 de 5</span><span class="np__t">Canción 2</span><span class="np__a">Artista · TODO</span>
+        <span class="np__q">«Tu frase sobre esta canción: por qué la elegiste. TODO(content)»</span>
+        <span class="np__link">Abrir en Spotify ↗</span></div></div>
+      <div class="sp">Reproductor oficial de Spotify<br>se carga al elegir la pista · sin reproducción automática</div></div></div>`,
+    crop: () => menu(2, PEEK_PROJ),
+  };
+
+  // Plug, cable and a pair of button earbuds, in device units (device body = 0..100 × 0..124, floor ≈ 125).
+  // Light comes from the top left. Everything resting on the floor (y > 125) sits in front of the device plane.
+  // side:   desktop — the cable loops off the socket, hangs loosely away from the body, lands on the floor and
+  //         splits; the buds rest to the right, clear of the body, its reflection and the buttons.
+  // behind: mobile — no room at the sides (16 px margin), so the cable drops behind the device and the buds rest
+  //         below it (the floor reflection is hidden while in Mi música).
+  const S = 1.15;                                    // earbud scale
+  const LAYOUTS = {
+    side: {
+      main: 'M80 -10.2 C80 -17.5 84 -21 90.5 -20.6 C98.5 -20.1 104.6 -13 106.6 -2 C108.2 7 108.4 30 108.3 55 C108.2 80 108.4 100 109.6 112 C110.6 121.5 112.6 125.6 116.2 126.6 C116.8 126.75 117.2 126.8 117.6 126.8',
+      split: { at: [119.2, 126.85], rot: 2 },
+      a: { at: [128.5, 135.5], rot: 26, fx: -1, c1: [123.4, 127.6], k: 3.4 },
+      b: { at: [143, 128.6], rot: -14, fx: -1, c1: [124.5, 125.2], k: 3.6 },
+    },
+    behind: {
+      main: 'M80 -10.2 C80 -16 82 -19.5 87 -19.8 C92.5 -20.1 96 -15.5 95.2 -8 C94.6 -2.5 92 4 90 12 C82 60 70 100 74 124 C74.6 127.5 76.8 129.2 79.6 129.6',
+      split: { at: [81, 129.8], rot: 8 },
+      a: { at: [72.5, 139], rot: -24, fx: 1,  c1: [85, 131.4], k: 2.8 },
+      b: { at: [93, 140.2], rot: 10,  fx: -1, c1: [83.6, 133.4], k: 2.9 },
+    },
+  };
+  const NECK_END = 6.65;                             // local x of the neck tip, where the cable enters
+  const rotPt = ([x, y], deg) => { const r = deg * Math.PI / 180; return [x * Math.cos(r) - y * Math.sin(r), x * Math.sin(r) + y * Math.cos(r)]; };
+  const neck = b => {                                // tip position + outward direction, in viewBox units
+    const [dx, dy] = rotPt([b.fx * S * NECK_END, 0], b.rot), [ux, uy] = rotPt([b.fx, 0], b.rot);
+    return { tip: [b.at[0] + dx, b.at[1] + dy], dir: [ux, uy] };
+  };
+  const f = n => n.toFixed(2);
+  const branch = (split, b) => {
+    const [ox, oy] = rotPt([1.75, 0], split.rot), from = [split.at[0] + ox, split.at[1] + oy];
+    const { tip, dir } = neck(b), c2 = [tip[0] + dir[0] * b.k, tip[1] + dir[1] * b.k];
+    return `M${f(from[0])} ${f(from[1])} C${b.c1.join(' ')} ${f(c2[0])} ${f(c2[1])} ${f(tip[0])} ${f(tip[1])}`;
+  };
+  // a round white cable (as in the reference photo): soft grey rim, white satin body, broad highlight on the lit side
+  const wire = (d, w) => `<path pathLength="1" d="${d}" stroke="#C9CDD2" stroke-width="${w}"/>` +
+    `<path pathLength="1" d="${d}" stroke="#F3F4F6" stroke-width="${f(w * .8)}"/>` +
+    `<path pathLength="1" d="${d}" stroke="#FFFFFF" stroke-width="${f(w * .38)}" transform="translate(${f(-w * .12)} ${f(-w * .1)})"/>`;
+
+  // one button earbud around its centre (local units): glossy oval shell, acoustic face tilted away on the
+  // left, tapered neck on the right with a grey ring where the cable enters. Mirrored with fx = -1.
+  const bud = b => {
+    const [x, y] = b.at, L = b.fx > 0 ? '' : 'R';
+    return `<g transform="translate(${x} ${y}) rotate(${b.rot}) scale(${b.fx * S} ${S})">
+      <path d="M2.4 -1.3 C4 -1.1 5.6 -.78 6.35 -.64 C6.75 -.58 6.75 .58 6.35 .64 C5.6 .78 4 1.1 2.4 1.3 Z" fill="url(#gNeck)" stroke="rgba(0,0,0,.14)" stroke-width=".1"/>
+      <rect x="5.5" y="-.66" width="1.3" height="1.32" rx=".3" fill="url(#gCollar)" stroke="rgba(0,0,0,.12)" stroke-width=".08"/>
+      <ellipse cx=".3" cy="0" rx="3.7" ry="3.15" fill="url(#gShell${L})" stroke="rgba(0,0,0,.13)" stroke-width=".12"/>
+      <ellipse cx="1.5" cy="1.6" rx="2" ry=".8" fill="rgba(60,66,74,.07)" transform="rotate(-18 1.5 1.6)"/>
+      <g transform="rotate(-8 -2.15 .15)">
+        <ellipse cx="-2.15" cy=".15" rx="1.9" ry="3.14" fill="rgba(20,24,32,.18)" filter="url(#fCore)"/>
+        <ellipse cx="-2.15" cy=".15" rx="1.7" ry="3" fill="url(#gRim${L})" stroke="rgba(0,0,0,.12)" stroke-width=".08"/>
+        <ellipse cx="-2.24" cy=".18" rx="1.34" ry="2.6" fill="url(#gDome${L})"/>
+        <ellipse cx="-2.4" cy=".2" rx=".84" ry="1.72" fill="none" stroke="#fff" stroke-width=".09" opacity=".9" transform="translate(${b.fx * .07} .08)"/>
+        <ellipse cx="-2.4" cy=".2" rx=".84" ry="1.72" fill="url(#gCap${L})" stroke="rgba(0,0,0,.2)" stroke-width=".08"/>
+        <ellipse cx="${-2.3 - b.fx * .62}" cy="-1.15" rx=".24" ry=".95" fill="#fff" opacity=".85" filter="url(#fSpec)"/>
+      </g>
+      <ellipse cx="${b.fx * -0.2}" cy="-2" rx="1.5" ry=".48" fill="#fff" opacity=".95" transform="rotate(${b.fx * -10} ${b.fx * -0.2} -2)" filter="url(#fSpec)"/>
+    </g>`;
+  };
+  // contact shadow: a tight dark core where the shell touches the floor + a wider soft penumbra
+  const contact = ([x, y], rx) => `<ellipse cx="${x}" cy="${y}" rx="${rx * 1.25}" ry="1.1" fill="rgba(20,24,32,.10)" filter="url(#fSoft)"/>` +
+    `<ellipse cx="${x}" cy="${y - .2}" rx="${rx * .7}" ry=".42" fill="rgba(20,24,32,.22)" filter="url(#fCore)"/>`;
+
+  const ACC = kind => {
+    const L = LAYOUTS[kind], sp = L.split;
+    return `<svg class="acc acc--${kind}" viewBox="-10 -30 160 182" aria-hidden="true">
+    <defs>
+      <linearGradient id="gPlug" x1="0" x2="1"><stop offset="0" stop-color="#C9CDD2"/><stop offset=".45" stop-color="#FAFBFC"/><stop offset="1" stop-color="#C4C8CD"/></linearGradient>
+      <linearGradient id="gWhite" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F3F4F6"/><stop offset="1" stop-color="#D5D8DC"/></linearGradient>
+      <linearGradient id="gWhiteV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F2F3F5"/><stop offset="1" stop-color="#D3D6DA"/></linearGradient>
+      <linearGradient id="gCollar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DCDFE2"/></linearGradient>
+      <linearGradient id="gNeck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDFDFD"/><stop offset=".55" stop-color="#E3E5E8"/><stop offset="1" stop-color="#B8BDC3"/></linearGradient>
+      <radialGradient id="gShell" cx=".36" cy=".28" r=".78"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".42" stop-color="#F4F5F7"/><stop offset=".82" stop-color="#DADDE1"/><stop offset="1" stop-color="#C2C7CC"/></radialGradient>
+      <radialGradient id="gShellR" cx=".64" cy=".28" r=".78"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".42" stop-color="#F4F5F7"/><stop offset=".82" stop-color="#DADDE1"/><stop offset="1" stop-color="#C2C7CC"/></radialGradient>
+      <!-- ear-facing side: rounded lip lit from the top left, a domed face darkening to its edge, a recessed centre cap -->
+      <linearGradient id="gRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#EEF0F2"/><stop offset="1" stop-color="#AEB3BA"/></linearGradient>
+      <linearGradient id="gRimR" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#EEF0F2"/><stop offset="1" stop-color="#AEB3BA"/></linearGradient>
+      <radialGradient id="gDome" cx=".42" cy=".4" r=".62"><stop offset="0" stop-color="#F1F2F4"/><stop offset=".68" stop-color="#D7DADE"/><stop offset="1" stop-color="#ADB2B9"/></radialGradient>
+      <radialGradient id="gDomeR" cx=".58" cy=".4" r=".62"><stop offset="0" stop-color="#F1F2F4"/><stop offset=".68" stop-color="#D7DADE"/><stop offset="1" stop-color="#ADB2B9"/></radialGradient>
+      <radialGradient id="gCap" cx=".62" cy=".64" r=".7"><stop offset="0" stop-color="#D9DCE0"/><stop offset=".7" stop-color="#C6CACF"/><stop offset="1" stop-color="#AFB4BB"/></radialGradient>
+      <radialGradient id="gCapR" cx=".38" cy=".64" r=".7"><stop offset="0" stop-color="#D9DCE0"/><stop offset=".7" stop-color="#C6CACF"/><stop offset="1" stop-color="#AFB4BB"/></radialGradient>
+      <filter id="fSoft" x="-50%" y="-300%" width="200%" height="700%"><feGaussianBlur stdDeviation=".55"/></filter>
+      <filter id="fCore" x="-50%" y="-300%" width="200%" height="700%"><feGaussianBlur stdDeviation=".18"/></filter>
+      <filter id="fSpec" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation=".12"/></filter>
+      <filter id="fCable" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx=".25" dy=".55" stdDeviation=".35" flood-color="#141820" flood-opacity=".16"/></filter>
+    </defs>
+    <g class="cable cable--main" fill="none" filter="url(#fCable)">${wire(L.main, 1)}</g>
+    <g class="plug">
+      <rect x="79.25" y="-10.4" width="1.5" height="3.4" rx=".35" fill="url(#gWhite)" stroke="rgba(0,0,0,.13)" stroke-width=".1"/>
+      <rect x="78.4" y="-7.3" width="3.2" height="6.9" rx=".85" fill="url(#gWhite)" stroke="rgba(0,0,0,.14)" stroke-width=".12"/>
+      <path d="M79.05 -6.6 v5.4" stroke="#fff" stroke-width=".45" stroke-linecap="round"/>
+      <rect x="78.55" y="-.7" width="2.9" height=".75" rx=".2" fill="url(#gPlug)" stroke="rgba(0,0,0,.12)" stroke-width=".08"/>
+    </g>
+    <g class="bud">
+      ${contact([sp.at[0], sp.at[1] + .95], 2)}${contact([L.a.at[0], L.a.at[1] + 3.45], 3.9)}${contact([L.b.at[0], L.b.at[1] + 3.45], 3.9)}
+    </g>
+    <g class="cable cable--pair" fill="none" filter="url(#fCable)">${wire(branch(sp, L.a), .85)}${wire(branch(sp, L.b), .85)}</g>
+    <g class="bud">
+      <g transform="translate(${sp.at.join(' ')}) rotate(${sp.rot})">
+        <rect x="-1.8" y="-.78" width="3.6" height="1.56" rx=".7" fill="url(#gWhiteV)" stroke="rgba(0,0,0,.13)" stroke-width=".1"/>
+        <path d="M-1.3 -.42 h2.6" stroke="#fff" stroke-width=".32" stroke-linecap="round"/>
+      </g>
+      ${bud(L.a)}${bud(L.b)}
+    </g>
+  </svg>`;
+  };
+
+  document.querySelectorAll('[data-dev]').forEach(el => {
+    const api = PocketOS.mount(el, { reflect: 'reflect' in el.dataset });
+    api.open('sobre-mi');                       // leave the menu so the live clock never re-renders over the mock
+    el.querySelector('[data-os]').innerHTML = SCREENS[el.dataset.dev]();
+    el.querySelector('.pocket__front').insertAdjacentHTML('beforeend', '<span class="jack"></span>');
+    el.setAttribute('inert', '');
+    const rig = el.closest('.rig');
+    rig.insertAdjacentHTML('beforeend', ACC(rig.dataset.acc || 'side'));
+  });
+
+  const rig = document.getElementById('heroRig'), btn = document.getElementById('plugBtn');
+  btn.addEventListener('click', () => {
+    const on = rig.classList.toggle('is-plugged');
+    btn.setAttribute('aria-pressed', on);
+    btn.textContent = on ? 'Salir de Mi música' : 'Abrir Mi música';
+  });
+</script>
+</body>
+</html>

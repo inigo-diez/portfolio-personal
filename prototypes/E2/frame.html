@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Vista móvil</title>
+<style>
+  html, body { margin: 0; background: #d9dadc; }
+  iframe { display: block; border: 0; background: #fff; }
+</style>
+</head>
+<body>
+<!-- Dev helper: renders a prototype at a phone-sized viewport. Usage: frame.html?p=home.html&w=390&h=844 -->
+<script>
+  const q = new URLSearchParams(location.search);
+  const f = document.createElement('iframe');
+  f.src = q.get('p') || 'home.html';
+  f.width = q.get('w') || 390;
+  f.height = q.get('h') || 844;
+  document.body.appendChild(f);
+</script>
+</body>
+</html>

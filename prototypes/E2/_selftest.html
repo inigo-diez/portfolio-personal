@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><link rel="stylesheet" href="device.css"></head>
+<body>
+<!-- Dev helper: automated check of the input model. Open it or run with --dump-dom; results go in #out. -->
+<div id="d" style="--w:400px"></div>
+<pre id="out"></pre>
+<script src="device.js"></script>
+<script>
+  const out = [], log = (ok, m) => out.push((ok ? 'PASS ' : 'FAIL ') + m);
+  let canvasRow = null;
+  const el = document.getElementById('d');
+  PocketOS.mount(el, { onCanvas: r => canvasRow = r });
+  const sel = () => el.querySelector('.os__item.is-sel')?.textContent.trim();
+  const head = () => { const t = el.querySelector('.os__title').textContent.trim(); return t === 'Pocket OS' ? 'MENU' : t; };
+  const key = k => el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
+  const click = s => el.querySelector(s).click();
+  const labels = [...el.querySelectorAll('.os__item')].map(li => li.textContent.trim());
+
+  log(labels.join('|') === 'Sobre mí|Trayectoria|Proyectos|Habilidades|Formación|Contacto|CV', 'menu = 7 entries in old-portfolio order (' + labels.join(', ') + ')');
+  log(sel() === 'Proyectos', 'initial selection = Proyectos (' + sel() + ')');
+  key('ArrowDown'); log(sel() === 'Habilidades', 'ArrowDown → Habilidades (' + sel() + ')');
+  key('ArrowUp'); key('ArrowUp'); key('ArrowUp'); key('ArrowUp'); log(sel() === 'CV', 'ArrowUp wraps to CV (' + sel() + ')');
+  key('Enter'); log(head() === 'CV', 'Enter opens CV section (' + head() + ')');
+  key('Escape'); log(head() === 'MENU' && sel() === 'CV', 'Esc returns to menu keeping selection (' + sel() + ')');
+  key('ArrowRight'); log(head() === 'CV', 'ArrowRight (ring ▶) opens the section');
+  key('ArrowLeft'); log(head() === 'MENU', 'ArrowLeft (ring ◀) goes back');
+  click('[data-cmd="home"]'); log(sel() === 'Proyectos' && head() === 'MENU', 'HOME button resets to Proyectos');
+  click('[data-cmd="select"]'); log(head() === 'Proyectos', 'center button opens Proyectos');
+  key('ArrowDown'); key('ArrowDown'); log(sel().startsWith('Geopolítica'), '2× down → Geopolítica (' + sel() + ')');
+  key('Enter'); log(canvasRow === 2, 'select collection calls onCanvas(2) (' + canvasRow + ')');
+  for (let i = 0; i < 9; i++) key('ArrowDown'); log(sel().startsWith('IA Generativa'), 'list clamps at last row (' + sel() + ')');
+  click('[data-cmd="back"]'); log(head() === 'MENU', 'BACK button returns to menu');
+  click('[data-cmd="home"]'); key('ArrowUp'); key('ArrowUp'); key('Enter');
+  log(head() === 'Sobre mí' && !!el.querySelector('[data-text]'), 'Sobre mí renders scrollable text');
+  click('[data-cmd="back"]'); log(!!el.querySelector('.os__peek .peek__mono'), 'menu shows preview of the selected entry (Sobre mí)');
+
+  // Long list: Formación has 9 rows, more than fit; the selection must stay visible
+  click('[data-cmd="home"]'); key('ArrowDown'); key('ArrowDown'); key('Enter');
+  log(head() === 'Formación', 'Formación opens (' + head() + ')');
+  for (let i = 0; i < 8; i++) key('ArrowDown');
+  const list = el.querySelector('.os__list'), s = el.querySelector('.is-sel');
+  const lr = list.getBoundingClientRect(), sr = s.getBoundingClientRect();
+  log(sel().startsWith('AI Engineering') && sr.bottom <= lr.bottom + 1 && sr.top >= lr.top - 1, 'last Formación row scrolled into view (' + sel() + ')');
+  log(!el.querySelector('.os__scroll').hidden, 'long list shows a position bar');
+
+  // Flip: any command while showing the back only turns the device around
+  const api2 = PocketOS.mount(document.body.appendChild(Object.assign(document.createElement('div'), { style: 'width:300px' })));
+  api2.flip(); api2.cmd('next');
+  const host2 = document.body.lastElementChild;
+  log(!host2.querySelector('.pocket__card').classList.contains('is-flipped') && host2.querySelector('.os__item.is-sel').textContent.trim() === 'Proyectos', 'command while flipped turns device back without moving');
+  log(host2.querySelector('.back__fine').textContent.includes('Iñigo Díez Osúa'), 'back engraving uses the full name');
+
+  // Ring: simulated circular gesture, 3 steps clockwise (≈100°)
+  click('[data-cmd="back"]'); click('[data-cmd="home"]');
+  const ring = el.querySelector('[data-ring]'), r = ring.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2, R = r.width * .36;
+  const at = deg => ({ clientX: cx + R * Math.cos(deg * Math.PI / 180), clientY: cy + R * Math.sin(deg * Math.PI / 180), pointerId: 1, bubbles: true });
+  ring.setPointerCapture = () => {};
+  ring.dispatchEvent(new PointerEvent('pointerdown', at(-90)));
+  for (let d = -85; d <= 10; d += 5) ring.dispatchEvent(new PointerEvent('pointermove', at(d)));
+  ring.dispatchEvent(new PointerEvent('pointerup', at(10)));
+  log(sel() === 'Contacto', 'ring: 100° clockwise = 3 steps → Contacto (' + sel() + ')');
+
+  // Ring: taps on the four axes
+  const tap = deg => { ring.dispatchEvent(new PointerEvent('pointerdown', at(deg))); ring.dispatchEvent(new PointerEvent('pointerup', at(deg))); };
+  tap(-90); log(sel() === 'Formación', 'tap ▲ = prev (' + sel() + ')');
+  tap(90); log(sel() === 'Contacto', 'tap ▼ = next (' + sel() + ')');
+  tap(0); log(head() === 'Contacto', 'tap ▶ = open (' + head() + ')');
+  tap(180); log(head() === 'MENU', 'tap ◀ = back');
+
+  // Ring: mouse wheel (one notch = 100 px in Chromium; trackpad deltas accumulate)
+  const wheel = dy => ring.dispatchEvent(new WheelEvent('wheel', { deltaY: dy, bubbles: true, cancelable: true }));
+  wheel(100); log(sel() === 'CV', 'wheel down over ring = next (' + sel() + ')');
+  wheel(-100); log(sel() === 'Contacto', 'wheel up over ring = prev (' + sel() + ')');
+  for (let i = 0; i < 4; i++) wheel(20); log(sel() === 'Contacto', 'small trackpad deltas do not step yet (' + sel() + ')');
+  wheel(20); log(sel() === 'CV', 'accumulated deltas step once (' + sel() + ')');
+
+  document.getElementById('out').textContent = out.join('\n');
+  document.title = out.every(l => l.startsWith('PASS')) ? 'ALL PASS' : 'FAILURES';
+</script>
+</body></html>

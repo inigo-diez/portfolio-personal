@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ejes del anillo · comparación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="device.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 32px 40px 72px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+  h1 { font-size: 15px; font-weight: 500; margin: 0; }
+  .meta { font-size: 12px; color: var(--ink-2); }
+  .lede { font-size: 14px; color: var(--ink-2); line-height: 1.55; max-width: 720px; margin: 20px 0 48px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .col { display: grid; justify-items: center; gap: 28px; align-content: start; }
+  .tag { font-size: 12px; color: var(--ink-2); }
+  .tag b { color: var(--accent-ink); font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; letter-spacing: -.02em; margin: 4px 0 8px; }
+  .cap { width: min(100%, 380px); }
+  .cap p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--ink-2); }
+  .cap p b { color: var(--ink); font-weight: 500; }
+  .zoom { width: 220px; height: 220px; border-radius: 50%; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--line); }
+  .zoom > div { position: absolute; left: -43px; top: -479px; }  /* ring centre of a 600 px device */
+  .row-label { grid-column: 1 / -1; font: 500 11px/1 var(--font-mono); color: var(--ink-2); padding-top: 16px; border-top: 1px solid var(--line); }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } .wrap { padding: 24px 16px 56px; } }
+
+  /* ── axis styles under comparison ── */
+  /* bold: the reference's visual language (large, solid, crisp, high contrast) with the device's real commands */
+  .ax-bold .ring__axis, .ax-photo .ring__axis {
+    width: 7.6cqw; height: 7.6cqw; margin: -3.8cqw 0 0 -3.8cqw;
+    color: #2A2D32; filter: drop-shadow(0 .1cqw 0 rgba(255, 255, 255, .85));
+  }
+  .ax-bold .ring__axis--up, .ax-photo .ring__axis--up       { top: 15%; }
+  .ax-bold .ring__axis--down, .ax-photo .ring__axis--down   { top: 85%; }
+  .ax-bold .ring__axis--left, .ax-photo .ring__axis--left   { left: 15%; }
+  .ax-bold .ring__axis--right, .ax-photo .ring__axis--right { left: 85%; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Ejes del anillo · comparación antes de sustituir</h1>
+  <span class="meta">Solo cambian los cuatro símbolos; el anillo, su tamaño y su comportamiento no se tocan</span>
+</header>
+<p class="lede">La referencia aporta el carácter de los símbolos: grandes, macizos, nítidos y con contraste. Como el anillo es plateado y no negro, los símbolos van oscuros. Las columnas B y C solo cambian la forma de los símbolos. Haz clic en un dispositivo y usa las flechas: el eje correspondiente se ilumina en azul.</p>
+
+<div class="grid">
+  <div class="row-label">ESCRITORIO · 380 px</div>
+  <div class="col"><div data-pocket data-style="" style="--w: 380px"></div>
+    <div class="cap"><span class="tag">A · actual</span><h2>Triángulos grabados</h2>
+      <p>Pequeños y grises, con aspecto de grabado. Discretos, pero a tamaño móvil cuesta verlos.</p></div></div>
+  <div class="col"><div data-pocket data-style="ax-bold" style="--w: 380px"></div>
+    <div class="cap"><span class="tag">B</span><h2>Estilo de la referencia, símbolos propios</h2>
+      <p>El peso, el tamaño y la nitidez de la foto con <b>▲ ▼ ◀ ▶</b>, que es lo que hace el anillo: subir, bajar, volver y abrir. Se lee al instante y no copia el reproductor.</p></div></div>
+  <div class="col"><div data-pocket data-style="ax-photo" style="--w: 380px"></div>
+    <div class="cap"><span class="tag">C · <b>elegida (2026-10-20)</b> · ya aplicada al dispositivo</span><h2>+ − ⏮ ⏭</h2>
+      <p>Iguales que en la foto. Pero <b>prometen funciones que no existen</b>: + y − parecen volumen, y ⏮ ⏭ parecen cambiar de pista, cuando en realidad mueven la lista, vuelven y abren. Además, Slate se leería como una copia de ese reproductor.</p></div></div>
+
+  <div class="row-label">DETALLE</div>
+  <div class="col"><div class="zoom"><div data-pocket data-style="" style="--w: 600px"></div></div></div>
+  <div class="col"><div class="zoom"><div data-pocket data-style="ax-bold" style="--w: 600px"></div></div></div>
+  <div class="col"><div class="zoom"><div data-pocket data-style="ax-photo" style="--w: 600px"></div></div></div>
+
+  <div class="row-label">MÓVIL · 342 px (teléfono de 390 px)</div>
+  <div class="col"><div data-pocket data-style="" style="--w: 342px"></div></div>
+  <div class="col"><div data-pocket data-style="ax-bold" style="--w: 342px"></div></div>
+  <div class="col"><div data-pocket data-style="ax-photo" style="--w: 342px"></div></div>
+</div>
+</div>
+
+<script src="device.js"></script>
+<script>
+  // Bold, solid glyphs (24 × 24). B keeps the device's real commands; C copies the reference photo's symbols.
+  const GLYPHS = {
+    'ax-bold': {
+      up: '<path d="M12 6.2l6.6 9.6H5.4z"/>', down: '<path d="M12 17.8L5.4 8.2h13.2z"/>',
+      left: '<path d="M6.2 12l9.6-6.6v13.2z"/>', right: '<path d="M17.8 12L8.2 5.4v13.2z"/>',
+    },
+    'ax-photo': {
+      up: '<path d="M10.5 5h3v5.5H19v3h-5.5V19h-3v-5.5H5v-3h5.5z"/>', down: '<path d="M5 10.5h14v3H5z"/>',
+      left: '<path d="M3.5 6.5h2.4v11H3.5zM5.9 12l7.6-5.5v11zM13 12l7.6-5.5v11z"/>',
+      right: '<path d="M20.5 6.5h-2.4v11h2.4zM18.1 12l-7.6-5.5v11zM11 12L3.4 6.5v11z"/>',
+    },
+  };
+  document.querySelectorAll('[data-pocket]').forEach(el => {
+    PocketOS.mount(el);
+    const style = el.dataset.style;
+    if (!style) return;
+    el.classList.add(style);
+    el.querySelectorAll('.ring__axis').forEach(ax => { ax.querySelector('svg').innerHTML = GLYPHS[style][ax.dataset.axis]; });
+  });
+  document.querySelectorAll('.zoom [data-pocket]').forEach(el => el.setAttribute('inert', ''));
+</script>
+</body>
+</html>

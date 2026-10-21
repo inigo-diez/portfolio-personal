@@ -1,0 +1,42 @@
+/* While a shared transition runs, input belongs to the transition (back / home can still retarget it
+   through the history and the device keys, which are handled outside the pointer path). */
+[data-transitioning] [data-page] {
+  pointer-events: none;
+}
+
+/* ── Comparison variant: View Transitions API (?tecnica=vt). Removed after E3 approval. ── */
+html[data-tecnica='vt'] [data-device] {
+  view-transition-name: dispositivo;
+}
+html[data-tecnica='vt'] [data-device='hero'] [data-screen],
+html[data-tecnica='vt'] [data-canvas-layer] {
+  view-transition-name: pantalla;
+}
+::view-transition-group(*) {
+  animation-duration: 730ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-group(dispositivo) {
+  z-index: 2;
+}
+::view-transition-image-pair(pantalla) {
+  overflow: hidden;
+}
+::view-transition-old(pantalla),
+::view-transition-new(pantalla) {
+  height: 100%;
+  object-fit: cover;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 250ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 200ms;
+  }
+}

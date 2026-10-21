@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E2 · Dispositivo Slate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="device.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  header { padding: 32px 40px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+  h1 { font-size: 15px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
+  .meta { font-size: 12px; color: var(--ink-2); }
+  main { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 32px; padding: 56px 40px 40px; align-items: start; }
+  figure { margin: 0; display: grid; justify-items: center; gap: 36px; }
+  .stage { height: 660px; display: grid; place-items: center; width: 100%; }
+  figcaption { width: min(100%, 420px); }
+  .tag { font-size: 12px; color: var(--ink-2); }
+  .tag b { color: var(--accent-ink); font-weight: 500; }
+  h2 { font-size: 20px; font-weight: 500; letter-spacing: -.02em; margin: 4px 0 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.45; }
+  td { padding: 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+  td:first-child { width: 34%; color: var(--ink-2); padding-right: 12px; }
+  .hint { padding: 0 40px 48px; font-size: 12.5px; color: var(--ink-2); }
+  kbd { font: 500 11px/1 var(--font-sans); border: 1px solid rgba(0,0,0,.14); border-radius: 4px; padding: 2px 5px; color: var(--ink); }
+
+  /* mark picker */
+  .marks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; width: min(100%, 420px); }
+  .marks button {
+    width: 100%; display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 16px; text-align: left;
+    padding: 14px 16px; border: 0; border-radius: 14px; background: var(--surface); cursor: pointer; font: inherit; color: inherit;
+    box-shadow: 0 0 0 1px var(--line); transition: box-shadow .15s;
+  }
+  .marks button:hover { box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+  .marks button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--accent); }
+  .marks button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .marks .glyph { height: 30px; display: flex; justify-content: center; color: var(--ink); }
+  .marks .glyph svg { height: 100%; width: auto; }
+  .marks b { display: block; font-size: 14px; font-weight: 500; }
+  .marks span.n { font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .marks .rec { font-size: 11px; color: var(--accent-ink); font-weight: 500; margin-left: 6px; }
+  .picker-head { width: min(100%, 420px); }
+  .picker-head p { font-size: 13px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+
+  @media (max-width: 1100px) {
+    main { grid-template-columns: 1fr; }
+    .stage { height: auto; padding: 24px 0 48px; }
+    header, main, .hint { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pocket OS · E2 v3 — Slate 100 × 124</h1>
+  <span class="meta">Prototipo en CSS/SVG · los dispositivos funcionan</span>
+</header>
+<main>
+  <figure>
+    <div class="stage"><div data-pocket data-reflect style="--w: 420px"></div></div>
+    <figcaption>
+      <span class="tag">Silueta <b>aprobada · E2 cerrada</b></span>
+      <h2>Slate</h2>
+      <table>
+        <tr><td>Forma</td><td>100 × 124 (antes 100 × 114). Misma anchura y pantalla 4:3; la altura extra va a la zona de controles.</td></tr>
+        <tr><td>Anillo</td><td>Más grande (Ø 37), con los cuatro ejes del vídeo: ▲ subir, ▼ bajar, ◀ atrás, ▶ abrir. En el centro, un botón circular separado por una ranura.</td></tr>
+        <tr><td>Teclas</td><td>ATRÁS e INICIO, centradas en el eje del anillo. Botón lateral en el canto derecho.</td></tr>
+        <tr><td>Menú</td><td>Las 7 entradas de la web antigua: Sobre mí, Trayectoria, Proyectos, Habilidades, Formación, Contacto, CV.</td></tr>
+      </table>
+    </figcaption>
+  </figure>
+  <figure>
+    <div class="stage"><div data-pocket data-back data-reflect id="backDevice" style="--w: 340px"></div></div>
+    <figcaption>
+      <span class="tag">Trasera</span>
+      <h2>Slate, por detrás</h2>
+      <table>
+        <tr><td>Grabado</td><td>Marca, <code>POCKET OS</code> y <code>ID-01 · Iñigo Díez Osúa · 2026</code>. El frontal queda limpio.</td></tr>
+        <tr><td>Cómo se ve</td><td>Botón "Girar" en la home. Cualquier control lo vuelve a poner de frente.</td></tr>
+      </table>
+    </figcaption>
+  </figure>
+  <figure>
+    <div class="picker-head">
+      <span class="tag">Marca · decidida: anillo y barra</span>
+      <h2>Marca de la trasera</h2>
+      <p>Elegida "○/" (2026-10-20). Se conservan las otras tres propuestas como registro; pulsa una para verla grabada.</p>
+    </div>
+    <ul class="marks" id="marks"></ul>
+  </figure>
+</main>
+<p class="hint">Gira el anillo arrastrando en círculo o pulsa sus ejes, pulsa el centro, usa la rueda del ratón sobre el botón lateral, o haz clic en un dispositivo y usa <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd> <kbd>←</kbd>.</p>
+<script src="device.js"></script>
+<script>
+  let backApi;
+  document.querySelectorAll('[data-pocket]').forEach(el => {
+    const d = PocketOS.mount(el, { reflect: 'reflect' in el.dataset, onCanvas: () => location.href = 'canvas.html' });
+    if ('back' in el.dataset) { d.flip(); backApi = d; }
+  });
+
+  const list = document.getElementById('marks');
+  list.innerHTML = Object.entries(PocketOS.MARKS).map(([id, m]) => `<li><button data-mark="${id}" aria-pressed="${id === PocketOS.DEFAULT_MARK}">
+      <span class="glyph">${m.svg}</span>
+      <span><b>${m.name}${id === PocketOS.DEFAULT_MARK ? '<span class="rec">elegida</span>' : ''}</b><span class="n">${m.note}</span></span>
+    </button></li>`).join('');
+  list.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    list.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    backApi.setMark(b.dataset.mark);
+    document.querySelector('#backDevice .pocket__card').classList.add('is-flipped');
+  });
+</script>
+</body>
+</html>

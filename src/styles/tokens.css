@@ -1,0 +1,39 @@
+/* Design tokens — E2 v3 "blanco tecnológico" (docs/design/design-system.md). */
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --metal: #cfd2d6;
+  --ink: #252525;
+  --ink-2: #6b6b6b; /* #777 fails 4.5:1 on white */
+  --accent: #4f75ad; /* fills / selection only (white text on it = 4.7:1) */
+  --accent-ink: #3e64a0; /* the accent as small text on white = 5.9:1 */
+  --line: rgba(0, 0, 0, 0.08);
+  --graphite: #5e636a; /* key icons and ring axis symbols */
+
+  --font-sans: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace; /* reference numbers only */
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-micro: 200ms;
+  --dur-os: 220ms;
+  --dur-camera: 600ms;
+
+  --page-x: 40px;
+  --radius-card: 14px;
+  --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04), 0 24px 48px -26px rgba(0, 0, 0, 0.22);
+
+  /* docked device on the canvas (device-spec: 200 × 248, bottom left) */
+  --dock-w: 200px;
+  --dock-left: 28px;
+  --dock-bottom: 36px;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --page-x: 16px;
+    --dock-w: 132px;
+    --dock-left: 12px;
+    --dock-bottom: 16px;
+  }
+}

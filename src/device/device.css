@@ -1,0 +1,293 @@
+/* Slate (E2 v3) — hardware. Ported from prototypes/E2/device.css.
+   All geometry in cqw (percent of the device width): the same device scales from the home hero to the dock.
+
+   E3 change for the screen → canvas transition: the aluminium is a separate plate with a hole behind the
+   screen, and the glass bezel is a border (no background). When the screen content fades out, whatever is
+   underneath — the canvas layer — shows through, and the body can travel ABOVE the canvas while it docks.
+   At rest nothing changes visually: the opaque screen covers the hole. */
+
+.pocket {
+  container-type: inline-size;
+  width: var(--w, 420px);
+  position: relative;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.pocket__front {
+  position: relative;
+  width: 100cqw;
+  aspect-ratio: 100 / 124;
+  border-radius: 8cqw;
+  /* outer shadows only (drawn outside the box, so nothing is painted behind the hole) */
+  box-shadow:
+    0 0 0 0.16cqw rgba(0, 0, 0, 0.13),
+    0 0.55cqw 0 0 #c4c8cd,
+    /* side wall, light */ 0 1.05cqw 0 0 #aeb3b9,
+    /* side wall, shadowed */ 0 1.1cqw 0 0.12cqw rgba(0, 0, 0, 0.1),
+    0 3cqw 3cqw -1.5cqw rgba(20, 24, 32, 0.16),
+    0 9cqw 12cqw -6cqw rgba(20, 24, 32, 0.22);
+}
+.pocket:focus-visible .pocket__front {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* bead-blasted aluminium, one piece; hole = screen rect + 0.6 (hidden under the bezel) */
+.pocket__plate {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    var(--grain),
+    radial-gradient(130% 85% at 32% 0%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, #f1f2f4 0%, #e5e7ea 55%, #dadde1 100%);
+  box-shadow:
+    inset 0 0 0 0.28cqw rgba(255, 255, 255, 0.78),
+    /* diamond-cut chamfer */ inset 0 0 0 0.5cqw rgba(0, 0, 0, 0.035);
+  --hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 124' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' d='M0 0H100V124H0ZM8 8V71.3H92V8Z'/%3E%3C/svg%3E");
+  -webkit-mask: var(--hole) 0 0 / 100% 100% no-repeat;
+  mask: var(--hole) 0 0 / 100% 100% no-repeat;
+}
+
+/* Glass: black bezel (border) + flush screen. Screen = 82.8 × 62.1 → 4:3 */
+.pocket__glass {
+  position: absolute;
+  left: 6cqw;
+  top: 6cqw;
+  width: 88cqw;
+  height: 67.3cqw;
+  border: 2.6cqw solid #0d0e10;
+  border-radius: 3.6cqw;
+  box-shadow:
+    0 0 0 0.22cqw rgba(0, 0, 0, 0.28),
+    /* seam between glass and aluminium */ inset 0 0 0 0.18cqw rgba(255, 255, 255, 0.07);
+}
+.pocket__glass::after {
+  /* one crisp reflection band across the whole glass (stays on top: it is the glass) */
+  content: '';
+  position: absolute;
+  inset: -2.6cqw;
+  border-radius: 3.6cqw;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.04) 34%,
+    rgba(255, 255, 255, 0) 34.2%
+  );
+}
+.pocket__screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.8cqw;
+  overflow: hidden;
+  background: #fcfcfb;
+}
+/* screen off: black panel over the screen (the transition dims it while the body travels) */
+.pocket__dim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 0.8cqw;
+  background: #0b0c0e;
+  opacity: 0;
+  pointer-events: none;
+}
+.pocket.is-waking .pocket__dim {
+  animation: pocket-wake 0.45s var(--ease-out) both;
+}
+@keyframes pocket-wake {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── Spun-metal controls ── */
+.ring {
+  position: absolute;
+  left: 7cqw;
+  top: 79.6cqw;
+  width: 37cqw;
+  height: 37cqw;
+  border-radius: 50%;
+  touch-action: none;
+  cursor: grab;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 0.22cqw rgba(0, 0, 0, 0.11),
+    0 0 0 0.5cqw rgba(255, 255, 255, 0.55),
+    inset 0 0.25cqw 0.3cqw rgba(255, 255, 255, 0.9),
+    inset 0 -0.5cqw 1cqw rgba(0, 0, 0, 0.07);
+}
+.ring:active {
+  cursor: grabbing;
+}
+.ring__axis {
+  position: absolute;
+  width: 7.6cqw;
+  height: 7.6cqw;
+  margin: -3.8cqw 0 0 -3.8cqw;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 1;
+  color: var(--graphite);
+  transition: color 0.1s;
+  filter: drop-shadow(0 0.1cqw 0 rgba(255, 255, 255, 0.85));
+}
+.ring__axis svg {
+  width: 100%;
+  height: 100%;
+}
+.ring__axis--up {
+  left: 50%;
+  top: 15%;
+}
+.ring__axis--down {
+  left: 50%;
+  top: 85%;
+}
+.ring__axis--left {
+  left: 15%;
+  top: 50%;
+}
+.ring__axis--right {
+  left: 85%;
+  top: 50%;
+}
+.ring__axis.is-pressed {
+  color: var(--accent);
+}
+.ring__spin,
+.key::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 20deg,
+    #f1f2f4,
+    #ffffff 10%,
+    #e2e5e8 23%,
+    #f6f7f8 36%,
+    #e4e6e9 50%,
+    #ffffff 61%,
+    #e1e4e7 74%,
+    #f5f6f7 87%,
+    #f1f2f4
+  );
+}
+.ring__spin {
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.12s var(--ease-out);
+}
+.ring__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 38%;
+  height: 38%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0) 56%,
+      rgba(0, 0, 0, 0.045) 57%,
+      rgba(255, 255, 255, 0) 60%
+    ),
+    linear-gradient(180deg, #f7f8f9 0%, #e7e9ec 100%);
+  box-shadow:
+    0 0 0 0.3cqw rgba(0, 0, 0, 0.16),
+    0 0 0 0.55cqw rgba(255, 255, 255, 0.7),
+    0 0.35cqw 0.6cqw rgba(0, 0, 0, 0.14),
+    inset 0 0.22cqw 0 #fff;
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+.ring__center:active,
+.ring__center.is-pressed {
+  transform: translate(-50%, -50%) scale(0.965);
+  box-shadow:
+    0 0 0 0.3cqw rgba(0, 0, 0, 0.16),
+    0 0 0 0.55cqw rgba(255, 255, 255, 0.7),
+    inset 0 0.3cqw 0.6cqw rgba(0, 0, 0, 0.1);
+}
+
+.key {
+  position: absolute;
+  top: 92.85cqw; /* centred on the ring's axis (y 98.1) */
+  width: 10.5cqw;
+  height: 10.5cqw;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--graphite);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 0.2cqw rgba(0, 0, 0, 0.11),
+    0 0.3cqw 0.5cqw rgba(0, 0, 0, 0.1),
+    inset 0 0.2cqw 0 rgba(255, 255, 255, 0.9);
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+.key::before {
+  content: '';
+}
+.key svg {
+  position: relative;
+  width: 40%;
+  height: 40%;
+}
+.key--back {
+  left: 68.5cqw;
+}
+.key--home {
+  left: 83.5cqw;
+}
+.key:active,
+.key.is-pressed {
+  transform: scale(0.95);
+  box-shadow:
+    0 0 0 0.2cqw rgba(0, 0, 0, 0.11),
+    inset 0 0.3cqw 0.6cqw rgba(0, 0, 0, 0.12);
+}
+.side-key {
+  position: absolute;
+  right: -0.9cqw;
+  top: 18cqw;
+  width: 1.3cqw;
+  height: 13cqw;
+  border-radius: 0 0.7cqw 0.7cqw 0;
+  background: linear-gradient(90deg, #b9bec4, #f3f4f6 45%, #c9cdd2);
+  box-shadow: 0.1cqw 0 0.3cqw rgba(0, 0, 0, 0.18);
+}
+.ring__center:focus-visible,
+.key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring__spin {
+    transition: none;
+  }
+  .pocket.is-waking .pocket__dim {
+    animation-duration: 0.01s;
+  }
+}
