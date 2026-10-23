@@ -1,4 +1,4 @@
-// Dev check of the Pocket OS (E4): drives the home device with the keyboard, touch and the mouse in headless
+// Dev check of the iDO Pocket device (E4): drives the home device with the keyboard, touch and the mouse in headless
 // Edge, desktop + mobile, saves a screenshot per screen and reports console errors and failed checks.
 // Sobre mí, Trayectoria, Habilidades, Formación and Contacto grow into their page (device docked);
 // CV and Mi música open inside the device.
@@ -69,13 +69,13 @@ for (const [w, h, sfx, touch] of [
       await shot(`02-${slug}`);
       await key('Escape');
       await page.waitForTimeout(1000);
-      check(page.url().endsWith('/portfolio-personal/') && (await title()) === 'Pocket OS', `Esc vuelve a la home desde ${label}`);
+      check(page.url().endsWith('/portfolio-personal/') && (await title()) === 'iDO', `Esc vuelve a la home desde ${label}`);
       check((await sel()) === label, `al volver, el menú está en ${label}`);
     } else {
       check((await title()) === label, `→ abre ${label} dentro del dispositivo`);
       await shot('02-cv');
       await key('Escape');
-      check((await title()) === 'Pocket OS', `Esc vuelve al menú desde ${label}`);
+      check((await title()) === 'iDO', `Esc vuelve al menú desde ${label}`);
     }
   }
   check((await sel()) === 'CV', 'al volver, la selección sigue en la sección de la que vienes');
@@ -83,8 +83,10 @@ for (const [w, h, sfx, touch] of [
   // Mi música disabled without songs
   await key('ArrowDown');
   check((await sel()) === 'Mi música', 'Mi música es la última entrada');
+  await key('ArrowDown');
+  check((await sel()) === 'Mi música', 'la lista no pasa de la última entrada (sin vuelta)');
   await key('ArrowRight');
-  check((await title()) === 'Pocket OS', 'Mi música no se abre sin canciones');
+  check((await title()) === 'iDO', 'Mi música no se abre sin canciones');
   await shot('04-mi-musica-desactivada');
 
   // the docked device on a page: its list goes to another section; ATRÁS / INICIO shrink the page back
@@ -164,7 +166,7 @@ for (const [w, h, sfx, touch] of [
     await page.waitForTimeout(260);
     const s2 = await page.locator('[data-device="hero"] [data-screen]').boundingBox();
     await swipe(s2.x + 40, s2.y + s2.height / 2, s2.x + 160, s2.y + s2.height / 2);
-    check((await title()) === 'Pocket OS', 'deslizar a la derecha vuelve');
+    check((await title()) === 'iDO', 'deslizar a la derecha vuelve');
     const keysBox = await page.locator('[data-device="hero"] .key--back').evaluate((el) => {
       const a = getComputedStyle(el, '::after');
       return el.getBoundingClientRect().width - 2 * parseFloat(a.left);
@@ -186,7 +188,9 @@ for (const [w, h, sfx, touch] of [
   // Mi música with the development test data
   await page.goto(B + '?musica=prueba');
   await page.waitForTimeout(400);
-  await key('ArrowUp', 3); // Proyectos → Trayectoria → Sobre mí → (wraps) Mi música
+  await key('ArrowUp', 3); // Proyectos → Trayectoria → Sobre mí → (stays) Sobre mí
+  check((await sel()) === 'Sobre mí', 'la lista no pasa de la primera entrada (sin vuelta)');
+  await key('ArrowDown', 7); // Sobre mí → … → Mi música
   check((await sel()) === 'Mi música', 'Mi música activa con datos de prueba');
   await shot('06-menu-mi-musica');
   await key('ArrowRight');

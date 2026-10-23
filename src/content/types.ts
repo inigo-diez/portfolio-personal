@@ -25,11 +25,27 @@ export interface CanvasPlacement {
   w: number;
 }
 
-/** One block of a case study (problem, data, method, result…). Filled in E6. */
+/** A small results table inside a case study. `highlight` = index of the row the text is about. */
+export interface CaseTable {
+  caption: string;
+  head: string[];
+  rows: string[][];
+  highlight?: number;
+}
+
+/**
+ * One block of a case study, in the order of brief §9 (problem, data, approach, results, limitations…).
+ * Blocks without real content are left out, never filled. `source` says where its claims come from.
+ */
 export interface CaseSection {
   id: string;
   title: string;
   body: string[];
+  list?: string[];
+  table?: CaseTable;
+  /** Key of a chart in content/charts (drawn by the site, in its palette). */
+  chart?: string;
+  source: string;
 }
 
 export interface Project {
@@ -43,7 +59,7 @@ export interface Project {
   /** One-paragraph hook (from the approved project map). */
   summary: string;
   status: ProjectStatus;
-  /** Year of the work. null = not confirmed yet → TODO(content). */
+  /** Year of the work. null = not shown (Iñigo, 2026-10-23: no project years on the site). */
   year: number | null;
   featured: boolean;
   /** Capabilities, not sectors. */
@@ -59,8 +75,8 @@ export interface Project {
   sources: Source[];
   /** Explicit TODO(content) items: missing real data, never invented. */
   todo: string[];
-  /** Language of its README when it is not Spanish (shown with a note on the canvas). */
-  readmeLang?: 'en';
+  /** README written in English: the canvas shows its Spanish translation (with a note); the original stays on GitHub. */
+  readmeTranslated?: true;
   /** Honest notes that must accompany the project (e.g. AI-assisted development). */
   notes?: string[];
 }

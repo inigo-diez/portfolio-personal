@@ -28,5 +28,5 @@ export const optimizacionRsm: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio RSM-estadistica-optimizacion-extraccion-VOCs', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Superficie o contorno de la respuesta global (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Superficie o contorno de la respuesta global (E6)'],
 };

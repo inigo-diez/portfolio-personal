@@ -32,7 +32,14 @@ v2 (2026-10-19): tras el vídeo de referencia de Iñigo (ver [MOODBOARD.md](../r
 | Sistema del dispositivo | **Geist** 500/600 | Escala con el dispositivo (≈ 3,25 % de su ancho) |
 | Títulos de tarjeta | Geist 500 | 13–18 px |
 | Cifras grandes | Geist 500, `tabular-nums` | 24–56 px |
-| Números de referencia (01, 02.1) | Geist Mono | 10,5–11 px. **Único uso de la monoespaciada.** |
+| Números de referencia (01, 02.1) | Geist Mono 400 | **Único uso de la monoespaciada.** Ver la regla debajo. |
+
+**Regla de los números de referencia (E7, 2026-10-23).** Colección = dos cifras (`01`); proyecto = colección, punto y orden (`01.1`).
+- **Color:** `text-2` (`#6B6B6B`). Nunca azul, salvo en un elemento seleccionado.
+- **Tamaño:** 12 px en tarjetas, listas y páginas; 13 px en la etiqueta de colección del lienzo. En el lienzo, al 62 % de la vista inicial, salen a ≈ 10 px en pantalla.
+- **Posición:** delante del título y en su misma línea (etiqueta de colección, lista móvil, antetítulo del caso de estudio) o arriba a la izquierda de la tarjeta, con el estado a la derecha.
+- **Uno por elemento.** El número grande en gris (28 px, `#B9BEC5`) del hueco de la portada solo marca el sitio de la imagen: desaparece cuando llegue la imagen y queda solo el de arriba a la izquierda.
+- **Excepción: la vista previa de Proyectos del dispositivo.** Sus casillas 01–04 son un mapa en miniatura, no referencias junto a un título, y se leen a ≈ 9 px: van en Geist 600, porque Geist Mono 400 las haría más débiles (decidido por Iñigo el 2026-10-23).
 
 En producción, las fuentes se sirven desde el propio sitio (sin Google Fonts).
 
@@ -47,7 +54,7 @@ En producción, las fuentes se sirven desde el propio sitio (sin Google Fonts).
 | Metal torneado (anillo, teclas) | `conic-gradient` claro; en el anillo, el brillo gira con el gesto |
 | Ejes del anillo | Símbolos + − ⏮ ⏭ macizos en `#5E636A` (el grafito de los iconos de las teclas) con un filo de luz blanca debajo; al pulsarlos (o sus flechas) pasan un instante a `--accent` |
 | Botón central | Disco satinado `#F7F8F9 → #E7E9EC`, separado del anillo por una ranura oscura con borde de luz |
-| Trasera | Aluminio pulido con un barrido de luz diagonal y grabados en bajo relieve |
+| Trasera | Aluminio pulido con un barrido de luz diagonal (blanco al 55 %) y grabados en bajo relieve, todos del mismo tono (grafito al 58 %): monograma, `POCKET` (2,5 % del ancho, versalitas espaciadas) y `Iñigo Díez Osúa · 2026` (2,3 %, ≈ 10 px en la home de escritorio). E7, 2026-10-23: el nombre medía 1,9 % y casi no se leía a tamaño real |
 
 ## Espaciado y forma
 
@@ -61,9 +68,9 @@ En producción, las fuentes se sirven desde el propio sitio (sin Google Fonts).
 - Microinteracciones (pulsar, seleccionar): ≤ 200 ms, `cubic-bezier(.2,.8,.2,1)`.
 - Navegación interna del sistema: desplazamiento lateral del 8 % con fundido, 220 ms.
 - **Inclinación del dispositivo en la home**: máximo ±4,5° según la posición del ratón, 600 ms de suavizado. Solo con ratón, nunca en táctil.
-- **Girar el dispositivo**: 900 ms. Cualquier control lo vuelve a poner de frente.
-- Cámara del lienzo: 600 ms.
-- `prefers-reduced-motion`: sin inclinación, sin desplazamientos y giro instantáneo.
+- **Girar el dispositivo**: 750 ms (900 ms hasta E7). Cualquier control lo vuelve a poner de frente.
+- Cámara del lienzo: 600 ms. Al abrir un proyecto, lo que tarda el despliegue de sus tarjetas (550 ms + 45 ms por tarjeta, 730–775 ms), para que la cámara y la última tarjeta terminen a la vez.
+- `prefers-reduced-motion`: sin inclinación, sin desplazamientos, giro instantáneo y cámara del lienzo sin deslizamiento.
 
 ## Gráficos
 

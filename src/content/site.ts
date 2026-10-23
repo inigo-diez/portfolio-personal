@@ -91,7 +91,6 @@ export const ui = {
   sources: 'Fuentes',
   status: { terminado: 'Terminado', 'en-curso': 'En curso' },
   draftNotice: 'Borrador: el caso de estudio completo llega en E6.',
-  pending: 'Pendiente',
   canvas: {
     title: 'Proyectos',
     label: 'Lienzo de proyectos',
@@ -108,16 +107,19 @@ export const ui = {
     github: 'Ver en GitHub',
     loading: 'Cargando…',
     readme: 'README',
-    readmeEn: 'Original en inglés',
+    readmeTranslated: 'Traducido del inglés',
   },
   device: {
-    label: 'Pocket OS: flechas arriba y abajo para moverte, derecha o Intro para abrir, izquierda o Escape para volver',
+    label:
+      'iDO Pocket: flechas arriba y abajo para moverte, derecha o Intro para abrir, izquierda o Escape para volver',
+    dock: 'iDO Pocket',
     select: 'Seleccionar',
     back: 'Atrás',
     home: 'Inicio',
     keysHint: { move: 'moverse', open: 'abrir', back: 'volver' },
     soon: 'Próximamente',
     flip: 'Girar',
+    sound: 'Sonido',
     position: (label: string, i: number, n: number) => `${label}, ${i} de ${n}`,
   },
   notFound: { title: 'Esta página no existe', body: 'Puede que el enlace haya cambiado. Prueba desde aquí:' },
@@ -132,5 +134,6 @@ export const ui = {
     cv: 'Currículum',
     home: 'Inicio',
     projectsWord: 'proyectos',
+    chartData: 'Ver los datos',
   },
 };

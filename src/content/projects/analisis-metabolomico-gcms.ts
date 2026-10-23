@@ -28,5 +28,5 @@ export const analisisMetabolomicoGcms: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio (2.ª parte de la serie)', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'PCA de los 17 experimentos (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'PCA de los 17 experimentos (E6)'],
 };

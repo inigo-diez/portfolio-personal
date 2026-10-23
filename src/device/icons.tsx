@@ -53,6 +53,18 @@ const PATHS = {
       <path d="M18.5 3.5v3.6h-3.6M5.5 20.5v-3.6h3.6" />
     </>
   ),
+  sound: (
+    <>
+      <path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" />
+      <path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10" />
+    </>
+  ),
+  mute: (
+    <>
+      <path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" />
+      <path d="M16 10l4 4M20 10l-4 4" />
+    </>
+  ),
 };
 
 /** Solid status glyphs for «Sonando» (state display only, not controls). */

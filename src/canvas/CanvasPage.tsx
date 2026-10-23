@@ -53,6 +53,10 @@ const UNIVERSE = {
 const SSR_CAM: Cam = fit(UNIVERSE, safeArea(1440, 900));
 const PAN_STEP = 80; // px per arrow key
 const RETURN_MS = 420; // back to the initial composition before the screen transition home
+// The cards unfold in a cascade (canvas.css, .sat: 550 ms + 45 ms per card); opening a project, the camera
+// ends with the last one.
+const UNFOLD_MS = 550;
+const UNFOLD_STEP_MS = 45;
 const MIN_START_Z = 0.62; // the opening view never shrinks the cards below this (the rest is explored)
 
 const GAP = 24;
@@ -116,7 +120,8 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
       if (coordsRef.current)
         coordsRef.current.textContent = `x: ${Math.round(-cam.current.x / cam.current.z)} · y: ${Math.round(-cam.current.y / cam.current.z)}`;
     };
-    // The whole universe if it fits at a readable size; otherwise its centre at that size (the rest is explored).
+    // The whole universe if it fits at a readable size; otherwise, at that size, centred across and from the top
+    // of the safe area down (the first collection label clear of the top bar; the rest is explored).
     const initialCam = () => {
       const b = boundsOf(universe()),
         area = safeArea(innerWidth, innerHeight);
@@ -126,7 +131,7 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
       return {
         z,
         x: area.left + area.width / 2 - ((b.x0 + b.x1) / 2) * z,
-        y: area.top + area.height / 2 - ((b.y0 + b.y1) / 2) * z,
+        y: area.top - b.y0 * z,
       };
     };
     const clamp = (c: Cam) => {
@@ -319,7 +324,8 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
       mounted.current = true;
       return;
     }
-    api.current?.frame(focus, returnMs.current);
+    const cards = focus ? document.querySelectorAll(`[data-project="${focus}"] .sat`).length : 0;
+    api.current?.frame(focus, returnMs.current ?? (cards ? UNFOLD_MS + UNFOLD_STEP_MS * (cards - 1) : undefined));
     returnMs.current = undefined;
   }, [focus]);
 
@@ -354,10 +360,11 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
     }
   };
   const onCommand = (c: Command) => {
-    if (c === 'next') nav.move(1);
-    else if (c === 'prev') nav.move(-1);
-    else if (c === 'select') pick(nav.sel);
+    if (c === 'next') return nav.move(1);
+    if (c === 'prev') return nav.move(-1);
+    if (c === 'select') pick(nav.sel);
     else navigate('');
+    return true;
   };
   const zoomBy = (f: number) => api.current?.zoomBy(f);
 
@@ -415,15 +422,15 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
         </nav>
       </header>
 
-      <div className="dock">
+      <aside className="dock" aria-label={ui.device.dock}>
         <Device data-device="dock" onCommand={onCommand}>
           <ListScreen title={ui.canvas.title} rows={rows} sel={nav.sel} onPick={(i) => (nav.setSel(i), pick(i))} />
         </Device>
-      </div>
+      </aside>
 
-      <div className="hud" data-chrome>
+      <aside className="hud" aria-label={ui.canvas.controls} data-chrome>
         <span className="hud__coords" ref={coordsRef} aria-hidden="true" />
-        <div className="hud__bar" role="toolbar" aria-label={ui.canvas.controls}>
+        <div className="hud__bar" role="toolbar">
           <button aria-label={ui.canvas.zoomOut} onClick={() => zoomBy(1 / 1.2)}>
             <Icon name="minus" />
           </button>
@@ -447,7 +454,7 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
             {ui.canvas.home}
           </button>
         </div>
-      </div>
+      </aside>
 
       {/* data-chrome: it fades with the rest of the controls if the canvas is left with it open */}
       <section
@@ -542,7 +549,7 @@ function ProjectGroup({ p, open, onToggle }: { p: Project; open: boolean; onTogg
         <section className="card sat sat--readme" data-card style={at(README.x, 0, README.w, p.facts.length + 1)}>
           <header>
             <h4>{ui.canvas.readme}</h4>
-            {p.readmeLang === 'en' && <span className="sat__note">{ui.canvas.readmeEn}</span>}
+            {p.readmeTranslated && <span className="sat__note">{ui.canvas.readmeTranslated}</span>}
             {p.links.repo && (
               <a href={p.links.repo} target="_blank" rel="noopener">
                 {ui.canvas.github} ↗
@@ -550,7 +557,7 @@ function ProjectGroup({ p, open, onToggle }: { p: Project; open: boolean; onTogg
             )}
             <a href={href(`proyectos/${p.slug}/`)}>{ui.canvas.openProject} →</a>
           </header>
-          <Readme slug={p.slug} active={open} lang={p.readmeLang} />
+          <Readme slug={p.slug} active={open} />
         </section>
       </div>
     </div>
@@ -558,7 +565,7 @@ function ProjectGroup({ p, open, onToggle }: { p: Project; open: boolean; onTogg
 }
 
 /** The README, loaded the first time its project is opened. */
-function Readme({ slug, active, lang }: { slug: string; active: boolean; lang?: 'en' }) {
+function Readme({ slug, active }: { slug: string; active: boolean }) {
   const [html, setHtml] = useState<string | null>(null);
   useEffect(() => {
     if (!active || html !== null) return;
@@ -571,7 +578,7 @@ function Readme({ slug, active, lang }: { slug: string; active: boolean; lang?: 
   return html === null ? (
     <div className="readme readme--loading">{ui.canvas.loading}</div>
   ) : (
-    <div className="readme" tabIndex={0} lang={lang} dangerouslySetInnerHTML={{ __html: html }} />
+    <div className="readme" tabIndex={0} dangerouslySetInnerHTML={{ __html: html }} />
   );
 }
 

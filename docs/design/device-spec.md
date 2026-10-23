@@ -20,7 +20,7 @@ Todas las medidas están en **% del ancho del dispositivo** (unidades `cqw`), as
 | Botón central | Ø 38 % del anillo | Disco satinado separado por una ranura oscura con borde de luz |
 | ATRÁS / INICIO | Ø 10,5, x 68,5 y 83,5, centrados en el eje del anillo | Solo icono (nombre accesible en `aria-label`) |
 | Botón lateral | 1,3 × 13 en el canto derecho | Pulido |
-| Trasera | Aluminio pulido | Grabado: marca **"○/"**, `POCKET OS`, `ID-01 · Iñigo Díez Osúa · 2026` |
+| Trasera | Aluminio pulido | Grabado: **monograma «iDO»** de Iñigo (desde 2026-10-23, sustituye a "○/"; `src/device/Monogram.tsx`), `POCKET` (se lee «iDO POCKET», el nombre del dispositivo) e `Iñigo Díez Osúa · 2026` |
 
 ## Modelo de entrada
 

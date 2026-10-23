@@ -28,6 +28,6 @@ export const figuris: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio Figuris', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Captura del visor y diagrama de arquitectura (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Captura del visor y diagrama de arquitectura (E6)'],
   notes: ['Desarrollado con asistencia de Claude Code (como declara la web antigua).'],
 };

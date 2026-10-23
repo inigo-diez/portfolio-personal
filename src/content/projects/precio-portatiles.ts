@@ -28,5 +28,5 @@ export const precioPortatiles: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio laptop-price-prediction-egypt', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Real frente a predicho (E6; no hay figura previa)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Real frente a predicho (E6; no hay figura previa)'],
 };

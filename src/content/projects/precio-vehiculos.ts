@@ -28,5 +28,5 @@ export const precioVehiculos: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio car-price-prediction-ml', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Importancia de variables o los clusters (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Importancia de variables o los clusters (E6)'],
 };

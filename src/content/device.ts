@@ -1,10 +1,11 @@
-// Strings shown on the Pocket OS screen. Sources: CV, old portfolio, project map (as in E2).
+// Strings shown on the iDO Pocket screen. Sources: CV, old portfolio, project map (as in E2).
 // The CV rows reuse the sourced data of profile.ts; nothing new is written here.
 import { person } from './profile';
 import { collections, TOTAL_PROJECTS } from './projects';
 
 export const os = {
-  name: 'Pocket OS',
+  /** Device name «iDO Pocket» (Iñigo, 2026-10-23); its screen shows only «iDO». */
+  name: 'iDO',
   peek: {
     'sobre-mi': { mono: 'ID', lines: ['Iñigo Díez Osúa', 'Química · Ciencia de datos · IA'] },
     trayectoria: {
@@ -30,7 +31,7 @@ export const os = {
     'mi-musica': { soon: 'Próximamente' },
   },
   /** Engraving on the back face (E2 v3). */
-  back: { line: 'Pocket OS', fine: `ID-01 · ${person.name} · 2026` },
+  back: { line: 'Pocket', fine: `${person.name} · 2026` }, // under the monogram: reads «iDO POCKET»
 };
 
 /** What selecting a row does (none = information only). */

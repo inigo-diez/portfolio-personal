@@ -10,6 +10,7 @@
   --accent-ink: #3e64a0; /* the accent as small text on white = 5.9:1 */
   --line: rgba(0, 0, 0, 0.08);
   --graphite: #5e636a; /* key icons and ring axis symbols */
+  --chart-2: #b3b8bf; /* comparison series in charts (below 3:1: always with direct labels or the data table) */
 
   --font-sans: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace; /* reference numbers only */

@@ -196,17 +196,22 @@ const allInView = (page, sel) =>
   await page.waitForTimeout(1500);
   check(page.url().endsWith('/portfolio-personal/') && (await clean(page)), '…y después la pantalla se encoge hasta la home');
 
-  // Mi música from the docked device (development test data)
+  // Mi música from the docked device (test data: only the dev server has them, a build ignores ?musica=prueba)
   await page.goto(B + 'proyectos/?musica=prueba', { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  await page.locator('[data-device="dock"]').first().focus();
-  for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowDown');
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(2600);
-  check(
-    (await page.locator('[data-device="hero"] .os__title').textContent()) === 'Mi música' && (await page.locator('.acc.is-plugged').count()) === 1,
-    'Mi música desde el acoplado: vuelve a la home, se abre y se conectan los auriculares',
-  );
+  const musicRow = page.locator('[data-device="dock"]').first().getByRole('option', { name: /Mi música/ });
+  if ((await musicRow.getAttribute('aria-disabled')) === 'true') {
+    console.log('  info  Mi música desde el acoplado: sin datos de prueba en una build (pásalo con el servidor de desarrollo)');
+  } else {
+    await page.locator('[data-device="dock"]').first().focus();
+    for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(2600);
+    check(
+      (await page.locator('[data-device="hero"] .os__title').textContent()) === 'Mi música' && (await page.locator('.acc.is-plugged').count()) === 1,
+      'Mi música desde el acoplado: vuelve a la home, se abre y se conectan los auriculares',
+    );
+  }
   await page.goto(B + '?musica=no');
 
   console.log(`  errores de consola: ${errs.length ? errs.join(' | ') : 'ninguno'}`);

@@ -12,9 +12,9 @@ Cada etapa tiene su ficha en [stages/](stages/), con tareas, entregables y punto
 | [E3](stages/E3-base-y-prueba-transicion.md) | Proyecto base + prueba de la transición → [design/transition.md](design/transition.md) | ✅ aprobado 2026-10-21 (la transición puede revisarse más adelante, con el proyecto más completo) | — |
 | [E4](stages/E4-pocket-os.md) | Pocket OS funcional (+ móvil) | ✅ aprobado 2026-10-23 (con el cambio de las secciones como página) | — |
 | [E5](stages/E5-infinite-canvas.md) | Infinite Canvas + transición definitiva | ✅ aprobado 2026-10-23 (universo de proyectos) | — |
-| [E6](stages/E6-contenido-real.md) | Contenido real y casos de estudio | 🔄 empezado 2026-10-23 | Textos aprobados |
-| [E7](stages/E7-pulido.md) | Pulido y detalles distintivos | ⬜ | Visto bueno visual |
-| [E8](stages/E8-validacion-y-lanzamiento.md) | Validación y lanzamiento a la raíz | ⬜ | Web publicada |
+| [E6](stages/E6-contenido-real.md) | Contenido real y casos de estudio | Iñigo la da por completada (2026-10-23); ver nota en Decisiones abiertas | Textos aprobados |
+| [E7](stages/E7-pulido.md) | Pulido y detalles distintivos | ✅ visto bueno visual 2026-10-23; Iñigo pasa a E8 | Visto bueno visual |
+| [E8](stages/E8-validacion-y-lanzamiento.md) | Validación y lanzamiento a la raíz | 🔄 empezado 2026-10-23 | Web publicada |
 
 Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva (riesgo técnico) · E4 = Fase 2 · E5 = Fase 3 · E6 = Fase 4 · E7 = Fase 5 · E8 = Fase 6.
 
@@ -31,12 +31,24 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
 
 ## Decisiones abiertas
 
+- **E8 · en curso (empezada 2026-10-23).** Primera entrega hecha (SEO, validación automática, rendimiento, accesibilidad, seguridad) y guía de lanzamiento: [stages/E8-validacion-y-lanzamiento.md](stages/E8-validacion-y-lanzamiento.md#estado-2026-10-23). Decisiones de Iñigo pendientes:
+  - **¿Se publica con 12 casos en borrador?** La auditoría que pegó Iñigo (2026-10-23) lo ve como bloqueo (NO-GO). El aviso público dice literalmente «Borrador: el caso de estudio completo llega en E6» (`draftNotice`, `src/content/site.ts`): menciona una etapa interna del proyecto.
+  - **Métricas de morosidad:** auditar las fugas de información antes de publicarlas (ya decidido el 2026-10-23 para antes de E8; sin hacer).
+  - **Frase bajo el saludo de la home** (propuesta en las dos auditorías): redacción de Iñigo.
+  - **Contraste de los proyectos atenuados** al abrir uno (opacidad 0,12, contraste ≈ 1,2:1; siguen siendo pulsables): dejarlo, subirlo o quitarlo.
+  - **Portfolio antiguo en `/portfolio-v1/`:** sus rutas `/assets/…` se romperán tras el cambio (paso 2 de la guía).
+  - Commit local de E6–E8 antes del lanzamiento.
+
+- **E7 · cerrada (2026-10-23).** Cuatro entregas (logo, rendimiento, lienzo, sonidos; menú sin vuelta, nombre «iDO Pocket», tipografía; revisión página por página; materiales, tiempos y los tres detalles). Iñigo dio el visto bueno visual, decidió dejar 01–04 de la vista previa de Proyectos en Geist (excepción anotada en design-system.md) y pidió pasar a E8. No consta si hizo la pasada a mano de girar, abrir y volver que había pedido antes de cerrar. Estado: [stages/E7-pulido.md](stages/E7-pulido.md#estado-2026-10-23).
+
+- **E6 · Iñigo la da por completada (2026-10-23, al pedir E7).** Contexto: se empezó con un caso de estudio piloto (`morosidad-crediticia`): [stages/E6-contenido-real.md](stages/E6-contenido-real.md#estado-2026-10-23). En disco (comprobado el 2026-10-23), solo `morosidad-crediticia` tiene el caso de estudio completo; los otros 12 siguen con `sections: []` y «Secciones del caso de estudio (E6)» en su `todo`.
+
 - **E5 · cerrada (aprobada el 2026-10-23).** Contexto original: qué hay, cómo probarlo y mediciones: [stages/E5-infinite-canvas.md](stages/E5-infinite-canvas.md#estado-2026-10-23). Para probar: `npm run build`, `npx vite preview --port 4173` y abrir http://localhost:4173/portfolio-personal/ (o `npm run dev`). Puntos que conviene que veas:
   - **Cambio de rumbo (2026-10-23):** la primera versión con pilas no era lo que querías. Ahora es un universo con los 13 proyectos a la vista; al pinchar uno se despliega en «De qué va», sus datos destacados y el README completo con el enlace a GitHub. Diste el visto bueno a las capturas.
   - **Imágenes:** hueco con el número de referencia hasta el final (decisión tuya). Dentro del README, las figuras salen como «[Figura: …]».
-  - **Dos README en inglés** (`biomarcadores-salud-mental` y `optimizacion-ml-vs-rsm`): la web es solo en español, así que los marco con «Original en inglés». Decide si se quedan así, se traducen (con tu revisión) o se resumen.
+  - **Dos README en inglés** (`biomarcadores-salud-mental` y `optimizacion-ml-vs-rsm`): resuelto el 2026-10-23, se traducen (ver Decisiones tomadas).
   - **Dos ganchos del mapa de E1 corregidos** al comprobarlos en su README: `optimizacion-ml-vs-rsm` compara RSM con **cuatro** modelos de ML (no cinco) y `precio-vehiculos` entrena regresión lineal, árboles, Random Forest, XGBoost y una red neuronal (no «cuatro familias»). Corregido también en [audit/project-map.md](audit/project-map.md).
-  - **Dos dudas que el README parece responder,** pendientes de que las confirmes (no se publican hasta entonces): ver Placeholders.
+  - **Dos dudas que el README parece responder:** resueltas el 2026-10-23 (ver Decisiones tomadas).
   - **Rendimiento:** la transición al lienzo va a 130–149 fps (p95 9–12 ms), más pesada que antes (≈ 160 fps, p95 6 ms), porque el lienzo tiene ahora todas las portadas y sus tarjetas. Sigue por encima de 60 fps; queda para E7, como el primer fotograma en frío (79–109 ms).
   - Al volver a la home desde el lienzo con un proyecto abierto, primero se cierra y la cámara vuelve a la composición inicial (0,42 s) y luego se encoge la pantalla (brief §7).
   - Esc en el lienzo ya no vuelve a la home: cierra el proyecto abierto (para volver: ATRÁS o INICIO del dispositivo, Inicio del HUD o el atrás del navegador).
@@ -89,9 +101,28 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
   - Idea opcional (no hecha): cambio de color plata ↔ negro desde un menú "Ajustes". Ahora sería una 9.ª entrada.
   - Capturas de los prototipos: `scripts/dev/shot.ps1` (salen en `_reference/shots/`; para la propuesta, `-Dir prototypes/musica`). Pruebas del modelo de entrada: `prototypes/E2/_selftest.html` (30 comprobaciones).
 - **Para E6 (contenido):** Trayectoria (= "Experiencia" de la web antigua: Grado + TFG) y Formación (Máster, Grado y 7 cursos) repiten el Grado, igual que en la web antigua. Decidir si Trayectoria se queda solo con el TFG o se reorienta cuando haya experiencia profesional.
-- Foto personal, formulario de contacto (Formspree), enlazar PDFs de certificados → ver audit/missing.md (no bloquean)
+- Formulario de contacto (Formspree), enlazar PDFs de certificados → ver audit/missing.md (no bloquean). La foto ya está en Sobre mí (2026-10-23).
 
 ## Decisiones tomadas
+
+- 2026-10-23 · **E7, decisiones de Iñigo al empezar:**
+  - **Logo:** su nuevo monograma «iDO» (`logos/Logotipo minimalista de Iñigo Díez Osúa.png`) sustituye a «○/» en favicon, imagen OG y trasera del dispositivo. Iñigo seguirá cambiando el logo (también la trasera); se adelanta con el actual.
+  - **Detalles distintivos:** no se añaden; se afinan los tres que hay (transición, grabado de la trasera, números de referencia).
+  - **Sonidos:** sí, desactivados por defecto y con un interruptor visible.
+  - **Nombre del dispositivo: «iDO Pocket»**; su pantalla muestra solo «iDO». Sin «ID-01» en la trasera. Logo con sus colores originales.
+  - **Menú del dispositivo sin vuelta:** se para en la primera y la última entrada.
+  - **Tipografía:** se aplica la revisión que pegó Iñigo (jerarquía en las portadas del lienzo, saludo de la home más grande, ritmo entre bloques y títulos largos equilibrados); se mantiene Geist.
+  - **Lienzo:** se mantiene el universo escalonado (descartada la rejilla compacta); solo letra pequeña más grande y la colección 01 despegada de la barra superior.
+
+- 2026-10-23 · **Respuestas de Iñigo a los placeholders (E6)**, aplicadas:
+  - `priorizacion-metabolitos`: sin patología concreta (no se menciona ninguna).
+  - `optimizacion-ml-vs-rsm`: x₁ = tiempo de extracción, confirmado; la tarjeta ya lo nombra.
+  - `simulacion-wti-montecarlo`: los 4 agentes con los nombres de su README (productor OPEC+, especulador técnico, creador de mercado, fondo geopolítico).
+  - Stack de `priorizacion-metabolitos` y `simulacion-wti-montecarlo`: Iñigo no lo sabe; se muestra solo lo que lista el README.
+  - Sin años del Grado ni del TFG, sin alcance del TFG, sin año de los proyectos y sin fecha de ningún curso. Se quitan las fechas de los cursos y el «Pendiente» de la lista; el máster mantiene «sept. 2026 – jul. 2027».
+  - Foto: recorte cuadrado de `IMG_3145.jpg` (la misma que la del CV), hecho desde la original de 3024 × 4032 para que salga nítida, sin metadatos; en Sobre mí (`public/img/`, AVIF y WebP de 640 px).
+  - README en inglés (`biomarcadores-salud-mental`, `optimizacion-ml-vs-rsm`): la tarjeta del lienzo muestra una **traducción completa al castellano** (nota «Traducido del inglés»); el enlace a GitHub lleva al original en inglés. Traducciones en `src/content/readmes/es/`, que `scripts/readmes.mjs` usa en lugar de la copia. Cifras comprobadas con un script contra el original (todas coinciden); fórmulas, nombres de variables, código y referencias, sin traducir. **Pendiente de que Iñigo revise la traducción.**
+  - (Ya decidido en la misma fecha) `morosidad-crediticia` no usa SMOTE: el notebook no lo usa, así que no se menciona.
 
 - 2026-10-23 · **E5 aprobada** (Iñigo, al pedir E6) y commit local. Para E6 decide: los gráficos se rehacen con los datos de sus carpetas locales (`Desktop/2020-2026`), indicando en cada uno la carpeta y el archivo para que confirme que es la versión publicada; las métricas de morosidad, portátiles y coches se publican como dice su README y **se auditan las fugas de información antes de E8** (su roadmap lo pide antes de difundirlas).
 
@@ -129,12 +160,4 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
 ## Placeholders de contenido pendientes
 
 Cifras retiradas o sin confirmar (no se publican hasta que Iñigo las confirme):
-- `priorizacion-metabolitos`: ¿orientado a alguna patología concreta (la web antigua decía esquizofrenia)?
-- `optimizacion-ml-vs-rsm`: ¿x₁ = tiempo de extracción? El README (en inglés) lo define como "Headspace extraction time (SPME fiber)"; falta que lo confirmes.
-- `simulacion-wti-montecarlo`: ¿4 tipos de agentes? El README describe cuatro (Productor OPEP+, Especulador técnico, Creador de mercado y Fondo geopolítico), con nombres distintos a los de la web antigua (tendencial, contrarian, hedger, especulador); falta que confirmes cuáles usar.
-- Stack de `priorizacion-metabolitos` y de `simulacion-wti-montecarlo`: sus README no lo listan (las tarjetas muestran solo lo verificado).
-- `morosidad-crediticia`: ¿se usó SMOTE?
-- Años del Grado en Química y del TFG; alcance del TFG (¿toda la serie de metabolómica?)
-- Año de cada proyecto (campo `year` en `src/content/projects/`, ahora `null` en los 13)
-- Fecha del curso Machine Learning Specialization (sin fecha en la web antigua)
 - **Mi música** (no se publica hasta tenerlo): las canciones que elija Iñigo (las añade al final de la lista), cada una con enlace de Spotify a la pista, título, artista y una frase personal (≤ 140 caracteres); frase de entrada opcional.

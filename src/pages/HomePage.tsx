@@ -12,6 +12,7 @@ import { isAvailable, labelOf, openSections, sections, topNav, ui, type SectionI
 import { Device, type Command, type Via } from '../device/Device';
 import { Earbuds } from '../device/Earbuds';
 import { Icon } from '../device/icons';
+import { useSound } from '../device/sound';
 import { NowPlayingScreen, SongsScreen, type PlayerHandle } from '../os/Music';
 import { ListScreen, MenuScreen, useListNav, type Dir } from '../os/Screen';
 import './home.css';
@@ -45,6 +46,7 @@ export function HomePage({ entry }: { entry?: SectionId }) {
   const songs = useListNav(tracks.length, 0);
   const track = songs.sel;
   const [flipped, setFlipped] = useState(false);
+  const [sound, setSound] = useSound();
   const player = useRef<PlayerHandle | null>(null);
   const mobile = useMedia(MOBILE);
   const plugged = view === 'mi-musica' || view === 'sonando';
@@ -84,44 +86,59 @@ export function HomePage({ entry }: { entry?: SectionId }) {
 
   const open = (i: number) => {
     const s = sections[i];
-    if (!isAvailable(s.id)) return;
+    if (!isAvailable(s.id)) return false;
     if (inDevice(s.id)) go(s.id, 'fwd');
     else navigate(s.path);
+    return true;
   };
 
-  const onCommand = (c: Command, via: Via) => {
-    if (flipped) return setFlipped(false); // any control puts it face up again
+  // Returns false when nothing happened (the device then stays silent).
+  const onCommand = (c: Command, via: Via): boolean => {
+    if (flipped) {
+      setFlipped(false); // any control puts it face up again
+      return true;
+    }
     if (c === 'home') {
+      if (view === 'menu' && menu.sel === DEFAULT_ENTRY) return false;
       if (view !== 'menu') go('menu', 'back');
       menu.setSel(DEFAULT_ENTRY);
-      return;
+      return true;
     }
     const step = c === 'next' ? 1 : c === 'prev' ? -1 : 0;
     switch (view) {
       case 'menu':
-        if (step) menu.move(step, true);
-        else if (c === 'select') open(menu.sel);
-        return;
+        if (step) return menu.move(step);
+        return c === 'select' && open(menu.sel);
       case 'mi-musica':
-        if (step) songs.move(step);
-        else if (c === 'select') go('sonando', 'fwd');
-        else if (c === 'back') go('menu', 'back');
-        return;
+        if (step) return songs.move(step);
+        if (c === 'select') go('sonando', 'fwd');
+        else go('menu', 'back');
+        return true;
       case 'sonando': {
         // ⏮ ⏭ (and ← →) change track; the centre plays or pauses; ATRÁS / Esc return to the list.
-        if (c === 'back' && via === 'other') return go('mi-musica', 'back');
-        if (c === 'select' && via === 'other') return player.current?.toggle();
-        songs.move(step || (c === 'select' ? 1 : -1));
-        return;
+        if (c === 'back' && via === 'other') {
+          go('mi-musica', 'back');
+          return true;
+        }
+        if (c === 'select' && via === 'other') {
+          player.current?.toggle();
+          return true;
+        }
+        return songs.move(step || (c === 'select' ? 1 : -1));
       }
       case 'cv': {
-        if (step) rows.move(step);
-        else if (c === 'select') {
+        if (step) return rows.move(step);
+        if (c === 'select') {
           const a = cvRows[rows.sel].action;
-          if (a) runAction(a);
-        } else if (c === 'back') go('menu', 'back');
+          if (!a) return false;
+          runAction(a);
+          return true;
+        }
+        go('menu', 'back');
+        return true;
       }
     }
+    return false;
   };
 
   // «Girar» from Mi música: the earbuds unplug first.
@@ -223,6 +240,10 @@ export function HomePage({ entry }: { entry?: SectionId }) {
           <button className="ghost" aria-pressed={flipped} onClick={flip}>
             <Icon name="flip" />
             <span>{ui.device.flip}</span>
+          </button>
+          <button className="ghost" aria-pressed={sound} onClick={() => setSound(!sound)}>
+            <Icon name={sound ? 'sound' : 'mute'} />
+            <span>{ui.device.sound}</span>
           </button>
         </div>
 

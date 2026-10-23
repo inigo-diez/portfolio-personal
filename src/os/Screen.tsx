@@ -298,10 +298,20 @@ export function Frame({
   );
 }
 
-/** Selection state for a list driven by the five commands. */
+/** Selection state for a list driven by the five commands. It stops at the first and last rows (no wrap-around). */
 export function useListNav(count: number, initial: number) {
-  const [sel, setSel] = useState(initial);
-  const move = (d: 1 | -1, wrap = false) =>
-    setSel((s) => (wrap ? (s + d + count) % count : Math.max(0, Math.min(count - 1, s + d))));
+  const [sel, setSelState] = useState(initial);
+  const cur = useRef(initial); // current value even between renders (several wheel steps in one frame)
+  const setSel = (i: number) => {
+    cur.current = i;
+    setSelState(i);
+  };
+  /** Moves one row; false if it was already at that end (nothing happened: no click sound). */
+  const move = (d: 1 | -1) => {
+    const n = Math.max(0, Math.min(count - 1, cur.current + d));
+    if (n === cur.current) return false;
+    setSel(n);
+    return true;
+  };
   return { sel, setSel, move };
 }

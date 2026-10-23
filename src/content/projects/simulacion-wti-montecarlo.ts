@@ -21,7 +21,7 @@ export const simulacionWtiMontecarlo: Project = {
   facts: [
     '2.800 observaciones diarias, de enero de 2015 a marzo de 2026',
     'Monte Carlo RSJD: 2.000 trayectorias a 252 días en 3 escenarios',
-    'Modelo basado en agentes con impacto de precio de Kyle (1985)',
+    'Modelo basado en agentes con impacto de precio de Kyle (1985) y cuatro tipos de agente: productor OPEC+, especulador técnico, creador de mercado y fondo geopolítico',
     'Evaluación financiera de cinco estrategias de inversión',
   ],
   cover: null,
@@ -30,10 +30,7 @@ export const simulacionWtiMontecarlo: Project = {
   sections: [],
   sources: [{ label: 'README del repositorio (2.ª parte de la serie)', url: REPO }],
   todo: [
-    'Año del proyecto',
     'Secciones del caso de estudio (E6)',
-    'Stack (el README no lo lista)',
-    '¿Nombrar los 4 tipos de agentes? (el README los describe; la web antigua usaba otros nombres)',
     'Fan chart de 3 escenarios (E6)',
   ],
 };

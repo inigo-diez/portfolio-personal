@@ -27,11 +27,10 @@ export const biomarcadoresSaludMental: Project = {
   cover: null,
   canvas: { x: 0, y: 70, w: 260 },
   links: { repo: REPO },
-  readmeLang: 'en',
+  readmeTranslated: true,
   sections: [],
   sources: [{ label: 'README del repositorio (1.ª parte de la serie)', url: REPO }],
   todo: [
-    'Año del proyecto',
     'Secciones del caso de estudio (E6)',
     'Gráfico de candidatos por base de datos o por condición (E6)',
   ],

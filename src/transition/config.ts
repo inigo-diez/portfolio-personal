@@ -2,7 +2,7 @@
 //   ?tecnica=vt     → View Transitions API variant (E3 comparison only)
 //   ?tecnica=flip   → default technique (FLIP + WAAPI)
 //   ?medir          → show the frame meter panel after each transition
-//   ?musica=prueba  → Mi música with test data (development only; ?musica=no turns it off)
+//   ?musica=prueba  → Mi música with test data (dev server only, never in a build; ?musica=no turns it off)
 import { setMusicTest } from '../content/music';
 import { setShowPanel, setTechnique } from './metrics';
 
@@ -26,7 +26,7 @@ export function readTestSwitches() {
   document.documentElement.dataset.tecnica = technique;
   setTechnique(technique === 'vt' ? 'view-transitions' : 'flip-waapi');
   setShowPanel(medir);
-  setMusicTest(store('e4-musica', q.get('musica')) === 'prueba');
+  if (import.meta.env.DEV) setMusicTest(store('e4-musica', q.get('musica')) === 'prueba');
 }
 
 export const getTechnique = () => technique;

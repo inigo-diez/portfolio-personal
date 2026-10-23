@@ -30,5 +30,5 @@ export const contagioEeuuIran: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio (3.ª parte de la serie)', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Modelo frente a Polymarket (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Modelo frente a Polymarket (E6)'],
 };

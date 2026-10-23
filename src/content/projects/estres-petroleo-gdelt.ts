@@ -23,5 +23,5 @@ export const estresPetroleoGdelt: Project = {
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio oil-market-stress-gdelt', url: REPO }],
-  todo: ['Año del proyecto', 'Secciones del caso de estudio (E6)', 'Gráfico del WTI con los días de estrés (E6)'],
+  todo: ['Secciones del caso de estudio (E6)', 'Gráfico del WTI con los días de estrés (E6)'],
 };

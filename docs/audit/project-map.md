@@ -33,7 +33,7 @@ Columna "Cifra destacada": el número grande de la tarjeta (como en la web antig
 
 | Proyecto | Slug | Cifra destacada | Gancho | Corrección |
 |---|---|---|---|---|
-| Predicción de Morosidad Crediticia — Sistema de Alerta Temprana | `morosidad-crediticia` | **F1 0,90** · en 8.399 clientes | Un sistema de alerta temprana de impago, con análisis de umbrales y del coste de cada tipo de error | Se quita "SMOTE" `TODO(content): confirmar`. El caso de estudio explica el desbalance de clases que ya señala el README (contarlo es una señal de rigor) |
+| Predicción de Morosidad Crediticia — Sistema de Alerta Temprana | `morosidad-crediticia` | **F1 0,90** · en 8.399 clientes | Un sistema de alerta temprana de impago, con análisis de umbrales y del coste de cada tipo de error | Se quita "SMOTE": el notebook no lo usa (comprobado el 2026-10-23). El caso de estudio explica el desbalance de clases que ya señala el README (contarlo es una señal de rigor) |
 | Predicción de Precio de Vehículos de Segunda Mano | `precio-vehiculos` | **R² 0,77** · sobre 19.237 vehículos | ~~Cuatro familias de modelos~~ Regresión lineal, árboles, Random Forest, XGBoost y una red neuronal, y una segmentación del mercado en 4 clusters de precio (corregido el 2026-10-23: el README entrena cinco modelos supervisados) | Sin cambios |
 | Predicción de Precio de Portátiles Reacondicionados (Egipto) | `precio-portatiles` | **R² 0,82** · MAE 152 € | Valoración automática para e-commerce de segunda mano, mejorando en 23 € el error de la solución de referencia del curso | "web scraping propio" → "dataset público de Kaggle obtenido por scraping". Se aclara que la referencia es la del curso |
 

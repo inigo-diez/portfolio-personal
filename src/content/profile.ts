@@ -13,7 +13,13 @@ export const person = {
   linkedin: 'https://www.linkedin.com/in/i%C3%B1igo-d%C3%ADez-os%C3%BAa-233642401/',
   cv: 'cv.pdf',
   cvDownloadName: 'Inigo-Diez-Osua-CV.pdf',
-  photo: null as null | string, // TODO(content): personal photo (audit/missing.md)
+  // Square crop of IMG_3145.jpg (the same photo as the CV), 640 px, metadata stripped. Paths relative to the base.
+  photo: {
+    avif: 'img/inigo-diez-osua.avif',
+    webp: 'img/inigo-diez-osua.webp',
+    size: 640,
+    alt: 'Retrato de Iñigo Díez Osúa',
+  },
 };
 
 export const about = {
@@ -30,8 +36,8 @@ export const about = {
 export interface TimelineItem {
   title: string;
   place: string;
-  /** null = not confirmed → TODO(content). */
-  dates: string | null;
+  /** Only where Iñigo wants a date shown (2026-10-23: none for the degree, the TFG or the courses). */
+  dates?: string;
   detail?: string;
 }
 
@@ -40,10 +46,9 @@ export const trayectoria: TimelineItem[] = [
   {
     title: 'Trabajo Fin de Grado · Datos metabolómicos',
     place: 'EHU',
-    dates: null, // TODO(content): year of the TFG
     detail: 'Análisis estadístico y modelización multivariante: PCA, PLS-DA, R²/Q², permutaciones, DoE/RSM.',
   },
-  { title: 'Grado en Química', place: 'EHU', dates: null }, // TODO(content): years of the degree
+  { title: 'Grado en Química', place: 'EHU' },
 ];
 
 export const formacion: TimelineItem[] = [
@@ -52,17 +57,17 @@ export const formacion: TimelineItem[] = [
     place: 'Afi Global Education',
     dates: 'sept. 2026 – jul. 2027',
   },
-  { title: 'Grado en Química', place: 'EHU', dates: null },
+  { title: 'Grado en Química', place: 'EHU' },
 ];
 
 export const cursos: TimelineItem[] = [
-  { title: 'Python Data Fundamentals', place: 'DataCamp', dates: 'ene. 2026' },
-  { title: 'Statistics Fundamentals in Python', place: 'DataCamp', dates: 'ene. 2026' },
-  { title: 'Applied Statistics in Python', place: 'DataCamp', dates: 'ene. 2026' },
-  { title: 'Machine Learning Specialization', place: 'DeepLearning.AI · Stanford (Coursera)', dates: null },
-  { title: 'SQL Fundamentals', place: 'DataCamp', dates: 'mar. 2026' },
-  { title: 'De 0 a Data Scientist', place: 'Jyts', dates: 'abr. 2026' },
-  { title: 'AI Engineering with LangChain', place: 'DataCamp', dates: 'oct. 2026' },
+  { title: 'Python Data Fundamentals', place: 'DataCamp' },
+  { title: 'Statistics Fundamentals in Python', place: 'DataCamp' },
+  { title: 'Applied Statistics in Python', place: 'DataCamp' },
+  { title: 'Machine Learning Specialization', place: 'DeepLearning.AI · Stanford (Coursera)' },
+  { title: 'SQL Fundamentals', place: 'DataCamp' },
+  { title: 'De 0 a Data Scientist', place: 'Jyts' },
+  { title: 'AI Engineering with LangChain', place: 'DataCamp' },
 ];
 
 // Declared skills (CV = old portfolio).

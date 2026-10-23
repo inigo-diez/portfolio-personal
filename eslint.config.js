@@ -18,8 +18,8 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
-    // dev checks run part of their code inside the page (page.evaluate)
-    files: ['scripts/dev/**/*.mjs'],
+    // dev checks and the brand images run part of their code inside the page (page.evaluate)
+    files: ['scripts/dev/**/*.mjs', 'scripts/brand.mjs'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 );

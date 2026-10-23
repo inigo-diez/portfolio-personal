@@ -14,12 +14,16 @@ No hay fechas registradas para este proyecto.
 
 ## Pendiente
 
-- [ ] Aprobar E5 o pedir cambios; los puntos a revisar están en PLAN.md (Decisiones abiertas → E5). *Anotado el 2026-10-23.*
-- [ ] Confirmar dos datos que el README parece responder (x₁ del proyecto ML vs RSM; los 4 tipos de agentes de la simulación del WTI): PLAN.md → Placeholders. *Anotado el 2026-10-23.*
-- [ ] Decidir qué hacer con los dos README en inglés (base de biomarcadores; RSM frente a ML): dejarlos con la nota, traducirlos o resumirlos. *Anotado el 2026-10-23.*
+- [ ] Pasada a mano en el navegador de girar, abrir un proyecto y volver a la home; si se siente fluido, E7 se cierra (PLAN.md → Decisiones abiertas → E7). *Anotado el 2026-10-23.*
+- [ ] Revisar la traducción al castellano de los dos README en inglés (PLAN.md → Decisiones tomadas, respuestas a los placeholders). *Anotado el 2026-10-23.*
 - [ ] Elegir las canciones de Mi música: Iñigo lo deja para el final, cuando haya una versión casi completa del proyecto y pueda ver el conjunto antes de decidir qué cambiar. *Anotado el 2026-10-23.*
 
 ## Registro de sesiones
+
+### 2026-10-23 (sesiones posteriores)
+- **Hecho (reconstruido de PLAN.md, la ficha de E7 y `git log`; esas sesiones no se apuntaron aquí):** E5 aprobada y commit local `9e2a88c`. Respondidos los placeholders de E6 y traducidos los dos README en inglés. Iñigo da E6 por completada (solo `morosidad-crediticia` tiene el caso de estudio completo). E7, entregas 1–3: logo «iDO», rendimiento, lienzo, sonidos, menú sin vuelta, nombre «iDO Pocket», tipografía y revisión página por página.
+- **Hecho (esta sesión):** E7, 4.ª entrega según la guía de cierre que pegó Iñigo. Trasera más legible, giro de 750 ms, cámara sincronizada con el despliegue de las tarjetas, cámara sin deslizamiento con movimiento reducido, transición revisada fotograma a fotograma y regla de los números de referencia en design-system.md (con la excepción de 01–04 que decidió Iñigo). Iñigo dio el visto bueno visual. Pasan typecheck, lint, build, smoke, `device-check` y `canvas-check`. Sin commit.
+- **Nuevos pendientes:** la pasada a mano para cerrar E7.
 
 ### 2026-10-23
 - **Hecho:** retomado el proyecto: E4 figura como hecha el 2026-10-21 y pendiente de aprobación, con todo su código sin commit (según `git status` de esta sesión). Iñigo decidió que el estado entre sesiones y el registro de fallos se dividan por proyecto (carpeta), no en el vault de Obsidian. Regla única para todos los proyectos: `PENDIENTES.md` y `REGISTRO-FALLOS.md` en la raíz de cada carpeta de proyecto. Creados los dos de este proyecto, actualizado su `CLAUDE.md`, reescrito el hook de inicio para que cargue el `PENDIENTES.md` de la carpeta, y quitado del `CLAUDE.md` global el import del registro del vault.

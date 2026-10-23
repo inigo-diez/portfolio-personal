@@ -28,7 +28,7 @@
 .pocket__card {
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
+  transition: transform 0.75s cubic-bezier(0.5, 0, 0.2, 1);
 }
 .pocket__card.is-flipped {
   transform: rotateY(180deg);
@@ -351,10 +351,10 @@
   display: grid;
   place-items: center;
   text-align: center;
-  color: rgba(40, 44, 50, 0.5);
+  color: rgba(40, 44, 50, 0.58);
   background:
     var(--grain),
-    linear-gradient(112deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.75) 42%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(112deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.55) 42%, rgba(255, 255, 255, 0) 60%),
     linear-gradient(180deg, #e3e5e8 0%, #cdd1d6 100%);
   box-shadow:
     inset 0 0 0 0.28cqw rgba(255, 255, 255, 0.78),
@@ -369,21 +369,21 @@
 }
 .back__mark {
   display: block;
-  height: 11cqw;
+  height: 10cqw;
   width: auto;
   margin: 0 auto 4cqw;
   filter: drop-shadow(0 0.12cqw 0 rgba(255, 255, 255, 0.7));
 }
 .back__line {
-  font-size: 2.4cqw;
+  font-size: 2.5cqw;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   font-weight: 500;
 }
 .back__fine {
-  margin-top: 1.4cqw;
-  font-size: 1.9cqw;
-  letter-spacing: 0.06em;
+  margin-top: 1.6cqw;
+  font-size: 2.3cqw;
+  letter-spacing: 0.04em;
 }
 .ring__center:focus-visible,
 .key:focus-visible {

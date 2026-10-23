@@ -2,6 +2,8 @@ import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { os } from '../content/device';
 import { ui } from '../content/site';
 import { AXIS_PATHS, Icon } from './icons';
+import { Monogram } from './Monogram';
+import { commandSound } from './sound';
 import './device.css';
 
 /** Every physical input becomes one of these five commands (docs/design/device-spec.md). */
@@ -27,7 +29,8 @@ const KEYS: Record<string, Command> = {
 interface DeviceProps {
   /** Screen content (the OS). */
   children: ReactNode;
-  onCommand: (c: Command, via: Via) => void;
+  /** Returns false when the command changed nothing (end of a list, ATRÁS on the top menu): no click sound. */
+  onCommand: (c: Command, via: Via) => boolean | void;
   /** Listen to the keyboard on the whole document (home), not only when the device has focus. */
   globalKeys?: boolean;
   /** Ignore all input (e.g. while a transition owns the device). */
@@ -77,7 +80,8 @@ export function Device({
       setTimeout(() => b.classList.remove('is-pressed'), 110);
     };
     const run = (c: Command, via: Via = 'other') => {
-      if (!inertRef.current) cmdRef.current(c, via);
+      if (inertRef.current) return;
+      if (cmdRef.current(c, via) !== false) commandSound(c);
     };
 
     // Keyboard: arrows mirror the ring's four axes (← back, → open, like a column browser)
@@ -297,7 +301,8 @@ export function Device({
   }, [tilt]);
 
   function press(c: Command) {
-    if (!inertRef.current) cmdRef.current(c, 'other');
+    if (inertRef.current) return;
+    if (cmdRef.current(c, 'other') !== false) commandSound(c);
   }
 
   return (
@@ -348,10 +353,7 @@ export function Device({
           </div>
           <div className="pocket__back" aria-hidden="true">
             <div className="engr">
-              <svg className="back__mark" viewBox="0 0 40 20" fill="none" stroke="currentColor" strokeLinecap="round">
-                <circle cx="9" cy="10" r="6.6" strokeWidth="2.6" />
-                <path d="M23 18L33 2" strokeWidth="3.2" />
-              </svg>
+              <Monogram className="back__mark" />
               <div className="back__line">{os.back.line}</div>
               <div className="back__fine">{os.back.fine}</div>
             </div>

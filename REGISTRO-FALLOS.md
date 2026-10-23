@@ -17,6 +17,21 @@ La entrada más reciente va arriba. Formato de cada entrada:
 
 Las tres primeras se apuntaron el 2026-10-21 y el 2026-10-23 en el registro del vault de Obsidian y se trasladaron aquí el 2026-10-23, sin cambiar su texto, al separar los registros por proyecto.
 
+## 2026-10-23 - Usé git stash para un «antes» y devolví un archivo con trabajo sin commit al último commit
+- Qué pasó: en E7, para comparar la maquetación antes y después de un cambio de CSS, ejecuté `git stash -- src/pages/page.css`. Eso no quitó solo mi cambio: devolvió el archivo entero a HEAD (sin el trabajo de E6 ni el de la sesión), así que la comparación medía otra cosa. Lo restauré con `git stash pop` y comprobé que el archivo estaba completo y el stash vacío; no se perdió nada, pero toqué trabajo de Iñigo sin commit y la medición no valía.
+- Por qué: usé una orden de git para un fin de medición sin pensar que el archivo ya tenía cambios sin commit anteriores a la sesión.
+- Regla para no repetirlo: para comparar antes y después, desactivar el cambio dentro de la página (estilo inyectado) o trabajar sobre una copia en el directorio temporal; nunca `git stash`, `checkout` ni `restore` sobre archivos con cambios sin commit, salvo que Iñigo lo pida.
+
+## 2026-10-23 - Cambié el azul del logo de Iñigo sin preguntarle
+- Qué pasó: al redibujar su monograma «iDO» en E7 sustituí su azul (`#4A78A6`, medido en su PNG) por el acento del sitio (`#4F75AD`) «por coherencia» y lo apliqué al favicon, la imagen OG y la trasera. Iñigo pidió mantener los colores originales.
+- Por qué: traté su logo como un elemento más del sistema de diseño que podía ajustar, cuando era material suyo que solo había que reproducir.
+- Regla para no repetirlo: el material que aporta Iñigo (logo, textos, imágenes) se reproduce tal cual. Si creo que un cambio mejora la coherencia, se lo propongo con una comparación y decide él antes de aplicarlo.
+
+## 2026-10-23 - Escribí el caso de estudio piloto como una auditoría, no para recruiters
+- Qué pasó: en el piloto de E6 (morosidad) metí en la página pública debilidades que encontré yo al revisar el notebook (un F1 de referencia calculado por mí que rebajaba el titular, el modelo ajustado que «marca a casi todos») y un resumen centrado en el coste de las falsas alarmas. Iñigo pidió corregirlo: «lo leerán recruiters, me tienes que vender lo mejor posible».
+- Por qué: confundí rigor con autocrítica pública. El CLAUDE.md fija la audiencia (recruiters) y la skill `trabajo-profesional` pide conclusión primero; aun así, redacté como revisor del proyecto.
+- Regla para no repetirlo: en los textos públicos, primero lo que Iñigo consiguió, con cifras verificadas y sin inflar nada. Limitaciones, solo las que él documentó. Lo que encuentre yo auditando va a `todo` del proyecto (lista interna de antes de E8) y se le comenta a él, nunca directamente a la página.
+
 ## 2026-10-23 - Convertí «recopila información sobre mí» en un informe de diseño
 - Qué pasó: Iñigo pidió «recopila información sobre mí para rehacer mi logo personal». Le entregué la marca actual, las alternativas de E2, las restricciones de diseño, las consecuencias de cambiarla y dos preguntas, y apenas sus datos personales. Me corrigió: «solo quiero que me pongas por aquí la información sobre mí que hay en esta carpeta, solo eso».
 - Por qué: tomé el propósito («para rehacer mi logo») como el encargo y amplié el alcance a todo lo que afecta al logo, en vez de ceñirme al objeto pedido (información sobre él).

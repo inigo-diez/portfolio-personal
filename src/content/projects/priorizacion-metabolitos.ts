@@ -30,10 +30,7 @@ export const priorizacionMetabolitos: Project = {
   sections: [],
   sources: [{ label: 'README del repositorio (3.ª parte de la serie)', url: REPO }],
   todo: [
-    'Año del proyecto',
     'Secciones del caso de estudio (E6)',
-    'Stack completo (el README no lo detalla)',
-    '¿Orientado a alguna patología concreta? (la web antigua decía esquizofrenia)',
     'Ranking con el desglose de los 4 criterios (E6)',
   ],
 };

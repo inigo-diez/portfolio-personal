@@ -18,7 +18,8 @@ docs/
 prototypes/               standalone HTML prototypes, no build (E2/, musica/)
 materials/                raw inputs from Iñigo (git-ignored except README)
 _reference/               old portfolio clone, reference images, screenshots, E3 videos (git-ignored)
-public/                   static files copied as-is (cv.pdf, favicon.svg)
+public/                   static files copied as-is (cv.pdf, favicon.svg, og.png, apple-touch-icon.png, img/: optimized images, AVIF + WebP)
+logos/                    Iñigo's logo files (source of the «iDO» monogram)
 src/
   main.tsx                client entry
   entry-server.tsx        SSR entry, used only by the prerender
@@ -33,12 +34,13 @@ src/
 scripts/
   prerender.mjs           one index.html per route + 404.html, after the client and SSR builds
   readmes.mjs             README copies (_reference/readmes) → src/content/readmes/<slug>.html
-  dev/                    shot.ps1 (prototype screenshots), smoke.mjs (all routes), device-check.mjs (drives the device), canvas-check.mjs (drives the canvas), measure-transition.mjs
+  brand.mjs               public/og.png + apple-touch-icon.png from the monogram and the real device (needs the preview server)
+  dev/                    shot.ps1 (prototype screenshots), smoke.mjs (all routes), device-check.mjs (drives the device), canvas-check.mjs (drives the canvas), site-check.mjs (E8: head, links, h1 of every built page), measure-transition.mjs
 .github/workflows/        deploy.yml: GitHub Pages, manual trigger
 dist/, dist-ssr/          build output (git-ignored)
 ```
 
-Not created yet: `assets/` (optimized images, E6). Mi música (E4) exists but stays unpublished while `tracks` in `src/content/music.ts` is empty: disabled in the device menu, no route, not prerendered. `?musica=prueba` shows it with development test data (never published).
+Optimized images go to `public/img/` (the first one, the portrait in Sobre mí, since 2026-10-23). Mi música (E4) exists but stays unpublished while `tracks` in `src/content/music.ts` is empty: disabled in the device menu, no route, not prerendered. `?musica=prueba` shows it with development test data, on the dev server only (a build ignores it since E8).
 
 ## Ground rules
 
@@ -72,7 +74,7 @@ Not created yet: `assets/` (optimized images, E6). Mi música (E4) exists but st
 - **Name: always the full name "Iñigo Díez Osúa"** (titles, greeting, engraving, metadata). Never shorten it to "Iñigo Díez".
 - **Sections (device menu, in this order):** Sobre mí · Trayectoria · Proyectos · Habilidades · Formación · Contacto · CV (the 7 of the old portfolio) · **Mi música** (personal, last). Trayectoria = old "Experiencia" (degree + TFG); Formación = old "Formación" (máster, degree, courses). All 8 appear in the device menu and the mobile link list; the desktop top nav shows only a selection (brief shortcuts + Mi música), and inner pages carry the full list in their footer.
 - **Mi música** (agreed 2026-10-20; visual proposal v3 in [prototypes/musica/propuesta.html](prototypes/musica/propuesta.html), earbuds v3 approved 2026-10-21; built in E4): route `/mi-musica`; songs chosen by Iñigo, one personal sentence each (`TODO(content)` — not published without them); official Spotify player loaded only when a track is chosen, never autoplay, unloaded (music stops) when leaving the section; title + direct link kept if Spotify fails; the device drives the official player through Spotify's iFrame API (decided 2026-10-21: centre = play/pause, ⏮ ⏭ = previous/next song, real playback position on screen); the official player stays visible; no volume control (the API has none); if the API fails, device controls are disabled and the official player + link remain. Never use Spotify's Web API (it needs a client secret). Hardware: discreet headphone socket on Slate's top edge (always there); a pair of button earbuds on a thin cable appears only inside Mi música — never on home or canvas.
-- **Device: "Slate"** (E2 closed 2026-10-20), 100 × 124, 4:3 screen, ring with four axis symbols + − ⏮ ⏭ (labels for prev / next / back / open — they do not control volume) + centre button, BACK/HOME keys, menu opens on Proyectos, back engraving "○/" (no solid dot). Spec: [docs/design/device-spec.md](docs/design/device-spec.md).
+- **Device: "Slate"** (design name; public name **«iDO Pocket»** since 2026-10-23, its screen shows only «iDO») (E2 closed 2026-10-20), 100 × 124, 4:3 screen, ring with four axis symbols + − ⏮ ⏭ (labels for prev / next / back / open — they do not control volume) + centre button, BACK/HOME keys, menu opens on Proyectos, back engraving: Iñigo's «iDO» monogram (since 2026-10-23, replaced "○/"; also the favicon and OG image, `src/device/Monogram.tsx`). Optional device sounds, off by default, toggled from «Sonido» on the home (`src/device/sound.ts`). Spec: [docs/design/device-spec.md](docs/design/device-spec.md).
 - **Projects:** all 13 from the old portfolio, in its 4 original groups, all 4 featured as canvas piles. Source of truth: [docs/audit/project-map.md](docs/audit/project-map.md) (slugs, verified headline figures, corrections). "Experience" section is named **Trayectoria**.
 - **Canvas (E5, decided 2026-10-23 after Iñigo rejected folded piles):** a universe with all 13 projects in view, grouped in their 4 collections (labels). Each project is a cover card (image slot: images come at the end). Clicking it unfolds, around it, «De qué va» (summary + stack), one card per verified highlight and its full README (`src/content/readmes/`, generated by `scripts/readmes.mjs` from the 2026-10-19 copies) with the GitHub link and «Página del proyecto», which grows the cover into the case study (`src/transition/shared.ts`). Arrows pan; docked devices take the keyboard only when focused. On phones: a list by collection with the docked device. Positions live in the content data.
 - Project charts are re-rendered in the site palette (one per project, E6), not reused from matplotlib defaults.
@@ -123,8 +125,10 @@ Run npm from Bash (PowerShell blocks npm scripts until Iñigo changes the execut
 | `npm run lint` · `npm run typecheck` · `npm run format` | ESLint · `tsc -b` · Prettier |
 | `node scripts/dev/smoke.mjs <out>` | Every route in headless Edge, desktop + mobile: console errors + screenshots |
 | `node scripts/dev/device-check.mjs [url] [out]` | Drives the home device (keyboard, mouse, touch, Mi música with test data), desktop + mobile; defaults to the dev server |
-| `node scripts/dev/canvas-check.mjs [url] [out]` | Drives the canvas (open a project, README, keyboard, pinch, list view, cover → case study and back, home) and the phone projects list; defaults to the preview server |
+| `node scripts/dev/canvas-check.mjs [url] [out]` | Drives the canvas (open a project, README, keyboard, pinch, list view, cover → case study and back, home) and the phone projects list; defaults to the preview server (the Mi música step needs the dev server URL: a build ignores `?musica=prueba`) |
+| `node scripts/dev/site-check.mjs [url]` | Every built page loaded directly: HTTP, title, description, canonical, OG, robots, one visible h1, images with alt, console errors, internal links and assets, sitemap and robots.txt; lists external links without requesting them. Preview server |
 | `node scripts/readmes.mjs` | Regenerates the README cards from `_reference/readmes/` |
+| `node scripts/brand.mjs` | Regenerates `public/og.png` and `public/apple-touch-icon.png` (after changing the logo or the device; preview server running) |
 | `.\scripts\dev\shot.ps1 -Page home.html -Out x.png` | Screenshot of a prototype (`-Dir prototypes/musica` for Mi música) → `_reference/shots/` |
 
 **Hook** ([.claude/settings.json](.claude/settings.json) → [.claude/hooks/check-file.mjs](.claude/hooks/check-file.mjs)): after every Write/Edit of `src/**/*.{ts,tsx,css}`, Prettier rewrites the file and ESLint checks ts/tsx. ESLint errors block until fixed; warnings are only reported. Typecheck is not part of it: run `npm run typecheck` before closing a task. This is the only hook of the project; the vault's note-review hook (`revisar_nota.py`) does not run here, and the global `SessionStart` hook only loads the pending items (see Session start and close).

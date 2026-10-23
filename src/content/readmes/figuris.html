@@ -3,19 +3,19 @@
   <span class="readme__img">[Figura]</span>
 </p>
 
-<h1 align="center">Figuris</h1>
+<h5 class="readme__h1" align="center">Figuris</h5>
 <p align="center"><em>Extracción y explicación verificable de figuras en artículos científicos</em></p>
 <p align="center">Proyecto personal · octubre de 2026 · Apache-2.0</p>
 
 <hr>
-<h3>Resumen</h3>
+<h6 class="readme__h3">Resumen</h6>
 <p>Los modelos multimodales describen figuras científicas con soltura, pero no dicen de dónde sale lo que afirman y se equivocan con la misma seguridad con la que aciertan. <strong>Figuris</strong> es un sistema local que localiza cada figura de un PDF, la asocia con su pie y con los párrafos que la citan y lee el texto impreso en ella. Solo entonces pide a un modelo multimodal una explicación estructurada en la que cada afirmación declara su tipo y cita su fuente. Un validador sin IA comprueba esas citas antes de mostrarlas. Sobre SFI-48, un corpus propio de 48 artículos y 292 figuras, el conjunto de prueba reservado da un F1 de 0,874 en las cajas de figura. El modelo inventó 7 citas en 149 explicaciones; el validador detectó las siete y ninguna se mostró como fiable. El coste total en llamadas al modelo fue inferior a un dólar.</p>
 <p align="center">
   <span class="readme__img">[Figura: Espacio de trabajo de Figuris: miniaturas de página, página con la figura recuadrada y panel de detalles]</span>
 </p>
 
 <p><strong>Figura 1.</strong> Espacio de trabajo: páginas con sus figuras marcadas, la página con las regiones detectadas y los detalles de la figura seleccionada. Artículo: Zhang et al., <em>Mol Cancer</em> 20:101 (2021), CC BY 4.0.</p>
-<h2>1. Introducción</h2>
+<h6 class="readme__h2">1. Introducción</h6>
 <p>Pedir a un asistente de IA que «explique la figura 3» es la solución más inmediata, y a menudo funciona. Pero la respuesta mezcla lo que se ve en la imagen, lo que dicen los autores y lo que supone el modelo, y no se puede comprobar sin volver al PDF. Figuris parte de una idea sencilla: <strong>el modelo de lenguaje es una pieza del proceso, no el proceso entero</strong>. Todo lo que puede hacerse sin IA generativa se hace antes: localizar la figura, encontrar su pie, reunir los párrafos que la citan y leer sus números. Después, un validador comprueba que cada cita existe.</p>
 <p>Las aportaciones son cuatro:</p>
 <ol>
@@ -24,7 +24,7 @@
 <li>el corpus de evaluación SFI-48, con anotación humana y un conjunto de prueba congelado;</li>
 <li>la aplicación web Figuris.</li>
 </ol>
-<h2>2. Sistema</h2>
+<h6 class="readme__h2">2. Sistema</h6>
 <p>El sistema procesa cada documento en diez etapas (Figura 2). Todo se ejecuta en local salvo la explicación, que hace una llamada al modelo por figura.</p>
 <p align="center">
   <span class="readme__img">[Figura: Diagrama de las diez etapas del sistema en dos filas]</span>
@@ -56,7 +56,7 @@
 </p>
 
 <p><strong>Figura 5.</strong> Explicación de una figura en la aplicación. Cada cita del texto abre la página original con el párrafo resaltado.</p>
-<h2>3. Evaluación</h2>
+<h6 class="readme__h2">3. Evaluación</h6>
 <p><strong>SFI-48</strong> reúne 48 artículos de PubMed Central con licencia CC BY, de seis disciplinas, con PDF nativos y seis escaneados, y 292 figuras de referencia revisadas a mano. Se dividió de antemano en <code>dev</code> (12 artículos), <code>validation</code> (12) y <code>test</code> (24). <code>test</code> estuvo congelado y se evaluó una sola vez, al final.</p>
 <p align="center">
   <span class="readme__img">[Figura: Gráfico de puntos con cuatro métricas en desarrollo y en test frente a su umbral]</span>
@@ -109,11 +109,11 @@
 
 <p><strong>Figura 8.</strong> Control de citas en <code>test</code>. Ninguna cita inventada llegó al lector como fiable. Este control no detecta una afirmación falsa que cite un texto real. Para eso, en <code>validation</code>, un juez LLM verificado a mano encontró 3 afirmaciones sin respaldo de 207 (1,45 %).</p>
 <p><strong>Limitaciones.</strong> El corpus es pequeño y lo anotó una sola persona, que no es experta en las disciplinas; la corrección de las explicaciones se midió con un juez LLM y no con expertos. Los escaneados concentran los fallos, los paneles y el OCR no alcanzan sus umbrales, y no se ha probado con usuarios. Detalle en <a href="https://github.com/inigo-diez/Figuris/blob/HEAD/docs/reports/stage5-gates.md" target="_blank" rel="noopener">stage5-gates.md</a> y <a href="https://github.com/inigo-diez/Figuris/blob/HEAD/docs/reports/stage5-test.md" target="_blank" rel="noopener">stage5-test.md</a>.</p>
-<h2>4. ¿Por qué no preguntar directamente a una IA?</h2>
+<h6 class="readme__h2">4. ¿Por qué no preguntar directamente a una IA?</h6>
 <table>
 <thead>
 <tr>
-<th></th>
+<td></td>
 <th>Asistente con el PDF</th>
 <th>Figuris</th>
 </tr>
@@ -160,13 +160,13 @@
 </tr>
 </tbody></table>
 <p>Un asistente devuelve un texto convincente y deja al lector la tarea de comprobarlo. Figuris trata la respuesta del modelo como una hipótesis: prepara la evidencia sin IA, obliga al modelo a citarla y comprueba las citas sin IA. Cuando el modelo se equivoca, el sistema lo detecta y lo dice.</p>
-<h2>Referencias</h2>
+<h6 class="readme__h2">Referencias</h6>
 <ol>
 <li>Clark y Divvala. <em>PDFFigures 2.0</em>. JCDL, 2016. · 2. Siegel et al. <em>DeepFigures</em>. JCDL, 2018, <a href="https://arxiv.org/abs/1804.02445" target="_blank" rel="noopener">arXiv:1804.02445</a>. · 3. <a href="https://github.com/grobidOrg/grobid" target="_blank" rel="noopener">GROBID</a>. · 4. Docling, <a href="https://arxiv.org/abs/2501.17887" target="_blank" rel="noopener">arXiv:2501.17887</a>. · 5. Du et al. <em>PP-OCR</em>. 2020, <a href="https://arxiv.org/abs/2009.09941" target="_blank" rel="noopener">arXiv:2009.09941</a>; <a href="https://github.com/RapidAI/RapidOCR" target="_blank" rel="noopener">RapidOCR</a>. · 6. Nagy y Seth. <em>Hierarchical representation of optically scanned documents</em> (XY-cut). ICPR, 1984.</li>
 </ol>
-<h2>Instalación y uso</h2>
+<h6 class="readme__h2">Instalación y uso</h6>
 <p>Requiere Python 3.11 o superior.</p>
-<pre><code class="language-bash">python -m venv .venv
+<pre tabindex="0"><code class="language-bash">python -m venv .venv
 .venv/Scripts/pip install -e &quot;.[dev,ocr]&quot;    # Linux/macOS: .venv/bin/pip
 sfi serve --open                             # aplicación en http://127.0.0.1:8000
 </code></pre>

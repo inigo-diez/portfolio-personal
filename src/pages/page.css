@@ -16,6 +16,7 @@
 }
 .page__main {
   width: 100%;
+  min-width: 0; /* grid item: lets wide content (chart, table) fit the column instead of widening the page */
   max-width: 760px;
   margin: 0 auto;
   padding: 72px var(--page-x) 96px;
@@ -27,9 +28,11 @@
   font-weight: 500;
   letter-spacing: -0.035em;
   line-height: 1.1;
+  text-wrap: balance; /* long titles (case studies) break into even lines */
 }
+/* one rhythm between blocks: 48 px above each block label, 14 px from the label to its content */
 .page__main h2 {
-  margin: 40px 0 12px;
+  margin: 48px 0 14px;
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-2);
@@ -42,6 +45,7 @@
 .page__main .lead {
   font-size: 19px;
   line-height: 1.5;
+  text-wrap: pretty;
 }
 .rows {
   list-style: none;
@@ -57,7 +61,7 @@
   border-bottom: 1px solid var(--line);
   font-size: 15px;
 }
-.rows li > span:last-child {
+.rows li > span:last-child:not(:first-child) {
   color: var(--ink-2);
   font-size: 13px;
   text-align: right;
@@ -84,9 +88,12 @@
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   font-size: 13.5px;
 }
-.todo {
-  color: var(--ink-2);
-  font-style: italic;
+.portrait img {
+  display: block;
+  width: 144px;
+  height: auto;
+  margin-bottom: 28px;
+  border-radius: var(--radius-card);
 }
 .big-figure {
   margin: 8px 0 32px;
@@ -132,6 +139,26 @@
 .text-link {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+/* Touch targets (WCAG 2.2 AA, 24 px minimum): small links get an invisible hit area above and below, drawn by
+   an absolute pseudo-element so the layout does not move; in the rows it covers the whole row. */
+.back-link,
+.text-link,
+.page__footer a {
+  position: relative;
+}
+.back-link::after,
+.text-link::after,
+.page__footer a::after {
+  content: '';
+  position: absolute;
+  inset: -5px 0;
+}
+.rows .text-link::after {
+  inset: -14px 0;
+}
+.page__footer a::after {
+  inset: -4px 0; /* the rows of footer links are 25 px apart: hit areas touch, never overlap */
 }
 
 .page__footer {
@@ -214,4 +241,213 @@
   .page--docked .page__footer {
     padding-left: var(--page-x);
   }
+}
+
+/* Case study (brief §9): editorial blocks, results table and the project chart. */
+.case-section h2 {
+  margin: 56px 0 14px;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.bullets {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+.bullets li {
+  margin: 0 0 8px;
+  padding-left: 4px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.table-wrap {
+  margin: 24px 0 8px;
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.data-table caption {
+  margin-bottom: 8px;
+  text-align: left;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.data-table th,
+.data-table td {
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+.data-table th:first-child {
+  text-align: left;
+  white-space: normal;
+}
+.data-table thead th {
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  border-bottom-color: rgba(0, 0, 0, 0.16);
+}
+.data-table tbody th {
+  font-weight: 400;
+}
+.data-table tr.is-highlight > * {
+  font-weight: 600;
+}
+
+.chart {
+  margin: 28px 0 8px;
+}
+.chart__title {
+  font-size: 15px;
+  font-weight: 500;
+}
+.chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  list-style: none;
+  margin: 8px 0 10px;
+  padding: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.chart__legend li::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  margin-right: 8px;
+  vertical-align: middle;
+  border-radius: 1px;
+  background: var(--chart-2);
+}
+.chart__legend li.is-main::before {
+  background: var(--accent);
+}
+.chart__plot {
+  position: relative;
+  border-radius: 8px;
+  outline: none;
+}
+.chart__plot:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.chart__plot svg {
+  display: block;
+  overflow: visible;
+}
+.chart__axis {
+  stroke: rgba(37, 37, 37, 0.25);
+  stroke-width: 1;
+}
+.chart__tick {
+  font-size: 12px;
+  fill: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.chart__axis-label,
+.chart__marker-label {
+  font-size: 12px;
+  fill: var(--ink-2);
+}
+.chart__marker {
+  stroke: rgba(37, 37, 37, 0.25);
+  stroke-width: 1;
+}
+.chart__line {
+  fill: none;
+  stroke: var(--chart-2);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart__line.is-main {
+  stroke: var(--accent);
+}
+.chart__direct {
+  font-size: 12.5px;
+  fill: var(--ink);
+}
+.chart__crosshair {
+  stroke: rgba(37, 37, 37, 0.35);
+  stroke-width: 1;
+}
+.chart__dot {
+  fill: var(--chart-2);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+.chart__dot.is-main {
+  fill: var(--accent);
+}
+.chart__hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+.chart__tip {
+  position: absolute;
+  top: 8px;
+  display: grid;
+  gap: 4px;
+  min-width: 180px;
+  max-width: 220px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  pointer-events: none;
+}
+.chart__tip-x {
+  color: var(--ink);
+  font-weight: 500;
+}
+.chart__tip-row::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: var(--chart-2);
+}
+.chart__tip-row.is-main::before {
+  background: var(--accent);
+}
+.chart__tip-row b {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.page__main .chart__caption {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.chart__data {
+  margin-top: 10px;
+  font-size: 13px;
+}
+.chart__data summary {
+  cursor: pointer;
+  color: var(--ink-2);
+}
+.chart__data summary:hover {
+  color: var(--ink);
+}
+.chart__data .data-table {
+  margin-top: 10px;
+}
+.page__main .case-link {
+  margin: 20px 0 0;
+  font-size: 15px;
 }
