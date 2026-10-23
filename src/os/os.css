@@ -235,8 +235,237 @@
   width: 75%;
 }
 
-.os__view.anim-fwd > * {
+/* menu: 8 rows of 6.6 fit on desktop; on mobile rows stay at 7 and the menu scrolls (decided 2026-10-20) */
+@media (max-width: 860px) {
+  .os__menu {
+    --row-h: 7cqw;
+  }
+}
+
+/* grey position bar of long lists (blue is for selection only) */
+.os__scroll {
+  flex: none;
+  height: 0.55cqw;
+  margin: 1cqw 3cqw 0.5cqw;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 1cqw;
+}
+.os__scroll i {
+  display: block;
+  height: 100%;
+  width: var(--p, 30%);
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: 1cqw;
+  transition: width 0.15s;
+}
+.os__scroll[hidden] {
+  display: none;
+}
+
+/* ── Mi música ── */
+.cov {
+  display: grid;
+  place-items: center;
+  flex: none;
+  object-fit: cover;
+  border-radius: 1cqw;
+  color: #9aa0a7;
+  background: linear-gradient(135deg, #eceef1, #d6dadf);
+  box-shadow: 0 0 0 0.18cqw rgba(0, 0, 0, 0.08);
+}
+.cov svg {
+  width: 40%;
+  height: 40%;
+}
+.pm__k {
+  margin-bottom: 1.6cqw;
+}
+.pm__cov {
+  width: 19cqw;
+  height: 19cqw;
+  box-shadow:
+    0 0 0 0.18cqw rgba(0, 0, 0, 0.08),
+    0 0.8cqw 1.6cqw -0.6cqw rgba(0, 0, 0, 0.25);
+}
+.pm__t {
+  margin-top: 2.2cqw;
+  font-size: 2.9cqw;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm__a {
+  font-size: 2.4cqw;
+  color: var(--ink-2);
+  margin-top: 0.3cqw;
+}
+
+.song {
+  height: 9.4cqw;
+  display: flex;
+  align-items: center;
+  gap: 2.2cqw;
+  padding: 0 2.4cqw;
+  cursor: pointer;
+}
+.song .cov {
+  width: 6.6cqw;
+  height: 6.6cqw;
+  border-radius: 0.6cqw;
+}
+.song > span {
+  min-width: 0;
+}
+.song b,
+.song small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song b {
+  font-size: 3cqw;
+  font-weight: 500;
+}
+.song small {
+  font-size: 2.4cqw;
+  color: var(--ink-2);
+  margin-top: 0.2cqw;
+}
+.song.is-sel {
+  background: linear-gradient(180deg, #4f75ad, #3f649c);
+  color: #fff;
+}
+.song.is-sel small {
+  color: #fff;
+}
+.song .chev {
+  margin-left: auto;
+  width: 2.4cqw;
+  height: 2.4cqw;
+  flex: none;
+  visibility: hidden;
+}
+.song.is-sel .chev {
+  visibility: visible;
+}
+
+/* «Sonando» */
+.np {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6cqw;
+  padding: 2.2cqw 2.6cqw;
+}
+.np__top {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 2.8cqw;
+}
+.np__cov {
+  height: 100%;
+  max-height: 25cqw;
+  aspect-ratio: 1;
+}
+.np__meta {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.np__k {
+  font-size: max(2.1cqw, 9px);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.np__t {
+  font-size: 3.6cqw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0.7cqw 0 0.2cqw;
+}
+.np__a {
+  font-size: max(2.5cqw, 10px);
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.np__q {
+  font-size: max(2.5cqw, 10px);
+  line-height: 1.4;
+  margin-top: 1.4cqw;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.np__link {
+  margin-top: auto;
+  flex: none;
+  font-size: max(2.3cqw, 10px);
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+/* real position from the player (playback_update): grey, not blue */
+.np__prog {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  font-size: max(2.1cqw, 9px);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.np__prog svg {
+  width: 2.4cqw;
+  height: 2.4cqw;
+  color: var(--ink);
+}
+.np__prog i {
+  flex: 1;
+  height: 0.6cqw;
+  border-radius: 1cqw;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) var(--p, 0%), rgba(0, 0, 0, 0.1) var(--p, 0%));
+}
+.np__note {
+  flex: none;
+  margin: 0;
+  font-size: max(2.3cqw, 10px);
+  color: var(--ink-2);
+}
+.np__player {
+  flex: none;
+  height: 80px; /* the official compact embed: a track shows whole from ≈ 250 px wide (measured 2026-10-21) */
+  margin: 0 -2.6cqw -2.2cqw; /* full width of the screen: 258 px on a 360 px phone */
+}
+.np__player[hidden] {
+  display: none;
+}
+.np__player iframe {
+  display: block;
+  border: 0;
+}
+
+/* internal push transitions (220 ms) */
+.os__view.anim-fwd > :not(.os__peek) {
   animation: os-fwd var(--dur-os) var(--ease-out);
+}
+.os__view.anim-back > :not(.os__peek) {
+  animation: os-back var(--dur-os) var(--ease-out);
 }
 @keyframes os-fwd {
   from {
@@ -244,8 +473,83 @@
     opacity: 0;
   }
 }
+@keyframes os-back {
+  from {
+    transform: translateX(-8%);
+    opacity: 0;
+  }
+}
+.os__peek {
+  animation: peek-in 0.25s var(--ease-out);
+}
+@keyframes peek-in {
+  from {
+    opacity: 0;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .os__view.anim-fwd > * {
+  .os__view.anim-fwd > :not(.os__peek),
+  .os__view.anim-back > :not(.os__peek),
+  .os__peek {
     animation: none;
   }
+}
+
+/* small devices (phones): the sentence gets two lines so the link always shows */
+@container (max-width: 400px) {
+  .np__q {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    margin-top: 0.8cqw;
+  }
+}
+
+/* Home device: the text never drops below a readable size, even when the device is 300 px wide (laptops,
+   phones). At 430 px every value is still the cqw one. The docked devices keep their proportions. */
+[data-device='hero'] .os {
+  font-size: max(3.25cqw, 12px);
+}
+[data-device='hero'] .os__status {
+  font-size: max(2.25cqw, 11px);
+}
+[data-device='hero'] .os__item .meta {
+  font-size: max(2.5cqw, 11px);
+}
+[data-device='hero'] .peek__label,
+[data-device='hero'] .song small,
+[data-device='hero'] .pm__a {
+  font-size: max(2.4cqw, 11px);
+}
+[data-device='hero'] .peek__chips span {
+  font-size: max(2.3cqw, 11px);
+}
+[data-device='hero'] .peek__kicker {
+  font-size: max(2.2cqw, 11px);
+}
+[data-device='hero'] .os__item svg {
+  width: max(3.1cqw, 12px);
+  height: max(3.1cqw, 12px);
+}
+[data-device='hero'] .os__item .chev,
+[data-device='hero'] .song .chev {
+  width: max(2.4cqw, 9px);
+  height: max(2.4cqw, 9px);
+}
+[data-device='hero'] .peek__title {
+  font-size: max(3.4cqw, 13px);
+}
+[data-device='hero'] .np__t {
+  font-size: max(3.6cqw, 13px);
+}
+[data-device='hero'] .peek__map i {
+  font-size: max(1.9cqw, 9px);
+}
+[data-device='hero'] .song {
+  height: max(9.4cqw, 34px);
+}
+[data-device='hero'] .song b {
+  font-size: max(3cqw, 12px);
+}
+[data-device='hero'] .pm__t {
+  font-size: max(2.9cqw, 12px);
 }

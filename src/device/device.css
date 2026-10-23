@@ -15,11 +15,39 @@
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* tilt (pointer-driven, home only) → flip card → two faces */
+.pocket__tilt {
+  position: relative;
+  z-index: 1;
+  transform: perspective(1600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.6s var(--ease-out);
+}
+.pocket--reflect .pocket__tilt {
+  -webkit-box-reflect: below 2.4cqw linear-gradient(transparent 80%, rgba(255, 255, 255, 0.16));
+}
+.pocket__card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
+}
+.pocket__card.is-flipped {
+  transform: rotateY(180deg);
+}
+/* a shared transition always starts from a flat, front-facing device (it measures the screen) */
+[data-transitioning] .pocket__tilt,
+[data-transitioning] .pocket__card {
+  transform: none;
+  transition: none;
+  -webkit-box-reflect: none;
+}
+
 .pocket__front {
   position: relative;
   width: 100cqw;
   aspect-ratio: 100 / 124;
   border-radius: 8cqw;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   /* outer shadows only (drawn outside the box, so nothing is painted behind the hole) */
   box-shadow:
     0 0 0 0.16cqw rgba(0, 0, 0, 0.13),
@@ -41,7 +69,7 @@
   border-radius: inherit;
   background:
     var(--grain),
-    radial-gradient(130% 85% at 32% 0%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 58%),
+    radial-gradient(130% 85% at var(--sx, 32%) var(--sy, 0%), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 58%),
     linear-gradient(180deg, #f1f2f4 0%, #e5e7ea 55%, #dadde1 100%);
   box-shadow:
     inset 0 0 0 0.28cqw rgba(255, 255, 255, 0.78),
@@ -85,6 +113,7 @@
   border-radius: 0.8cqw;
   overflow: hidden;
   background: #fcfcfb;
+  touch-action: none; /* swipes on the screen are device input */
 }
 /* screen off: black panel over the screen (the transition dims it while the body travels) */
 .pocket__dim {
@@ -237,7 +266,6 @@
   display: grid;
   place-items: center;
   color: var(--graphite);
-  overflow: hidden;
   box-shadow:
     0 0 0 0.2cqw rgba(0, 0, 0, 0.11),
     0 0.3cqw 0.5cqw rgba(0, 0, 0, 0.1),
@@ -248,6 +276,13 @@
 }
 .key::before {
   content: '';
+}
+/* invisible touch area: at least 44 × 44 px however small the device is */
+.key::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * max(0px, (44px - 10.5cqw) / 2));
+  border-radius: 50%;
 }
 .key svg {
   position: relative;
@@ -267,6 +302,7 @@
     0 0 0 0.2cqw rgba(0, 0, 0, 0.11),
     inset 0 0.3cqw 0.6cqw rgba(0, 0, 0, 0.12);
 }
+/* flush side key on the right edge: mouse wheel or vertical drag = next / prev */
 .side-key {
   position: absolute;
   right: -0.9cqw;
@@ -274,8 +310,80 @@
   width: 1.3cqw;
   height: 13cqw;
   border-radius: 0 0.7cqw 0.7cqw 0;
+  cursor: ns-resize;
+  touch-action: none;
   background: linear-gradient(90deg, #b9bec4, #f3f4f6 45%, #c9cdd2);
   box-shadow: 0.1cqw 0 0.3cqw rgba(0, 0, 0, 0.18);
+  transition: transform 0.08s;
+}
+.side-key::after {
+  content: '';
+  position: absolute;
+  inset: -1cqw -2.4cqw -1cqw -1cqw;
+}
+.side-key.is-pressed {
+  transform: translateX(-0.3cqw);
+}
+
+/* headphone socket on the top edge: a discreet dark slot, always part of the hardware */
+.jack {
+  position: absolute;
+  left: 77.9cqw;
+  top: -0.4cqw;
+  width: 4.2cqw;
+  height: 0.95cqw;
+  border-radius: 0.5cqw;
+  z-index: 3;
+  background: linear-gradient(180deg, #24272b, #4a4e54);
+  box-shadow:
+    0 0 0 0.2cqw #eceef0,
+    0 0 0 0.32cqw rgba(0, 0, 0, 0.12);
+}
+
+/* ── Back face: polished aluminium with the engraving ── */
+.pocket__back {
+  position: absolute;
+  inset: 0;
+  border-radius: 8cqw;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: rgba(40, 44, 50, 0.5);
+  background:
+    var(--grain),
+    linear-gradient(112deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.75) 42%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, #e3e5e8 0%, #cdd1d6 100%);
+  box-shadow:
+    inset 0 0 0 0.28cqw rgba(255, 255, 255, 0.78),
+    0 0 0 0.16cqw rgba(0, 0, 0, 0.13),
+    0 0.55cqw 0 0 #c4c8cd,
+    0 1.05cqw 0 0 #aeb3b9,
+    0 3cqw 3cqw -1.5cqw rgba(20, 24, 32, 0.16),
+    0 9cqw 12cqw -6cqw rgba(20, 24, 32, 0.22);
+}
+.pocket__back .engr {
+  text-shadow: 0 0.12cqw 0 rgba(255, 255, 255, 0.7);
+}
+.back__mark {
+  display: block;
+  height: 11cqw;
+  width: auto;
+  margin: 0 auto 4cqw;
+  filter: drop-shadow(0 0.12cqw 0 rgba(255, 255, 255, 0.7));
+}
+.back__line {
+  font-size: 2.4cqw;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.back__fine {
+  margin-top: 1.4cqw;
+  font-size: 1.9cqw;
+  letter-spacing: 0.06em;
 }
 .ring__center:focus-visible,
 .key:focus-visible {
@@ -284,7 +392,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ring__spin {
+  .ring__spin,
+  .pocket__tilt {
+    transition: none;
+  }
+  .pocket__card {
     transition: none;
   }
   .pocket.is-waking .pocket__dim {

@@ -1,6 +1,8 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { os } from '../content/device';
-import type { Section } from '../content/site';
+import type { Track } from '../content/music';
+import { musicUi } from '../content/music';
+import { isAvailable, ui, type Section } from '../content/site';
 import { Battery, Icon, type IconName } from '../device/icons';
 import './os.css';
 
@@ -38,30 +40,89 @@ export interface Row {
   disabled?: boolean;
 }
 
-function RowList({ rows, sel, label, onPick }: { rows: Row[]; sel: number; label: string; onPick: (i: number) => void }) {
+/** Push direction of the last screen change (internal OS transition, 220 ms). */
+export type Dir = 'fwd' | 'back' | null;
+
+/** Scrolls a long list so the selection stays visible, with a grey position bar (not blue: blue = selection). */
+export function useKeepInView(sel: number) {
+  const list = useRef<HTMLUListElement>(null);
+  const bar = useRef<HTMLDivElement>(null);
+  const top = useRef(0);
+  useLayoutEffect(() => {
+    const ul = list.current!,
+      row = ul.children[sel] as HTMLElement | undefined;
+    if (!row) return;
+    const h = row.offsetHeight,
+      n = ul.children.length;
+    const visible = Math.max(1, Math.floor(ul.clientHeight / h + 0.01));
+    bar.current!.hidden = n <= visible;
+    if (n <= visible) {
+      top.current = 0;
+      ul.scrollTop = 0;
+      return;
+    }
+    if (sel < top.current) top.current = sel;
+    if (sel >= top.current + visible) top.current = sel - visible + 1;
+    top.current = Math.min(top.current, n - visible);
+    ul.scrollTop = top.current * h;
+    bar.current!.style.setProperty('--p', ((100 * (top.current + visible)) / n).toFixed(1) + '%');
+  });
+  return { list, bar };
+}
+
+function RowList({
+  rows,
+  sel,
+  label,
+  onPick,
+}: {
+  rows: Row[];
+  sel: number;
+  label: string;
+  onPick: (i: number) => void;
+}) {
+  const { list, bar } = useKeepInView(sel);
   return (
-    <ul className="os__list" role="listbox" aria-label={label}>
-      {rows.map((r, i) => (
-        <li
-          key={r.label}
-          className={
-            'os__item' + (i === sel ? ' is-sel' : '') + (r.strong ? ' is-strong' : '') + (r.disabled ? ' is-disabled' : '')
-          }
-          role="option"
-          aria-selected={i === sel}
-          aria-disabled={r.disabled || undefined}
-          onClick={() => onPick(i)}
-        >
-          {r.icon && <Icon name={r.icon} />}
-          <span>{r.label}</span>
-          {r.meta ? <span className="meta">{r.meta}</span> : <Icon name="chev" className="chev" />}
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="os__list" role="listbox" aria-label={label} ref={list}>
+        {rows.map((r, i) => (
+          <li
+            key={r.label + i}
+            className={
+              'os__item' +
+              (i === sel ? ' is-sel' : '') +
+              (r.strong ? ' is-strong' : '') +
+              (r.disabled ? ' is-disabled' : '')
+            }
+            role="option"
+            aria-selected={i === sel}
+            aria-disabled={r.disabled || undefined}
+            onClick={() => onPick(i)}
+          >
+            {r.icon && <Icon name={r.icon} />}
+            <span>{r.label}</span>
+            {r.meta ? <span className="meta">{r.meta}</span> : <Icon name="chev" className="chev" />}
+          </li>
+        ))}
+      </ul>
+      <div className="os__scroll" ref={bar} hidden aria-hidden="true">
+        <i />
+      </div>
+    </>
   );
 }
 
-function Peek({ id }: { id: Section['id'] }) {
+export function Cover({ track, className }: { track: Track | undefined; className: string }) {
+  return track?.cover ? (
+    <img className={'cov ' + className} src={track.cover} alt="" />
+  ) : (
+    <span className={'cov ' + className}>
+      <Icon name="note" />
+    </span>
+  );
+}
+
+function Peek({ id, track }: { id: Section['id']; track?: Track }) {
   const p = os.peek;
   switch (id) {
     case 'sobre-mi':
@@ -138,7 +199,16 @@ function Peek({ id }: { id: Section['id'] }) {
         </>
       );
     case 'mi-musica':
-      return <div className="peek__label">{p['mi-musica'].lines[0]}</div>;
+      return track ? (
+        <>
+          <div className="peek__kicker pm__k">{musicUi.selected}</div>
+          <Cover track={track} className="pm__cov" />
+          <div className="pm__t">{track.title}</div>
+          <div className="pm__a">{track.artist}</div>
+        </>
+      ) : (
+        <div className="peek__label">{p['mi-musica'].soon}</div>
+      );
   }
 }
 
@@ -153,40 +223,74 @@ function Chips({ items }: { items: string[] }) {
 }
 
 /** Home menu: list (52 %) + preview of the selected entry. */
-export function MenuScreen({ items, sel, onPick }: { items: Section[]; sel: number; onPick: (i: number) => void }) {
-  const rows: Row[] = items.map((s) => ({ label: s.label, disabled: !s.path }));
+export function MenuScreen({
+  items,
+  sel,
+  onPick,
+  track,
+  dir,
+}: {
+  items: Section[];
+  sel: number;
+  onPick: (i: number) => void;
+  /** Selected song (preview of Mi música). */
+  track?: Track;
+  dir: Dir;
+}) {
+  const rows: Row[] = items.map((s) => ({ label: s.label, disabled: !isAvailable(s.id) }));
+  const live = ui.device.position(items[sel].label, sel + 1, items.length);
   return (
-    <Frame title={os.name} live={items[sel].label}>
-      <div className="os__view os__split">
-        <div className="os__main">
-          <RowList rows={rows} sel={sel} label="Menú" onPick={onPick} />
-        </div>
-        <div className="os__peek" aria-hidden="true">
-          <Peek id={items[sel].id} />
-        </div>
+    <Frame title={os.name} live={live} dir={dir} split>
+      <div className="os__main os__menu">
+        <RowList rows={rows} sel={sel} label="Menú" onPick={onPick} />
+      </div>
+      <div className="os__peek" key={items[sel].id} aria-hidden="true">
+        <Peek id={items[sel].id} track={track} />
       </div>
     </Frame>
   );
 }
 
-/** A full-width list (e.g. Proyectos on the docked device). */
-export function ListScreen({ title, rows, sel, onPick }: { title: string; rows: Row[]; sel: number; onPick: (i: number) => void }) {
+/** A full-width list (sections, the docked device). */
+export function ListScreen({
+  title,
+  rows,
+  sel,
+  onPick,
+  dir = 'fwd',
+}: {
+  title: string;
+  rows: Row[];
+  sel: number;
+  onPick: (i: number) => void;
+  dir?: Dir;
+}) {
   return (
-    <Frame title={title} live={rows[sel].label}>
-      <div className="os__view anim-fwd">
-        <div className="os__main">
-          <RowList rows={rows} sel={sel} label={title} onPick={onPick} />
-        </div>
+    <Frame title={title} live={ui.device.position(rows[sel].label, sel + 1, rows.length)} dir={dir}>
+      <div className="os__main">
+        <RowList rows={rows} sel={sel} label={title} onPick={onPick} />
       </div>
     </Frame>
   );
 }
 
-function Frame({ title, live, children }: { title: string; live: string; children: ReactNode }) {
+export function Frame({
+  title,
+  live,
+  dir,
+  split,
+  children,
+}: {
+  title: string;
+  live: string;
+  dir: Dir;
+  split?: boolean;
+  children: ReactNode;
+}) {
   return (
     <div className="os">
       <StatusBar title={title} />
-      {children}
+      <div className={'os__view' + (split ? ' os__split' : '') + (dir ? ' anim-' + dir : '')}>{children}</div>
       <span className="sr-only" aria-live="polite">
         {live}
       </span>

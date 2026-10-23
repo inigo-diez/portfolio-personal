@@ -8,7 +8,7 @@ import { chromium } from 'playwright-core';
 
 const OUT = path.resolve(process.argv[2] ?? '_reference/e3');
 const RUNS = Number(process.argv[3] ?? 5);
-const B = 'http://localhost:4173/portfolio-personal/';
+const B = process.env.PREVIEW_URL ?? 'http://localhost:4173/portfolio-personal/'; // e.g. another build to compare
 const VIEW = { width: 1440, height: 900 };
 await fs.mkdir(OUT, { recursive: true });
 

@@ -155,3 +155,63 @@
 .page__footer p {
   margin: 0;
 }
+
+/* Mi música (conventional page): the full list without players, works without JavaScript */
+.songs-page li {
+  align-items: baseline;
+}
+.songs-page__note {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+/* Section pages the device screen grows into: the device stays docked in the corner, as on the canvas,
+   and the text keeps clear of it. */
+.page-dock {
+  position: fixed;
+  left: var(--dock-left);
+  bottom: var(--dock-bottom);
+  z-index: 5;
+}
+.page-dock .pocket {
+  --w: var(--dock-w);
+}
+.page--docked {
+  --dock-clear: calc(var(--dock-left) + var(--dock-w) + 40px);
+}
+.page--docked .page__main {
+  margin-left: max(var(--dock-clear), calc((100% - 760px) / 2));
+  width: min(760px, 100% - var(--dock-clear) - var(--page-x));
+}
+.page--docked .page__footer {
+  padding-left: var(--dock-clear);
+}
+/* During the transition the page is a fixed window over the home (it grows from the screen). */
+[data-transitioning] .docked__layer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 10;
+  background: var(--bg);
+}
+/* Phones: the docked device sits at the top of the page and scrolls with it, so it never covers the text. */
+@media (max-width: 860px) {
+  .page--docked {
+    grid-template-rows: auto auto 1fr auto;
+  }
+  .page-dock {
+    position: static;
+    padding: 24px var(--page-x) 0;
+  }
+  .page--docked .page__main {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 36px;
+  }
+  .page--docked .page__footer {
+    padding-left: var(--page-x);
+  }
+}

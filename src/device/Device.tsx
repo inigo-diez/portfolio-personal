@@ -1,10 +1,13 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { os } from '../content/device';
 import { ui } from '../content/site';
 import { AXIS_PATHS, Icon } from './icons';
 import './device.css';
 
 /** Every physical input becomes one of these five commands (docs/design/device-spec.md). */
 export type Command = 'next' | 'prev' | 'select' | 'back' | 'home';
+/** Where a command came from. In «Sonando» the ⏮ ⏭ axes (and ← →) change track instead of back / select. */
+export type Via = 'axis' | 'other';
 
 type Axis = keyof typeof AXIS_PATHS;
 const AXIS_CMD: Record<Axis, Command> = { up: 'prev', down: 'next', left: 'back', right: 'select' };
@@ -24,18 +27,38 @@ const KEYS: Record<string, Command> = {
 interface DeviceProps {
   /** Screen content (the OS). */
   children: ReactNode;
-  onCommand: (c: Command) => void;
+  onCommand: (c: Command, via: Via) => void;
   /** Listen to the keyboard on the whole document (home), not only when the device has focus. */
   globalKeys?: boolean;
   /** Ignore all input (e.g. while a transition owns the device). */
   inert?: boolean;
+  /** Home only: lean towards the mouse, with a highlight that follows it. */
+  tilt?: boolean;
+  /** Home only: soft reflection on the floor. */
+  reflect?: boolean;
+  /** Show the engraved back face. */
+  flipped?: boolean;
+  /** Things that hang off the hardware (the earbuds' plug and cable), drawn in device units. */
+  accessory?: ReactNode;
   className?: string;
   style?: CSSProperties;
   'data-device'?: string;
 }
 
-/** Slate: hardware + input model. E3 = simplified (no flip, tilt, reflection or side dial: E4). */
-export function Device({ children, onCommand, globalKeys, inert, className, style, ...rest }: DeviceProps) {
+/** Slate: hardware + input model. */
+export function Device({
+  children,
+  onCommand,
+  globalKeys,
+  inert,
+  tilt,
+  reflect,
+  flipped,
+  accessory,
+  className,
+  style,
+  ...rest
+}: DeviceProps) {
   const root = useRef<HTMLDivElement | null>(null);
   const spin = useRef<HTMLSpanElement>(null);
   const cmdRef = useRef(onCommand);
@@ -53,21 +76,21 @@ export function Device({ children, onCommand, globalKeys, inert, className, styl
       b.classList.add('is-pressed');
       setTimeout(() => b.classList.remove('is-pressed'), 110);
     };
-    const run = (c: Command) => {
-      if (!inertRef.current) cmdRef.current(c);
+    const run = (c: Command, via: Via = 'other') => {
+      if (!inertRef.current) cmdRef.current(c, via);
     };
 
     // Keyboard: arrows mirror the ring's four axes (← back, → open, like a column browser)
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as Element | null;
-      if (t?.closest?.('input, textarea, select, a, nav, [role="toolbar"], .list-view')) return;
+      if (t?.closest?.('input, textarea, select, a, nav, iframe, [role="toolbar"], .list-view')) return;
       if ((e.key === 'Enter' || e.key === ' ') && t?.closest?.('button')) return; // the button handles its own click
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const c = KEYS[e.key];
       if (!c) return;
       e.preventDefault();
-      run(c);
       const axis = e.key.startsWith('Arrow') ? CMD_AXIS[c] : undefined;
+      run(c, axis ? 'axis' : 'other');
       if (axis) flash(`[data-axis="${axis}"]`);
       else if (c === 'select') flash('.ring__center');
       else if (c === 'back') flash('.key--back');
@@ -119,9 +142,9 @@ export function Device({ children, onCommand, globalKeys, inert, className, styl
       if (!drag) return;
       if (!drag.moved) {
         flash(`[data-axis="${drag.axis}"]`);
-        run(AXIS_CMD[drag.axis]);
+        run(AXIS_CMD[drag.axis], 'axis');
       }
-      setRot(rot);
+      setRot(rot); // detent: the metal settles on the last step
       drag = null;
     };
     // Mouse wheel over the ring: one notch (100 px) = one step; trackpads accumulate.
@@ -137,11 +160,95 @@ export function Device({ children, onCommand, globalKeys, inert, className, styl
         setRot(rot);
       }
     };
+
+    // Side key: mouse wheel or vertical drag scrolls (one step per notch / per 14 px).
+    const side = el.querySelector<HTMLElement>('[data-side]')!;
+    let sideY: number | null = null,
+      sideAcc = 0,
+      sideWheel = 0;
+    const sideDown = (e: PointerEvent) => {
+      side.setPointerCapture(e.pointerId);
+      sideY = e.clientY;
+      sideAcc = 0;
+      side.classList.add('is-pressed');
+    };
+    const sideMove = (e: PointerEvent) => {
+      if (sideY === null) return;
+      sideAcc += e.clientY - sideY;
+      sideY = e.clientY;
+      while (Math.abs(sideAcc) >= 14) {
+        run(sideAcc > 0 ? 'next' : 'prev');
+        sideAcc -= Math.sign(sideAcc) * 14;
+      }
+    };
+    const sideUp = () => {
+      sideY = null;
+      side.classList.remove('is-pressed');
+    };
+    const sideWheelFn = (e: WheelEvent) => {
+      e.preventDefault();
+      sideWheel += e.deltaMode === 1 ? e.deltaY * 34 : e.deltaY;
+      while (Math.abs(sideWheel) >= 100) {
+        run(sideWheel > 0 ? 'next' : 'prev');
+        sideWheel -= Math.sign(sideWheel) * 100;
+      }
+    };
+
+    // Touch on the screen: vertical swipe = next / prev (one step per row height), horizontal swipe:
+    // finger to the right = back, to the left = open. A tap still reaches the row underneath (its click).
+    const screen = el.querySelector<HTMLElement>('[data-screen]')!;
+    let swipe: { x0: number; y0: number; y: number; acc: number; moved: boolean } | null = null;
+    let swallowClick = false;
+    const swDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      swallowClick = false; // a swipe produces no click, so the flag must not outlive it
+      swipe = { x0: e.clientX, y0: e.clientY, y: e.clientY, acc: 0, moved: false };
+    };
+    const swMove = (e: PointerEvent) => {
+      if (!swipe) return;
+      const rowPx = el.clientWidth * 0.07;
+      if (Math.abs(e.clientY - swipe.y0) < 8 && !swipe.moved) return;
+      swipe.acc += swipe.y - e.clientY; // finger up = content up = next
+      swipe.y = e.clientY;
+      while (Math.abs(swipe.acc) >= rowPx) {
+        run(swipe.acc > 0 ? 'next' : 'prev');
+        swipe.acc -= Math.sign(swipe.acc) * rowPx;
+        swipe.moved = true;
+      }
+    };
+    const swUp = (e: PointerEvent) => {
+      if (!swipe) return;
+      const dx = e.clientX - swipe.x0,
+        dy = e.clientY - swipe.y0;
+      if (!swipe.moved && Math.abs(dx) > 40 && Math.abs(dx) > 2 * Math.abs(dy)) {
+        run(dx > 0 ? 'back' : 'select');
+        swipe.moved = true;
+      }
+      swallowClick = swipe.moved;
+      swipe = null;
+    };
+    const swClick = (e: MouseEvent) => {
+      if (!swallowClick) return;
+      swallowClick = false;
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
     ring.addEventListener('pointerdown', down);
     ring.addEventListener('pointermove', move);
     ring.addEventListener('pointerup', up);
     ring.addEventListener('pointercancel', up);
     ring.addEventListener('wheel', wheel, { passive: false });
+    side.addEventListener('pointerdown', sideDown);
+    side.addEventListener('pointermove', sideMove);
+    side.addEventListener('pointerup', sideUp);
+    side.addEventListener('pointercancel', sideUp);
+    side.addEventListener('wheel', sideWheelFn, { passive: false });
+    screen.addEventListener('pointerdown', swDown);
+    screen.addEventListener('pointermove', swMove);
+    screen.addEventListener('pointerup', swUp);
+    screen.addEventListener('pointercancel', swUp);
+    screen.addEventListener('click', swClick, true);
     return () => {
       keyTarget.removeEventListener('keydown', onKey as EventListener);
       ring.removeEventListener('pointerdown', down);
@@ -149,17 +256,54 @@ export function Device({ children, onCommand, globalKeys, inert, className, styl
       ring.removeEventListener('pointerup', up);
       ring.removeEventListener('pointercancel', up);
       ring.removeEventListener('wheel', wheel);
+      side.removeEventListener('pointerdown', sideDown);
+      side.removeEventListener('pointermove', sideMove);
+      side.removeEventListener('pointerup', sideUp);
+      side.removeEventListener('pointercancel', sideUp);
+      side.removeEventListener('wheel', sideWheelFn);
+      screen.removeEventListener('pointerdown', swDown);
+      screen.removeEventListener('pointermove', swMove);
+      screen.removeEventListener('pointerup', swUp);
+      screen.removeEventListener('pointercancel', swUp);
+      screen.removeEventListener('click', swClick, true);
     };
   }, [globalKeys]);
 
+  // Lean towards the mouse (never with touch or reduced motion), with a highlight that follows it.
+  useEffect(() => {
+    if (!tilt) return;
+    const el = root.current!;
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    const set = (rx: number, ry: number, sx: number, sy: number) => {
+      el.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      el.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+      el.style.setProperty('--sx', sx.toFixed(1) + '%');
+      el.style.setProperty('--sy', sy.toFixed(1) + '%');
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || still.matches) return;
+      const nx = e.clientX / innerWidth - 0.5,
+        ny = e.clientY / innerHeight - 0.5;
+      set(-ny * 7, nx * 9, 32 + nx * 50, ny * 30); // max ±4.5°
+    };
+    const reset = () => set(0, 0, 32, 0);
+    addEventListener('pointermove', onMove);
+    document.documentElement.addEventListener('pointerleave', reset);
+    return () => {
+      removeEventListener('pointermove', onMove);
+      document.documentElement.removeEventListener('pointerleave', reset);
+      reset();
+    };
+  }, [tilt]);
+
   function press(c: Command) {
-    if (!inertRef.current) cmdRef.current(c);
+    if (!inertRef.current) cmdRef.current(c, 'other');
   }
 
   return (
     <div
       ref={root}
-      className={'pocket' + (className ? ' ' + className : '')}
+      className={'pocket' + (reflect ? ' pocket--reflect' : '') + (className ? ' ' + className : '')}
       style={style}
       tabIndex={0}
       role="group"
@@ -167,33 +311,54 @@ export function Device({ children, onCommand, globalKeys, inert, className, styl
       aria-label={ui.device.label}
       {...rest}
     >
-      <div className="pocket__front">
-        <div className="pocket__plate" />
-        <div className="pocket__glass">
-          <div className="pocket__screen" data-screen>
-            {children}
+      <div className="pocket__tilt">
+        <div className={'pocket__card' + (flipped ? ' is-flipped' : '')}>
+          <div className="pocket__front">
+            <div className="pocket__plate" />
+            <span className="jack" aria-hidden="true" />
+            <div className="pocket__glass">
+              <div className="pocket__screen" data-screen>
+                {children}
+              </div>
+              <div className="pocket__dim" data-dim />
+            </div>
+            <div className="ring" data-ring aria-hidden="true">
+              <span className="ring__spin" ref={spin} />
+              {(Object.keys(AXIS_PATHS) as Axis[]).map((a) => (
+                <span key={a} className={`ring__axis ring__axis--${a}`} data-axis={a}>
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d={AXIS_PATHS[a]} />
+                  </svg>
+                </span>
+              ))}
+              <button
+                className="ring__center"
+                aria-label={ui.device.select}
+                tabIndex={-1}
+                onClick={() => press('select')}
+              />
+            </div>
+            <button className="key key--back" aria-label={ui.device.back} onClick={() => press('back')}>
+              <Icon name="back" />
+            </button>
+            <button className="key key--home" aria-label={ui.device.home} onClick={() => press('home')}>
+              <Icon name="home" />
+            </button>
+            <span className="side-key" data-side aria-hidden="true" />
           </div>
-          <div className="pocket__dim" data-dim />
-        </div>
-        <div className="ring" data-ring aria-hidden="true">
-          <span className="ring__spin" ref={spin} />
-          {(Object.keys(AXIS_PATHS) as Axis[]).map((a) => (
-            <span key={a} className={`ring__axis ring__axis--${a}`} data-axis={a}>
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d={AXIS_PATHS[a]} />
+          <div className="pocket__back" aria-hidden="true">
+            <div className="engr">
+              <svg className="back__mark" viewBox="0 0 40 20" fill="none" stroke="currentColor" strokeLinecap="round">
+                <circle cx="9" cy="10" r="6.6" strokeWidth="2.6" />
+                <path d="M23 18L33 2" strokeWidth="3.2" />
               </svg>
-            </span>
-          ))}
-          <button className="ring__center" aria-label={ui.device.select} tabIndex={-1} onClick={() => press('select')} />
+              <div className="back__line">{os.back.line}</div>
+              <div className="back__fine">{os.back.fine}</div>
+            </div>
+          </div>
         </div>
-        <button className="key key--back" aria-label={ui.device.back} onClick={() => press('back')}>
-          <Icon name="back" />
-        </button>
-        <button className="key key--home" aria-label={ui.device.home} onClick={() => press('home')}>
-          <Icon name="home" />
-        </button>
-        <span className="side-key" aria-hidden="true" />
       </div>
+      {accessory}
     </div>
   );
 }

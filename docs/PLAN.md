@@ -9,9 +9,9 @@ Cada etapa tiene su ficha en [stages/](stages/), con tareas, entregables y punto
 | [E0](stages/E0-preparacion.md) | Preparación | ✅ (faltan 2 tareas de Iñigo) | — |
 | [E1](stages/E1-inventario-contenido.md) | Inventario de contenido → [audit/](audit/), mapa final en [project-map.md](audit/project-map.md) | ✅ aprobado 2026-10-19 | — |
 | [E2](stages/E2-direccion-artistica.md) | Dirección artística → [prototypes/E2/](../prototypes/E2/), [design/](design/) | ✅ aprobado 2026-10-20 (v3) | — |
-| [E3](stages/E3-base-y-prueba-transicion.md) | Proyecto base + prueba de la transición → [design/transition.md](design/transition.md) | ⏸ técnica aprobada; falta el visto bueno visual del contorno (2026-10-20) | Técnica validada |
-| [E4](stages/E4-pocket-os.md) | Pocket OS funcional (+ móvil) | ⬜ | Dispositivo completo |
-| [E5](stages/E5-infinite-canvas.md) | Infinite Canvas + transición definitiva | ⬜ | Navegación sin perderse |
+| [E3](stages/E3-base-y-prueba-transicion.md) | Proyecto base + prueba de la transición → [design/transition.md](design/transition.md) | ✅ aprobado 2026-10-21 (la transición puede revisarse más adelante, con el proyecto más completo) | — |
+| [E4](stages/E4-pocket-os.md) | Pocket OS funcional (+ móvil) | ✅ aprobado 2026-10-23 (con el cambio de las secciones como página) | — |
+| [E5](stages/E5-infinite-canvas.md) | Infinite Canvas + transición definitiva | 🔄 empezada 2026-10-23 | Navegación sin perderse |
 | [E6](stages/E6-contenido-real.md) | Contenido real y casos de estudio | ⬜ | Textos aprobados |
 | [E7](stages/E7-pulido.md) | Pulido y detalles distintivos | ⬜ | Visto bueno visual |
 | [E8](stages/E8-validacion-y-lanzamiento.md) | Validación y lanzamiento a la raíz | ⬜ | Web publicada |
@@ -23,7 +23,7 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
 ## Pendiente de Iñigo
 
 - [ ] `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` en PowerShell (solo si quieres usar npm desde PowerShell; desde Bash ya funciona)
-- [ ] Primer commit + push
+- [x] Primer commit + push (2026-10-21: `452bc9a` en `origin/main`). Este repo firma con «Iñigo Díez Osúa <idiezosua@gmail.com>» (config local) y su remoto lleva el usuario `inigo-diez@` para usar la cuenta personal; el resto de repos sigue con el correo de Afi.
 - [ ] Cuando quieras publicar la versión de prueba: Settings → Pages → Source «GitHub Actions» y lanzar el workflow `Deploy to GitHub Pages` (manual) desde Actions
 - [x] CV en `materials/cv/`
 - [ ] Responder a [audit/missing.md](audit/missing.md) (datos y cifras por confirmar)
@@ -31,15 +31,26 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
 
 ## Decisiones abiertas
 
-- **E3 · visto bueno visual** (vídeo y tira de fotogramas en `_reference/e3/`, explicación en [design/transition.md](design/transition.md)). Iñigo aprobó la técnica y pidió un único ajuste: un contorno gris fino alrededor de la pantalla mientras crece, que se desvanezca antes del final, con los mismos 730 ms y el mismo recorrido del cuerpo. **Hecho el 2026-10-20; falta que lo vea en la grabación.** Si lo da por bueno, E3 queda cerrada. Para probarla: `npm run dev` y abrir http://localhost:5173/portfolio-personal/ (con `?medir`, panel de fps; con `?tecnica=vt`, la alternativa). Decisiones técnicas de E3, **aprobadas el 2026-10-20**:
+- **E4 · pendiente de aprobación (2026-10-21; cambio del 2026-10-23).** Qué hay, cómo probarlo y mediciones: [stages/E4-pocket-os.md](stages/E4-pocket-os.md#estado-2026-10-21). Para probar: `npm run dev` y abrir http://localhost:5173/portfolio-personal/; Mi música con datos de prueba: añadir `?musica=prueba` (se queda para la sesión; `?musica=no` lo quita). Puntos que conviene que veas (no he cambiado nada de lo acordado por ellos):
+  - ⏮ y ⏭ en «Sonando» **cargan** la pista, como se acordó: si sonaba música, la nueva queda en pausa hasta pulsar el centro.
+  - ATRÁS desde «Sonando» descarga el reproductor y la música se para al volver a la lista, no solo al salir de Mi música: en la lista no hay ningún control visible del reproductor.
+  - En móvil, arrastrar el dedo sobre la pantalla del dispositivo mueve la selección, así que no desplaza la página si el gesto empieza ahí.
+  - Al empezar la transición al lienzo, el reflejo del suelo desaparece de golpe (no puede viajar con el cuerpo hasta la esquina).
+  - **(Nuevo, 2026-10-23)** Sobre mí, Trayectoria, Habilidades, Formación y Contacto se abren como su página: la pantalla crece y el dispositivo queda acoplado (abajo a la izquierda en escritorio, arriba de la página en móvil). CV y Mi música siguen dentro. Conviene que lo veas en tu portátil y en el móvil: `?musica=prueba` para Mi música.
+  - En el acoplado de las páginas, las áreas táctiles de 44 px de ATRÁS e INICIO se solapan por su tamaño (como en el lienzo): pulsar ATRÁS puede activar INICIO, pero las dos llevan a la home.
+  - Tras la transición, el foco del teclado queda en el dispositivo acoplado, como en el lienzo: ↑ ↓ mueven su lista y Esc vuelve. Para desplazar la página con flechas hay que salir de él (Tab o clic en la página).
+  - El dispositivo acoplado en el lienzo no tiene menú, así que «Mi música desde el dock» (decidido el 2026-10-20) aún no se puede alcanzar: queda para E5.
+  - Portadas de Mi música: hueco con una nota musical hasta tener tus canciones.
+
+- **E3 · cerrada (aprobada el 2026-10-21).** Contexto original: visto bueno visual (vídeo y tira de fotogramas en `_reference/e3/`, explicación en [design/transition.md](design/transition.md)). Iñigo aprobó la técnica y pidió un único ajuste: un contorno gris fino alrededor de la pantalla mientras crece, que se desvanezca antes del final, con los mismos 730 ms y el mismo recorrido del cuerpo. **Hecho el 2026-10-20; falta que lo vea en la grabación.** Si lo da por bueno, E3 queda cerrada. Para probarla: `npm run dev` y abrir http://localhost:5173/portfolio-personal/ (con `?medir`, panel de fps; con `?tecnica=vt`, la alternativa). Decisiones técnicas de E3, **aprobadas el 2026-10-20**:
   - CSS con tokens (sin Tailwind): el dispositivo ya estaba hecho en CSS y así no hay que traducirlo.
   - Sin Motion por ahora: la transición usa la Web Animations API del navegador (0 KB). Se reconsidera en E4 y E5.
   - Router propio mínimo (sin react-router): la URL alimenta la misma máquina de estados que el dispositivo, así que el botón atrás del navegador ejecuta la misma transición.
   - URLs con barra final (`/proyectos/figuris/`): cada ruta es una carpeta con su `index.html`, que es lo que GitHub Pages sirve sin redirecciones.
-  - Comprobaciones aplazadas: el primer fotograma en frío (48 ms) pasa a E4 y el lienzo en móvil, a E5.
-  - El dispositivo de E3 está simplificado: menú con vista previa, lista de Proyectos en el lienzo, anillo (giro, ejes, rueda del ratón), teclas y teclado. El resto de entradas del menú abren su página convencional. Girar, inclinación, reflejo y botón lateral vuelven en E4. «Mi música» aparece en el menú, desactivada.
+  - Comprobaciones aplazadas: el primer fotograma en frío (48 ms) pasa a E4 y el lienzo en móvil, a E5. **E4 (2026-10-21):** medido junto a E3 en las mismas condiciones, sigue en 36–48 ms en las dos versiones; no se ha montado el lienzo por adelantado (ver [design/transition.md](design/transition.md#pendiente-para-e5)).
+  - (Hecho en E4) El dispositivo de E3 estaba simplificado: menú con vista previa, lista de Proyectos en el lienzo, anillo (giro, ejes, rueda del ratón), teclas y teclado. El resto de entradas del menú abren su página convencional. Girar, inclinación, reflejo y botón lateral vuelven en E4. «Mi música» aparece en el menú, desactivada.
 
-- **«Mi música»: propuesta v3 pendiente de visto bueno** → [prototypes/musica/propuesta.html](../prototypes/musica/propuesta.html). Requisitos acordados (2026-10-20): sección personal **al final del menú (8.ª, después de CV)**; vista previa con portada, artista y pista seleccionada; canciones elegidas por Iñigo (las irá añadiendo al final), con una frase suya cada una y el reproductor oficial de Spotify; sin reproducción automática; si Spotify no carga, se mantienen el título y el enlace directo; entrada de auriculares discreta en el canto superior; los auriculares solo aparecen dentro de Mi música; «Sonando» sin controles de reproducción propios.
+- **«Mi música»: propuesta v3 implementada en E4 (se aprueba con E4)** → [prototypes/musica/propuesta.html](../prototypes/musica/propuesta.html). Requisitos acordados (2026-10-20): sección personal **al final del menú (8.ª, después de CV)**; vista previa con portada, artista y pista seleccionada; canciones elegidas por Iñigo (las irá añadiendo al final), con una frase suya cada una y el reproductor oficial de Spotify; sin reproducción automática; si Spotify no carga, se mantienen el título y el enlace directo; entrada de auriculares discreta en el canto superior; los auriculares solo aparecen dentro de Mi música; «Sonando» sin controles de reproducción propios.
   - Decidido 2026-10-20:
     - La música se para al salir de Mi música; nunca sigue sonando sin un control visible.
     - El botón central en «Sonando» se prueba en E4 y solo reproduce o pausa si la API de Spotify es fiable. Hasta entonces, la reproducción queda en el reproductor oficial.
@@ -48,7 +59,7 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
     - Enlaces de arriba aprobados: Proyectos · Sobre mí · Contacto · CV · GitHub ↗ · Mi música (se implementan al final). Trayectoria, Habilidades y Formación, desde el dispositivo, la lista móvil y el pie de las páginas interiores.
     - Filas del menú: 6,6 en escritorio. En móvil no bajan: el menú se desplaza y la lista de enlaces tiene áreas táctiles amplias.
     - Desde el dispositivo acoplado en el lienzo, Mi música vuelve a la home con la transición inversa y allí se conectan los auriculares.
-  - Decidido 2026-10-21 (sustituye lo del botón central de arriba):
+  - Decidido 2026-10-21 (sustituye lo del botón central de arriba). **Comprobado en E4:** con el centro la posición avanza, se para y sigue; ⏮ ⏭ cargan la pista correcta, también si se pulsan antes de que cargue el reproductor; en 8 alternancias seguidas los controles no se desactivaron nunca:
     - El dispositivo controla el reproductor oficial de Spotify con su iFrame API: el centro reproduce o pausa, ⏮ y ⏭ cargan la canción anterior o siguiente, y «Sonando» muestra la posición real (evento `playback_update`). El reproductor oficial sigue visible. Si la API no responde, los controles del dispositivo se desactivan y queda el reproductor con su enlace.
     - Sin control de volumen: la iFrame API no lo ofrece. + y − no cambian el volumen.
     - Límites asumidos: sin sesión de Spotify en el navegador, el visitante oye 30 s por canción; se carga el script de Spotify en la página. En E8, revisar el aviso de cookies de terceros.
@@ -64,6 +75,14 @@ Correspondencia con las 6 fases del brief original: E1+E2 = Fase 1 · E3 = nueva
 - Foto personal, formulario de contacto (Formspree), enlazar PDFs de certificados → ver audit/missing.md (no bloquean)
 
 ## Decisiones tomadas
+
+- 2026-10-23 · **E4 aprobada** (Iñigo: «Vale, pasamos a la E5», tras el cambio de las secciones como página). Siguiente: E5.
+
+- 2026-10-23 · **Secciones como página (cambio de E4 antes de aprobarla).** Iñigo vio la información demasiado pequeña dentro del dispositivo. Elegido: la pantalla crece hasta la página real de Sobre mí, Trayectoria, Habilidades, Formación y Contacto, con el dispositivo acoplado (no el lienzo infinito, que sigue siendo solo para Proyectos); **CV y Mi música, dentro del dispositivo**; letra mínima en el dispositivo de la home. Se hace en E4, antes de aprobarla; luego, E5.
+
+- 2026-10-21 · **E4 hecha, pendiente de aprobación.** Sin Motion también en E4: las transiciones internas del sistema son CSS (220 ms) y la de la pantalla al lienzo sigue con la Web Animations API. Se vuelve a valorar en E5.
+
+- 2026-10-21 · **E3 aprobada.** Iñigo prefiere ver el proyecto más completo antes de volver a la transición: queda abierta a ajustes en E5 (transición definitiva) o E7 (pulido). Siguiente: E4, en una conversación nueva.
 
 - 2026-10-20 · **E3 hecha, pendiente de aprobación.** Proyecto Vite 8 + React 19 + TypeScript; 11 páginas prerenderizadas (home, lienzo, 3 casos de estudio en borrador, 5 secciones, 404) con título, descripción, Open Graph y `noindex` mientras la base sea `/portfolio-personal/`. Contenido tipado en `src/content` con fuentes; 3 proyectos en borrador: `analisis-metabolomico-gcms`, `estres-petroleo-gdelt` y `figuris` (en curso). CV publicado como `public/cv.pdf`. Favicon provisional con la marca «○/» (el definitivo, en E7).
 

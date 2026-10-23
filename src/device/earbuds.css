@@ -1,0 +1,80 @@
+/* Earbuds accessory (prototypes/musica/propuesta.html, v3). Units: % of the device width (cqw). */
+.acc {
+  position: absolute;
+  left: -10cqw;
+  top: -30cqw;
+  width: 160cqw;
+  height: 182cqw;
+  pointer-events: none;
+  z-index: 5;
+  overflow: visible;
+}
+.acc--behind {
+  z-index: 0; /* the cable passes behind the body */
+}
+
+/* unplug (default state): reverse in 0.3 s */
+.acc .cable path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.25s cubic-bezier(0.5, 0, 0.2, 1) 0.05s;
+}
+.acc .plug {
+  transform: translateY(-7px);
+  opacity: 0;
+  transition:
+    transform 0.15s var(--ease-out),
+    opacity 0.1s;
+}
+.acc .bud {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.15s,
+    transform 0.15s var(--ease-out);
+}
+
+/* plug in: the cable draws (0.6 s), the plug goes in, then the branches and the buds appear */
+.acc.is-plugged .cable path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.5, 0, 0.2, 1) 0.1s;
+}
+.acc.is-plugged .cable--pair path {
+  transition-delay: 0.55s;
+  transition-duration: 0.3s;
+}
+.acc.is-plugged .plug {
+  transform: none;
+  opacity: 1;
+  transition:
+    transform 0.25s var(--ease-out) 0.65s,
+    opacity 0.15s 0.6s;
+}
+.acc.is-plugged .bud {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.3s 0.7s,
+    transform 0.45s var(--ease-out) 0.7s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acc .cable path,
+  .acc.is-plugged .cable path {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .acc .cable,
+  .acc .plug,
+  .acc .bud {
+    opacity: 0;
+    transform: none;
+    transition: opacity 0.2s;
+  }
+  .acc.is-plugged .cable,
+  .acc.is-plugged .plug,
+  .acc.is-plugged .bud {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+}

@@ -23,31 +23,6 @@
   height: 1000px;
   transform-origin: 0 0;
 }
-/* Screen outline during the transition: four 1 px lines that only stretch along their length,
-   so the line stays 1 px thick at every size (a scaled box would thin out its border). */
-.canvas-frame {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-.canvas-frame i {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.16);
-  transform-origin: 0 0;
-}
-.canvas-frame [data-edge='t'],
-.canvas-frame [data-edge='b'] {
-  width: 100%;
-  height: 1px;
-}
-.canvas-frame [data-edge='l'],
-.canvas-frame [data-edge='r'] {
-  width: 1px;
-  height: 100%;
-}
 .world.is-animating {
   transition: transform var(--dur-camera) var(--ease-out);
 }

@@ -36,6 +36,9 @@ Toda entrada física se convierte en uno de **5 comandos**, que alimentan una ú
 | INICIO · tecla Inicio | `home` |
 | Botón lateral: rueda del ratón o arrastre vertical | `next` / `prev` (en el lienzo: zoom, en E5) |
 | Flechas del teclado: igual que los ejes del anillo | ↑ `prev` · ↓ `next` · ← `back` · → `select` |
+| Deslizar el dedo sobre la pantalla (E4) | vertical: una fila por cada 7 % del ancho (dedo hacia arriba = `next`) · a la derecha `back` · a la izquierda `select` |
+
+Implementación: [src/device/Device.tsx](../../src/device/Device.tsx). Cada comando lleva su origen: los ejes del anillo y las flechas ← → se distinguen de ATRÁS, Esc e Intro, y eso permite que en «Sonando» ⏮ ⏭ cambien de pista.
 
 - Las flechas ← → siguen la lógica de un explorador por columnas: izquierda sube un nivel, derecha entra. Al pulsarlas se ilumina el eje correspondiente del anillo.
 - **En «Sonando» (Mi música), ⏮ y ⏭ cambian a la pista anterior o siguiente**, como indican sus símbolos (decidido 2026-10-20). + y − también pasan de pista, igual que en las listas. Se vuelve a la lista con ATRÁS o Esc. Ningún eje controla el volumen.
@@ -46,7 +49,7 @@ Toda entrada física se convierte en uno de **5 comandos**, que alimentan una ú
 
 - Barra de estado: hora real, título (`Pocket OS` en el menú, el nombre de la sección dentro) y batería.
 - Tipografía: Geist, no monoespaciada.
-- **Menú de 7 entradas, en el orden de la web antigua:** Sobre mí · Trayectoria · Proyectos · Habilidades · Formación · Contacto · CV.
+- **Menú de 8 entradas:** las 7 de la web antigua en su orden (Sobre mí · Trayectoria · Proyectos · Habilidades · Formación · Contacto · CV) y **Mi música** al final. Filas de 6,6 en escritorio (caben las 8); en móvil, de 7, y el menú se desplaza para mantener visible la selección. Mi música aparece desactivada mientras no tenga canciones.
   - Al abrirse (y al pulsar INICIO) la selección empieza en **Proyectos**, el destino principal, aunque no sea la primera entrada (decidido 2026-10-20).
 - **Menú partido**: lista a la izquierda (52 %) y vista previa de la entrada seleccionada a la derecha, solo con contenido real:
 
@@ -59,11 +62,14 @@ Toda entrada física se convierte en uno de **5 comandos**, que alimentan una ú
 | Formación | Línea de tiempo: Máster CD e IA (Afi, 2026–27) y Grado en Química (EHU) + "7 cursos complementarios" | web antigua |
 | Contacto | Correo y "LinkedIn · GitHub" | web antigua |
 | CV | Miniatura de documento y "Currículum · PDF" | — |
+| Mi música | «Pista seleccionada»: portada, título y artista (sin canciones: «Próximamente») | Canciones de Iñigo |
 
-- Secciones: listas a ancho completo o texto desplazable (Sobre mí).
+- **Secciones (cambiado el 2026-10-23):** dentro de la pantalla de 4:3 el texto quedaba en 7–10 px en portátiles y móviles. Ahora **Sobre mí, Trayectoria, Habilidades, Formación y Contacto se abren como su página real**: la pantalla crece hasta ocupar la ventana (la misma transición que Proyectos → lienzo) y el dispositivo se queda acoplado. En escritorio va fijo abajo a la izquierda, como en el lienzo, y el texto se aparta para no quedar debajo. En móvil va arriba de la página y se desplaza con ella, para no tapar el texto. Su pantalla muestra la lista de secciones: ↑ ↓ eligen, el centro abre otra sección, y ATRÁS o INICIO encogen la página de vuelta a la pantalla. La dirección cambia (`/sobre-mi/`…), así que se puede compartir y el botón atrás del navegador hace la transición inversa.
+  - **Dentro del dispositivo siguen CV y Mi música.** En CV, abrir una fila abre el PDF o lo descarga. Mi música: lista de canciones y «Sonando» (portada, «n de N», título, artista, frase, «Abrir en Spotify ↗», posición real y el reproductor oficial de 80 px a todo el ancho).
+  - Al volver de una sección, la selección del menú sigue en ella.
   - **Trayectoria** = lo que la web antigua llamaba "Experiencia": TFG y Grado en Química.
   - **Formación** = lo que la web antigua llamaba "Formación": Máster, Grado y los 7 cursos complementarios con sus fechas.
-  - Las listas largas (Formación, 9 filas) se desplazan para mantener visible la selección y muestran una barra de posición gris.
+- **Tamaño mínimo de letra en el dispositivo de la home (2026-10-23):** las filas no bajan de 12 px; la barra de estado, los datos y las vistas previas, de 11 px; los títulos de la vista previa y de «Sonando», de 13 px. Con el dispositivo a 430 px todo sigue en sus valores proporcionales; los mínimos solo actúan cuando es más pequeño (portátiles, móviles). Los dispositivos acoplados conservan sus proporciones.
 - La selección es una barra azul con un degradado leve hacia abajo; el texto blanco cumple 4,7 : 1. El azul solo marca la selección.
 
 ## En la home

@@ -177,17 +177,17 @@
 <section>
   <span class="num">03</span>
   <h2>«Sonando»: la pista elegida y el reproductor oficial</h2>
-  <p class="lede">Al elegir una pista se abre esta vista: portada, posición en la lista, título, artista, tu frase y un enlace directo a Spotify. Debajo va el reproductor oficial de Spotify, el único elemento que reproduce. No dibujo botones de reproducir, pausa ni barra de progreso propios: los únicos controles de audio son los del reproductor de Spotify.</p>
+  <p class="lede">Al elegir una pista se abre esta vista: portada, posición en la lista, título, artista, tu frase y un enlace directo a Spotify. Debajo va el reproductor oficial de Spotify, siempre visible. Desde el 2026-10-21, el dispositivo lo controla con la iFrame API de Spotify y muestra la posición real de la pista (implementado en E4). Si la API no responde, los controles del dispositivo se desactivan y queda el reproductor oficial.</p>
   <div class="row">
     <div class="fig"><div class="rig is-plugged acc-room" style="--w: 420px"><div data-dev="playing"></div></div>
       <p class="cap">El rectángulo oscuro es el sitio del reproductor de Spotify (80 px de alto, el tamaño compacto oficial).</p></div>
     <div class="notes">
       <table>
         <tr><th>Entrada</th><th>En «Sonando»</th></tr>
-        <tr><td>⏮ · ⏭</td><td>Pista anterior o siguiente de tu selección, como indican sus símbolos. Cambia la vista y el reproductor, pero <b>no reproduce</b>.</td></tr>
+        <tr><td>⏮ · ⏭</td><td>Cargan la pista anterior o siguiente de tu selección, como indican sus símbolos. Cambia la vista y el reproductor, pero <b>no reproduce</b>: eso lo hace el centro.</td></tr>
         <tr><td>+ · − · girar</td><td>Igual que en las listas: suben y bajan, es decir, pista anterior o siguiente. No cambian el volumen, porque el reproductor de Spotify no lo permite.</td></tr>
         <tr><td>ATRÁS · Esc</td><td>Vuelve a la lista.</td></tr>
-        <tr><td>Centro</td><td>Se probará en E4: reproducir o pausar mediante la API oficial de Spotify, y solo se activa si funciona de forma fiable. Hasta entonces no hace nada y la reproducción queda en el reproductor oficial.</td></tr>
+        <tr><td>Centro</td><td>Reproduce o pausa mediante la iFrame API oficial de Spotify (decidido el 2026-10-21 y comprobado en E4). Si una orden no tiene respuesta en 2,5 s se repite una vez; si tampoco responde, los controles del dispositivo se desactivan y queda el reproductor oficial.</td></tr>
         <tr><td>Teclado</td><td>Tab entra en los controles del reproductor de Spotify; Mayús+Tab vuelve al dispositivo.</td></tr>
         <tr><td>Carga</td><td>El reproductor no se carga hasta que eliges una pista. Así, nada de Spotify se ejecuta en la home y no hay reproducción automática.</td></tr>
         <tr><td>Si Spotify falla</td><td>Siguen visibles el título, el artista, la frase y «Abrir en Spotify ↗». Si el reproductor no carga en unos segundos, en su lugar aparece «No se ha podido cargar el reproductor» con el mismo enlace.</td></tr>

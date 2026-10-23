@@ -1,16 +1,17 @@
 import type { PageMeta } from './types';
+import { musicAvailable } from './music';
 import { person } from './profile';
 
 /** Conventional pages (each one is a real, prerendered route). */
-export type PageId = 'sobre-mi' | 'trayectoria' | 'habilidades' | 'formacion' | 'contacto';
+export type PageId = 'sobre-mi' | 'trayectoria' | 'habilidades' | 'formacion' | 'contacto' | 'mi-musica';
 
-export type SectionId = PageId | 'proyectos' | 'cv' | 'mi-musica';
+export type SectionId = PageId | 'proyectos' | 'cv';
 
 export interface Section {
   id: SectionId;
   label: string;
-  /** Route path relative to the base (trailing slash), or the CV file. null = not built yet. */
-  path: string | null;
+  /** Route path relative to the base (trailing slash), or the CV file. */
+  path: string;
 }
 
 // Device menu and mobile link list: the 7 sections of the old portfolio, in their order, + Mi música (last).
@@ -22,17 +23,25 @@ export const sections: Section[] = [
   { id: 'formacion', label: 'Formación', path: 'formacion/' },
   { id: 'contacto', label: 'Contacto', path: 'contacto/' },
   { id: 'cv', label: 'CV', path: person.cv },
-  // Agreed but not built: route /mi-musica arrives in E4 and is not published without Iñigo's songs.
-  { id: 'mi-musica', label: 'Mi música', path: null },
+  { id: 'mi-musica', label: 'Mi música', path: 'mi-musica/' },
 ];
 
-// Desktop top nav: approved selection (Mi música is added when the section exists).
-export const topNav: { label: string; path?: string; href?: string }[] = [
+export const labelOf = (id: SectionId) => sections.find((s) => s.id === id)!.label;
+
+/** Mi música is not published without Iñigo's songs (content/music.ts): until then it is disabled. */
+export const isAvailable = (id: SectionId) => id !== 'mi-musica' || musicAvailable();
+
+/** The sections that can be opened right now (link lists, footer). */
+export const openSections = () => sections.filter((s) => isAvailable(s.id));
+
+// Desktop top nav: approved selection (2026-10-20). Mi música only once the section exists.
+export const topNav = (): { label: string; path?: string; href?: string }[] => [
   { label: 'Proyectos', path: 'proyectos/' },
   { label: 'Sobre mí', path: 'sobre-mi/' },
   { label: 'Contacto', path: 'contacto/' },
   { label: 'CV', path: person.cv },
   { label: 'GitHub ↗', href: person.github },
+  ...(musicAvailable() ? [{ label: 'Mi música', path: 'mi-musica/' }] : []),
 ];
 
 const suffix = ` · ${person.name}`;
@@ -45,16 +54,27 @@ export const meta = {
   },
   proyectos: {
     title: `Proyectos${suffix}`,
-    description: '13 proyectos en 4 colecciones: metabolómica, mercados del petróleo, machine learning aplicado e IA generativa verificable.',
+    description:
+      '13 proyectos en 4 colecciones: metabolómica, mercados del petróleo, machine learning aplicado e IA generativa verificable.',
   },
   'sobre-mi': { title: `Sobre mí${suffix}`, description: 'Quién soy, qué estudio y cómo trabajo con datos.' },
-  trayectoria: { title: `Trayectoria${suffix}`, description: 'Grado en Química (EHU) y Trabajo Fin de Grado con datos metabolómicos.' },
-  habilidades: { title: `Habilidades${suffix}`, description: 'Python, SQL, machine learning, estadística y diseño de experimentos.' },
+  trayectoria: {
+    title: `Trayectoria${suffix}`,
+    description: 'Grado en Química (EHU) y Trabajo Fin de Grado con datos metabolómicos.',
+  },
+  habilidades: {
+    title: `Habilidades${suffix}`,
+    description: 'Python, SQL, machine learning, estadística y diseño de experimentos.',
+  },
   formacion: {
     title: `Formación${suffix}`,
     description: 'Máster en Ciencia de Datos e IA (Afi), Grado en Química (EHU) y cursos complementarios.',
   },
   contacto: { title: `Contacto${suffix}`, description: 'Correo, LinkedIn y GitHub de Iñigo Díez Osúa.' },
+  'mi-musica': {
+    title: `Mi música${suffix}`,
+    description: 'Canciones elegidas por Iñigo Díez Osúa, cada una con una frase suya.',
+  },
   notFound: { title: `Página no encontrada${suffix}`, description: 'Esta dirección no existe.' },
 } satisfies Record<string, PageMeta>;
 
@@ -85,13 +105,14 @@ export const ui = {
     notWritten: 'caso de estudio en E6',
   },
   device: {
-    label:
-      'Pocket OS: flechas arriba y abajo para moverte, derecha o Intro para abrir, izquierda o Escape para volver',
+    label: 'Pocket OS: flechas arriba y abajo para moverte, derecha o Intro para abrir, izquierda o Escape para volver',
     select: 'Seleccionar',
     back: 'Atrás',
     home: 'Inicio',
     keysHint: { move: 'moverse', open: 'abrir', back: 'volver' },
     soon: 'Próximamente',
+    flip: 'Girar',
+    position: (label: string, i: number, n: number) => `${label}, ${i} de ${n}`,
   },
   notFound: { title: 'Esta página no existe', body: 'Puede que el enlace haya cambiado. Prueba desde aquí:' },
   labels: {

@@ -1,10 +1,9 @@
-import { href } from '../app/routes';
+import { href, isDocked } from '../app/routes';
 import { about, cursos, formacion, habilidades, person, trayectoria, type TimelineItem } from '../content/profile';
+import { getTracks, musicIntro, musicUi } from '../content/music';
 import { projectBySlug } from '../content/projects';
-import { sections, ui, type PageId } from '../content/site';
+import { labelOf, openSections, ui, type PageId } from '../content/site';
 import { PageShell } from './PageShell';
-
-const labelOf = (id: string) => sections.find((s) => s.id === id)!.label;
 
 function Timeline({ items }: { items: TimelineItem[] }) {
   return (
@@ -117,18 +116,42 @@ function Contacto() {
   );
 }
 
+function MiMusica() {
+  return (
+    <>
+      <h1>{labelOf('mi-musica')}</h1>
+      {musicIntro && <p className="lead">{musicIntro}</p>}
+      <ol className="rows songs-page">
+        {getTracks().map((t, i) => (
+          <li key={i}>
+            <span>
+              {t.title}
+              <small>{t.artist}</small>
+              <small className="songs-page__note">«{t.note}»</small>
+            </span>
+            <a className="text-link" href={t.url} target="_blank" rel="noopener">
+              {musicUi.open}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </>
+  );
+}
+
 const PAGES: Record<PageId, () => React.JSX.Element> = {
   'sobre-mi': SobreMi,
   trayectoria: Trayectoria,
   habilidades: Habilidades,
   formacion: Formacion,
   contacto: Contacto,
+  'mi-musica': MiMusica,
 };
 
 export function SectionPage({ id }: { id: PageId }) {
   const Body = PAGES[id];
   return (
-    <PageShell current={`${id}/`}>
+    <PageShell current={`${id}/`} dock={isDocked(id) ? id : undefined}>
       <Body />
     </PageShell>
   );
@@ -200,11 +223,11 @@ export function NotFoundPage() {
             {ui.labels.home}
           </a>
         </li>
-        {sections
-          .filter((s) => s.path && s.id !== 'cv')
+        {openSections()
+          .filter((s) => s.id !== 'cv')
           .map((s) => (
             <li key={s.id}>
-              <a className="text-link" href={href(s.path!)}>
+              <a className="text-link" href={href(s.path)}>
                 {s.label}
               </a>
             </li>

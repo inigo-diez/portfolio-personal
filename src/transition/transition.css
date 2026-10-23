@@ -4,6 +4,37 @@
   pointer-events: none;
 }
 
+/* Screen outline during the transition: four 1 px lines that only stretch along their length,
+   so the line stays 1 px thick at every size (a scaled box would thin out its border). Fixed, above the
+   growing window and below the travelling device; the transition sets its size to the window's. */
+.screen-frame {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  pointer-events: none;
+  opacity: 0;
+}
+.screen-frame i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.16);
+  transform-origin: 0 0;
+}
+.screen-frame [data-edge='t'],
+.screen-frame [data-edge='b'] {
+  width: 100%;
+  height: 1px;
+}
+.screen-frame [data-edge='l'],
+.screen-frame [data-edge='r'] {
+  width: 1px;
+  height: 100%;
+}
+
 /* ── Comparison variant: View Transitions API (?tecnica=vt). Removed after E3 approval. ── */
 html[data-tecnica='vt'] [data-device] {
   view-transition-name: dispositivo;

@@ -8,6 +8,7 @@ import type { Collection, Project } from '../content/types';
 import { Device, type Command } from '../device/Device';
 import { Icon } from '../device/icons';
 import { ListScreen, useListNav, type Row } from '../os/Screen';
+import { ScreenFrame } from '../transition/ScreenFrame';
 import { boundsOf, camTransform, centreOf, fit, safeArea, Z_MAX, Z_MIN, type Cam } from './camera';
 import './canvas.css';
 
@@ -203,13 +204,7 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
           ))}
         </div>
       </div>
-      {/* Outline of the screen while it grows into the canvas (only visible during the transition) */}
-      <div className="canvas-frame" data-canvas-frame aria-hidden="true">
-        <i data-edge="t" />
-        <i data-edge="r" />
-        <i data-edge="b" />
-        <i data-edge="l" />
-      </div>
+      <ScreenFrame />
 
       <header className="canvas-top" data-chrome>
         <div className="crumb">
@@ -219,7 +214,7 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
         </div>
         <nav className="topnav" aria-label={ui.primaryNav}>
           <ul>
-            {topNav.map((n) => (
+            {topNav().map((n) => (
               <li key={n.label}>
                 <a
                   href={n.href ?? href(n.path!)}
@@ -236,7 +231,12 @@ export function CanvasPage({ restore = false }: { restore?: boolean }) {
 
       <div className="dock">
         <Device data-device="dock" onCommand={onCommand} globalKeys>
-          <ListScreen title={ui.canvas.title} rows={DEVICE_ROWS} sel={nav.sel} onPick={(i) => (nav.setSel(i), pick(i))} />
+          <ListScreen
+            title={ui.canvas.title}
+            rows={DEVICE_ROWS}
+            sel={nav.sel}
+            onPick={(i) => (nav.setSel(i), pick(i))}
+          />
         </Device>
       </div>
 

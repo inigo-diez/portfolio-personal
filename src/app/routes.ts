@@ -1,4 +1,5 @@
 import { projectBySlug, projects } from '../content/projects';
+import { musicAvailable } from '../content/music';
 import { meta, type PageId } from '../content/site';
 import type { PageMeta } from '../content/types';
 
@@ -9,7 +10,25 @@ export type Route =
   | { kind: 'page'; id: PageId }
   | { kind: 'notfound' };
 
-const PAGES: PageId[] = ['sobre-mi', 'trayectoria', 'habilidades', 'formacion', 'contacto'];
+// Mi música is a route only while it has songs (content/music.ts); never prerendered without them.
+const pages = (): PageId[] => [
+  'sobre-mi',
+  'trayectoria',
+  'habilidades',
+  'formacion',
+  'contacto',
+  ...(musicAvailable() ? (['mi-musica'] as const) : []),
+];
+
+/**
+ * Sections whose screen grows into their page, with the device docked (decided 2026-10-23: the text is
+ * read at web size, not inside the 4:3 screen). CV and Mi música stay inside the device.
+ */
+export const DOCKED_PAGES: readonly PageId[] = ['sobre-mi', 'trayectoria', 'habilidades', 'formacion', 'contacto'];
+export const isDocked = (id: PageId) => DOCKED_PAGES.includes(id);
+
+/** Routes the device screen grows into (and shrinks back from). */
+export const opensFromScreen = (r: Route) => r.kind === 'canvas' || (r.kind === 'page' && isDocked(r.id));
 
 export const BASE = import.meta.env.BASE_URL; // from vite.config.ts (single source)
 
@@ -27,7 +46,7 @@ export function parse(pathname: string): Route {
   if (p === 'proyectos') return { kind: 'canvas' };
   const m = /^proyectos\/([a-z0-9-]+)$/.exec(p);
   if (m) return projectBySlug(m[1]) ? { kind: 'project', slug: m[1] } : { kind: 'notfound' };
-  if ((PAGES as string[]).includes(p)) return { kind: 'page', id: p as PageId };
+  if ((pages() as string[]).includes(p)) return { kind: 'page', id: p as PageId };
   return { kind: 'notfound' };
 }
 
@@ -71,5 +90,5 @@ export const allRoutes: Route[] = [
   { kind: 'home' },
   { kind: 'canvas' },
   ...projects.map((p) => ({ kind: 'project' as const, slug: p.slug })),
-  ...PAGES.map((id) => ({ kind: 'page' as const, id })),
+  ...pages().map((id) => ({ kind: 'page' as const, id })),
 ];

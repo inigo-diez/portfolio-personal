@@ -1,6 +1,6 @@
 # Transición pantalla ↔ lienzo (E3)
 
-Implementación: [src/transition/screenToCanvas.ts](../../src/transition/screenToCanvas.ts). Orquestación por rutas: [src/app/Stage.tsx](../../src/app/Stage.tsx). Medición: [scripts/dev/measure-transition.mjs](../../scripts/dev/measure-transition.mjs).
+Implementación: [src/transition/screenToCanvas.ts](../../src/transition/screenToCanvas.ts) (desde el 2026-10-23 también lleva la pantalla a las páginas de sección: ver más abajo). Orquestación por rutas: [src/app/Stage.tsx](../../src/app/Stage.tsx). Medición: [scripts/dev/measure-transition.mjs](../../scripts/dev/measure-transition.mjs).
 
 ## Qué se ve (ida, 730 ms)
 
@@ -70,7 +70,41 @@ Medido con el contorno incluido (no cambia los resultados). Las dos técnicas so
 
 El presupuesto del brief es de 150 KB de JS comprimido en la home: se usa algo más de la mitad. La mayor parte es React (estimación: unos 60 KB). El lienzo todavía no se carga aparte; se hará en E5 si su código crece.
 
-## Pendiente para E4 y E5
+## E4: el dispositivo completo (2026-10-21)
 
-- (Comprobación de E4) El primer fotograma de la ida coincide con el montaje del lienzo en React: unos 12 ms, y 48 ms la primera vez en frío. Si se nota en equipos lentos, se puede montar el lienzo por adelantado (por ejemplo, al pasar el ratón por «Ver proyectos» o al seleccionar «Proyectos»).
-- (Comprobación de E5) En móvil la transición funciona, pero el lienzo es demasiado pequeño: en E5 se sustituye por la lista o galería móvil.
+El cuerpo ahora lleva inclinación, giro y reflejo. Al empezar la transición (`[data-transitioning]`) se ponen a cero al instante, para que la pantalla se mida plana y de frente; el reflejo desaparece en ese momento. Si se sale de Mi música, los auriculares se desconectan antes (0,3 s), y solo después empieza la transición.
+
+Medido contra E3 en el mismo equipo, con la build de producción, 5 repeticiones por escenario y alternando las versiones (E3, E4, E3, E4) para repartir el ruido del equipo:
+
+| Escenario | E3 | E4 |
+|---|---|---|
+| Ida con el dispositivo: fps · peor fotograma · p95 | 154–157 · 42–48 ms · 6,9–7,6 ms | 147–156 · 36–43 ms · 8–10,7 ms |
+| Vuelta con el atrás del navegador | 160 · 24–34 ms · 7–7,7 ms | 152–155 · 42 ms · 9–9,8 ms |
+| Movimiento reducido, ida | 134–137 · 42–55 ms · 15–17 ms | 129–131 · 67–91 ms · 24–28 ms |
+
+E4 cuesta unos 2–3 ms más en el p95, por el reflejo y las capas 3D de la home, y sigue por encima de 145 fps. Todas las pruebas, incluidas las interrumpidas, terminan con el estado limpio. Una primera medición aislada dio un peor fotograma de 95 ms; la comparación alternada mostró que era ruido del equipo. Resultados: `_reference/e4/ab-e3`, `_reference/e4/ab-e4`. Para medir otra build: `PREVIEW_URL=http://localhost:4174/portfolio-personal/ node scripts/dev/measure-transition.mjs <carpeta>`.
+
+## E4: la pantalla también crece hasta las páginas de sección (2026-10-23)
+
+Dentro de la pantalla de 4:3 el texto de las secciones quedaba en 7–10 px en portátiles y móviles. Por eso Sobre mí, Trayectoria, Habilidades, Formación y Contacto se abren ahora con la misma transición que Proyectos, pero el destino es su página real en lugar del lienzo. CV y Mi música siguen dentro del dispositivo.
+
+- **Mismo motor.** `startScreenTransition` recibe el destino (lienzo o página) y el resto de la coreografía es idéntico: los dos números (g, s), el contorno gris, el cuerpo que se acopla, la interrupción a mitad de camino y el fundido con movimiento reducido. Lo que cambia por destino es cómo se compensa el contenido dentro de la ventana que crece. En el lienzo se interpola la cámara. En la página, esta se muestra a escala uniforme, tan ancha como la ventana (una miniatura de la página real), así que el texto nunca se estira.
+- **La página como ventana.** Mientras dura la transición (`[data-transitioning]`), la capa de la página es una ventana fija sobre la home ([page.css](../../src/pages/page.css)). Su ancho es el que tendrá la página sola, sin la barra de desplazamiento si la página es más alta que la ventana, para que nada salte al terminar.
+- **Al volver de una página desplazada,** la ventana enseña ese desplazamiento y lo lleva al principio mientras encoge. Si la vuelta se interrumpe y se regresa a la página, se restaura el desplazamiento. Con movimiento reducido, la página se funde sin moverse de donde estaba.
+- **Dispositivo acoplado:** en escritorio, fijo abajo a la izquierda, como en el lienzo. En móvil va arriba de la página y se desplaza con ella; si se vuelve con la página desplazada, el cuerpo llega desde arriba.
+- La variante `?tecnica=vt` (comparación de E3) solo se aplica al lienzo.
+
+Medido con la build de producción, en el mismo equipo:
+
+| Escenario | Resultado |
+|---|---|
+| Pantalla → página y vuelta (1440 × 900 y 390 × 844, 3 idas y 3 vueltas cada uno, la vuelta con la página desplazada 400 px) | 152–165 fps, p95 6,1–6,3 ms; peor fotograma 24–36 ms en la primera ida, 6–18 ms en el resto |
+| Lienzo, antes y después del cambio, alternando versiones 4 veces (2 repeticiones por sesión) | Peor fotograma de la primera ida (en frío): antes 60,7 / 48,4 / 48,6 / 48,5 ms; después 54,3 / 48,3 / 48,4 / 48,5 ms. p95 de 6,2–6,3 ms en las dos. Sin empeoramiento. |
+
+Todas las pruebas, también las interrumpidas, terminan con el estado limpio. Estas mediciones se guardaron en la carpeta temporal de la sesión, no en `_reference/`.
+
+## Pendiente para E5
+
+- El primer fotograma de la ida coincide con el montaje del lienzo en React: 36–48 ms en frío, igual en E3 que en E4. No se ha montado el lienzo por adelantado; si se nota en equipos lentos, se puede hacer (por ejemplo, al pasar el ratón por «Ver proyectos» o al seleccionar «Proyectos»).
+- Con movimiento reducido, el fundido de E4 tiene un peor fotograma algo mayor (67–91 ms frente a 42–55 ms); revisar al rehacer la transición definitiva.
+- En móvil la transición funciona, pero el lienzo es demasiado pequeño: en E5 se sustituye por la lista o galería móvil.

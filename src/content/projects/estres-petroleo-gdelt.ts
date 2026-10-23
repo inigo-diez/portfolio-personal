@@ -17,11 +17,7 @@ export const estresPetroleoGdelt: Project = {
   tags: ['Series temporales', 'Clasificación', 'Interpretabilidad'],
   stack: ['Python', 'GDELT', 'SHAP'],
   headline: { value: '16 años', label: 'de noticias geopolíticas frente al WTI' },
-  facts: [
-    'Periodo 2010–2026: 4.059 días',
-    '67 variables con control de fuga de información',
-    'F1 0,571 · AUC 0,615',
-  ],
+  facts: ['Periodo 2010–2026: 4.059 días', '67 variables con control de fuga de información', 'F1 0,571 · AUC 0,615'],
   cover: null,
   canvas: { x: 1060, y: 150, w: 250 },
   links: { repo: REPO },
