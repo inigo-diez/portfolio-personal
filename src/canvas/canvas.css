@@ -24,7 +24,13 @@
   transform-origin: 0 0;
 }
 .world.is-animating {
-  transition: transform var(--dur-camera) var(--ease-out);
+  transition: transform var(--cam-ms, var(--dur-camera)) var(--ease-out);
+}
+/* the canvas takes the keyboard (arrows pan): a visible frame inside the viewport while it has keyboard focus */
+.canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -8px;
+  border-radius: 14px;
 }
 
 /* cards */
@@ -37,34 +43,16 @@
   box-shadow: var(--shadow-card);
   cursor: pointer;
   transition:
-    transform 0.3s var(--ease-out),
+    translate 0.3s var(--ease-out),
     box-shadow 0.3s var(--ease-out);
 }
+/* the hover lift uses `translate`, so it never waits for (or fights) the unfolding `transform` */
 .card:hover {
-  transform: translateY(-3px);
+  translate: 0 -3px;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.07),
     0 2px 4px rgba(0, 0, 0, 0.04),
     0 34px 60px -28px rgba(0, 0, 0, 0.26);
-}
-/* a pile = a neat deck: two cards peeking out underneath (no rotation) */
-.card.pile::before,
-.card.pile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--surface);
-  border-radius: var(--radius-card);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 12px 24px -16px rgba(0, 0, 0, 0.18);
-}
-.card.pile::before {
-  transform: translateY(8px) scale(0.965);
-}
-.card.pile::after {
-  transform: translateY(16px) scale(0.93);
 }
 .card__top {
   display: flex;
@@ -86,10 +74,6 @@
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
-.card--project .card__title {
-  font-size: 14px;
-  margin: 12px 0 14px;
-}
 .metric b {
   display: block;
   font-variant-numeric: tabular-nums;
@@ -99,9 +83,6 @@
   letter-spacing: -0.04em;
   color: var(--ink);
   white-space: nowrap;
-}
-.card--project .metric b {
-  font-size: 26px;
 }
 .metric span {
   display: block;
@@ -129,6 +110,294 @@
 }
 .card footer a:hover {
   text-decoration: underline;
+}
+
+/* the universe: each collection is a region with its label; every project shows its cover */
+.zone__head {
+  position: absolute;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: baseline;
+}
+.zone__head .mono {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.zone__head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+.zone__head p {
+  grid-column: 2;
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* a project: a zero-size layer at the world origin, so the open one (and its cards) sits above the rest */
+.proj {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+.proj.is-open {
+  z-index: 3;
+}
+.world.has-focus .proj:not(.is-open),
+.world.has-focus .zone__head {
+  opacity: 0.12;
+  transition: opacity 0.3s var(--ease-out);
+}
+.proj,
+.zone__head {
+  transition: opacity 0.3s var(--ease-out);
+}
+
+/* the cover: an image frame (TODO(content): the images come at the end) and the project's essentials */
+.cover {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cover__img {
+  flex: none;
+  height: 150px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f6f7f8, #eceef1);
+  border-bottom: 1px solid var(--line);
+}
+.cover__img .mono {
+  font-size: 28px;
+  color: #b9bec5;
+  letter-spacing: -0.02em;
+}
+.cover__body {
+  flex: 1;
+  padding: 14px 18px 16px;
+}
+.cover .card__title {
+  margin: 10px 0 12px;
+  font-size: 15px;
+}
+.cover .metric b {
+  font-size: 28px;
+}
+.proj.is-open .cover {
+  box-shadow:
+    0 0 0 1.5px var(--accent),
+    0 24px 48px -26px rgba(0, 0, 0, 0.22);
+}
+/* the whole cover opens and closes its project (the button stretches over it) */
+.cover__open {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cover__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+}
+.cover__open:focus-visible {
+  outline: none;
+}
+.cover__open:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* the cards a project unfolds into: folded under the cover (offset --fx/--fy), out with a slight spring,
+   one after another; z-index −1 keeps them under the cover while they travel */
+.sat {
+  z-index: -1;
+  cursor: default;
+  padding: 16px 18px;
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.32, 0.5, 1) calc(var(--i) * 45ms),
+    opacity 0.3s var(--ease-out) calc(var(--i) * 45ms),
+    translate 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    visibility 0s linear calc(var(--i) * 45ms);
+}
+.sat:hover {
+  translate: none;
+}
+/* folded: hidden once it has faded under the cover, so the ~70 folded cards are never painted (keeps the
+   screen transition and the panning light) */
+.proj:not(.is-open) .sat {
+  transform: translate(var(--fx), var(--fy)) scale(0.9);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition-delay: 0s, 0s, 0s, 0s, 0.3s;
+}
+.sat h4 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.sat p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.sat .sat__lead {
+  font-size: 15px;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+.card__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.card__stack li {
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  font-size: 11.5px;
+}
+
+/* the README: read inside its card (it scrolls on its own) */
+.sat--readme {
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.sat--readme header {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.sat--readme header h4 {
+  margin: 0;
+}
+.sat__note {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.sat--readme header a:first-of-type {
+  margin-left: auto;
+}
+.sat--readme header a {
+  font-size: 12.5px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.readme {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 14px 18px 20px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.readme--loading {
+  color: var(--ink-2);
+}
+.readme h1,
+.readme h2,
+.readme h3,
+.readme h4 {
+  margin: 1.4em 0 0.5em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.readme h1 {
+  font-size: 19px;
+  margin-top: 0.4em;
+}
+.readme h2 {
+  font-size: 16px;
+}
+.readme h3,
+.readme h4 {
+  font-size: 14px;
+}
+.readme p,
+.readme ul,
+.readme ol {
+  margin: 0 0 0.8em;
+}
+.readme ul,
+.readme ol {
+  padding-left: 1.3em;
+}
+.readme a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.readme code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface-2);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+.readme pre {
+  overflow: auto;
+  background: var(--surface-2);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.readme pre code {
+  background: none;
+  padding: 0;
+}
+.readme table {
+  display: block;
+  overflow: auto;
+  border-collapse: collapse;
+  margin: 0 0 1em;
+  font-size: 12px;
+}
+.readme th,
+.readme td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.readme hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 1.2em 0;
+}
+.readme blockquote {
+  margin: 0 0 1em;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+  color: var(--ink-2);
+}
+.readme__img {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--ink-2);
 }
 
 /* chrome */
@@ -271,9 +540,58 @@
   color: var(--ink-2);
   text-align: right;
 }
-.list-view li.is-muted {
-  font-size: 13px;
+.list-view li a .mono,
+.canvas-page__mobile .list-view__group .mono {
   color: var(--ink-2);
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+/* phones: the projects page is the list (with the device docked); the canvas is not used (brief §11) */
+.canvas-page__mobile {
+  display: none;
+}
+@media (max-width: 860px) {
+  .canvas-page {
+    position: static;
+    z-index: auto;
+  }
+  .canvas,
+  .canvas-top,
+  .dock,
+  .hud,
+  .list-view {
+    display: none;
+  }
+  .canvas-page__mobile {
+    display: block;
+  }
+  .canvas-page__mobile .list-view__group {
+    margin: 36px 0 0;
+  }
+  .canvas-page__mobile .list-view__group h2 {
+    margin: 0 0 8px;
+  }
+  .canvas-page__mobile .list-view__group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .canvas-page__mobile .list-view__group li {
+    border-bottom: 1px solid var(--line);
+  }
+  .canvas-page__mobile .list-view__group li a {
+    display: block;
+    padding: 14px 0 4px;
+    font-size: 16px;
+  }
+  .canvas-page__mobile .list-view__group li > span {
+    display: block;
+    padding-bottom: 14px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
 }
 
 @media (max-width: 860px) {
@@ -293,5 +611,13 @@
   }
   .canvas-top {
     padding-top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sat,
+  .proj,
+  .zone__head {
+    transition: none;
   }
 }

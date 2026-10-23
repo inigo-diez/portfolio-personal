@@ -99,6 +99,7 @@ for (const technique of ['flip', 'vt']) {
       await waitCount(page, n + 1);
       add(`${key} · ida (enlace)`, (await transitions(page)).slice(n, n + 1), await check(page, 'canvas'));
       await page.waitForTimeout(400);
+      await page.focus('[data-device="dock"]'); // E5: the docked device takes the keys only when focused
       await page.keyboard.press('Escape'); // device ATRÁS
       await waitCount(page, n + 2);
       add(`${key} · vuelta (tecla ATRÁS)`, (await transitions(page)).slice(n + 1, n + 2), await check(page, 'home'));

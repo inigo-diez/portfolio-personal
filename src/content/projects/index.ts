@@ -1,15 +1,41 @@
-import type { Collection, Project } from '../types';
+import type { Collection, CollectionId, Project } from '../types';
 import { analisisMetabolomicoGcms } from './analisis-metabolomico-gcms';
+import { analizadorSensoresLlm } from './analizador-sensores-llm';
+import { biomarcadoresSaludMental } from './biomarcadores-salud-mental';
+import { contagioEeuuIran } from './contagio-eeuu-iran';
 import { estresPetroleoGdelt } from './estres-petroleo-gdelt';
 import { figuris } from './figuris';
+import { morosidadCrediticia } from './morosidad-crediticia';
+import { optimizacionMlVsRsm } from './optimizacion-ml-vs-rsm';
+import { optimizacionRsm } from './optimizacion-rsm';
+import { precioPortatiles } from './precio-portatiles';
+import { precioVehiculos } from './precio-vehiculos';
+import { priorizacionMetabolitos } from './priorizacion-metabolitos';
+import { simulacionWtiMontecarlo } from './simulacion-wti-montecarlo';
 
-// E3: 3 real projects as drafts. The other 10 are added in E6 (see docs/audit/project-map.md).
-export const projects: Project[] = [analisisMetabolomicoGcms, estresPetroleoGdelt, figuris];
+// The 13 projects of the old portfolio (docs/audit/project-map.md), in reference order. E5: card-level data
+// for all of them; the case studies are written in E6.
+export const projects: Project[] = [
+  biomarcadoresSaludMental,
+  analisisMetabolomicoGcms,
+  priorizacionMetabolitos,
+  optimizacionRsm,
+  optimizacionMlVsRsm,
+  estresPetroleoGdelt,
+  simulacionWtiMontecarlo,
+  contagioEeuuIran,
+  morosidadCrediticia,
+  precioVehiculos,
+  precioPortatiles,
+  figuris,
+  analizadorSensoresLlm,
+];
+const slugsOf = (id: CollectionId) => projects.filter((p) => p.collection === id).map((p) => p.slug);
 
 export const projectBySlug = (slug: string) => projects.find((p) => p.slug === slug);
 
-// The 4 original groups of the old portfolio, all featured as canvas piles.
-// Laid out 2 × 2 like the "Proyectos" preview on the device (01 02 / 03 04).
+// The 4 original groups of the old portfolio. On the canvas each is a region of the universe, laid out like the
+// "Proyectos" preview on the device (01 02 / 03 04); `canvas` is the position of its label.
 // Headline figures: verified (docs/audit/project-map.md).
 export const collections: Collection[] = [
   {
@@ -17,41 +43,37 @@ export const collections: Collection[] = [
     title: 'Metabolómica & Biomarcadores de Salud Mental',
     shortTitle: 'Metabolómica & Biomarcadores',
     kicker: 'GC-MS · ML · TFG',
-    projectCount: 5,
     headline: { value: '~39.000', label: 'candidatos a biomarcador indexados', from: 'biomarcadores-salud-mental' },
-    canvas: { x: 320, y: 140, w: 330 },
-    projects: ['analisis-metabolomico-gcms'],
+    canvas: { x: 0, y: 0, w: 560 },
+    projects: slugsOf('01'),
   },
   {
     id: '02',
     title: 'Geopolítica, Crudo WTI y Mercados Financieros',
     shortTitle: 'Geopolítica y Crudo WTI',
     kicker: 'GDELT · MONTE CARLO · RSJD',
-    projectCount: 3,
     headline: { value: '2.000', label: 'trayectorias Monte Carlo por escenario', from: 'simulacion-wti-montecarlo' },
-    canvas: { x: 690, y: 140, w: 330 },
-    projects: ['estres-petroleo-gdelt'],
+    canvas: { x: 1020, y: 30, w: 560 },
+    projects: slugsOf('02'),
   },
   {
     id: '03',
     title: 'Machine Learning Aplicado — Proyectos Kaggle',
     shortTitle: 'ML Aplicado · Kaggle',
     kicker: 'REGRESIÓN · CLASIFICACIÓN',
-    projectCount: 3,
     headline: { value: 'F1 0,90', label: 'alerta temprana de morosidad', from: 'morosidad-crediticia' },
-    canvas: { x: 320, y: 490, w: 330 },
-    projects: [],
+    canvas: { x: 0, y: 860, w: 560 },
+    projects: slugsOf('03'),
   },
   {
     id: '04',
     title: 'IA Generativa para Ciencia e Ingeniería',
     shortTitle: 'IA Generativa',
     kicker: 'LLM · DOCUMENT AI',
-    projectCount: 2,
     headline: { value: '0', label: 'citas inventadas llegaron al lector', from: 'figuris' },
-    canvas: { x: 690, y: 490, w: 330 },
-    projects: ['figuris'],
+    canvas: { x: 1100, y: 520, w: 560 },
+    projects: slugsOf('04'),
   },
 ];
 
-export const TOTAL_PROJECTS = collections.reduce((n, c) => n + c.projectCount, 0); // 13
+export const TOTAL_PROJECTS = projects.length; // 13 (a collection's count is its projects.length)

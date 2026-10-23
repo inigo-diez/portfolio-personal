@@ -1,6 +1,6 @@
 # Transición pantalla ↔ lienzo (E3)
 
-Implementación: [src/transition/screenToCanvas.ts](../../src/transition/screenToCanvas.ts) (desde el 2026-10-23 también lleva la pantalla a las páginas de sección: ver más abajo). Orquestación por rutas: [src/app/Stage.tsx](../../src/app/Stage.tsx). Medición: [scripts/dev/measure-transition.mjs](../../scripts/dev/measure-transition.mjs).
+Implementación: motor común en [src/transition/shared.ts](../../src/transition/shared.ts) (desde E5); la pantalla, en [screenToCanvas.ts](../../src/transition/screenToCanvas.ts) (también hacia las páginas de sección, ver más abajo); la tarjeta del lienzo, en [cardToPage.ts](../../src/transition/cardToPage.ts). Orquestación por rutas: [src/app/Stage.tsx](../../src/app/Stage.tsx). Medición: [scripts/dev/measure-transition.mjs](../../scripts/dev/measure-transition.mjs).
 
 ## Qué se ve (ida, 730 ms)
 
@@ -103,8 +103,25 @@ Medido con la build de producción, en el mismo equipo:
 
 Todas las pruebas, también las interrumpidas, terminan con el estado limpio. Estas mediciones se guardaron en la carpeta temporal de la sesión, no en `_reference/`.
 
-## Pendiente para E5
+## E5: el universo de proyectos y la portada que crece (2026-10-23)
 
-- El primer fotograma de la ida coincide con el montaje del lienzo en React: 36–48 ms en frío, igual en E3 que en E4. No se ha montado el lienzo por adelantado; si se nota en equipos lentos, se puede hacer (por ejemplo, al pasar el ratón por «Ver proyectos» o al seleccionar «Proyectos»).
+- **Motor común** ([shared.ts](../../src/transition/shared.ts)). Los dos números (g, s), el muestreo a 60 fps, la interrupción, el fundido con movimiento reducido, la ventana que crece con su contorno y la página a escala uniforme salen de `screenToCanvas.ts` sin cambiar su comportamiento. Las dos transiciones los comparten.
+- **Portada → caso de estudio** ([cardToPage.ts](../../src/transition/cardToPage.ts)). Misma técnica y duración (110 + 620 ms). La portada se funde con una miniatura de la página real, que crece hasta la ventana mientras se desvanecen el HUD, la barra superior y el dispositivo acoplado. Se lanza desde «Página del proyecto →» del proyecto desplegado; si la portada no se ve, crece desde la tarjeta del README. Al volver, el lienzo ya está montado con la misma cámara y el mismo proyecto abierto, así que la página se encoge en su sitio. Desde la vista Lista hay cambio de página normal. En móvil no hay lienzo: cambio normal, y la lista vuelve a su desplazamiento.
+- **Vuelta a la home desde el lienzo:** primero se cierra el proyecto abierto y la cámara vuelve a la composición inicial (420 ms); después, la transición inversa (brief §7).
+- **En móvil, la pantalla crece hasta la lista de proyectos**, que es una página anidada en la del lienzo, con su dispositivo acoplado.
+
+Medido con la build de producción, en el mismo equipo:
+
+| Escenario | Resultado |
+|---|---|
+| Pantalla → lienzo con el universo (2 sesiones de 3 repeticiones) | Ida 130–135 fps, p95 10–12 ms, peor fotograma en frío 79–109 ms; vuelta 147–149 fps, p95 9–12 ms. Con movimiento reducido, p95 32–40 ms. |
+| Portada → caso de estudio y vuelta (3 proyectos, con la página desplazada 400 px al volver) | 117–153 fps, p95 6–18 ms |
+| Referencia: la primera versión con pilas, comparada con E4 alternando versiones 4 veces | p95 6,2 ms en las dos; peor fotograma de la primera ida 67–73 ms (E4: 49–73 ms) |
+
+El universo es más pesado que las pilas: 13 portadas a la vista y unas 70 tarjetas plegadas en el lienzo que la pantalla escala. Que las plegadas no se pinten (`visibility: hidden` una vez recogidas) lo mejoró algo (ida de ≈ 112 a ≈ 130 fps). Sigue por encima de 60 fps; optimizarlo queda para E7. Todas las pruebas, también las interrumpidas, terminan con el estado limpio. Mediciones en la carpeta temporal de la sesión.
+
+## Pendiente (de E3–E5)
+
+- El primer fotograma de la ida coincide con el montaje del lienzo en React: 36–48 ms en frío en E3 y E4 (medido el 2026-10-21); en E5, 79–109 ms con el universo (ver arriba). No se ha montado el lienzo por adelantado; si se nota en equipos lentos, se puede hacer en E7 (por ejemplo, al pasar el ratón por «Ver proyectos» o al seleccionar «Proyectos»).
 - Con movimiento reducido, el fundido de E4 tiene un peor fotograma algo mayor (67–91 ms frente a 42–55 ms); revisar al rehacer la transición definitiva.
-- En móvil la transición funciona, pero el lienzo es demasiado pequeño: en E5 se sustituye por la lista o galería móvil.
+- (Hecho en E5) En móvil, el lienzo se sustituye por la lista por colecciones y la pantalla crece hasta ella.

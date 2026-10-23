@@ -24,7 +24,7 @@ export const analisisMetabolomicoGcms: Project = {
     'PCA, K-Means, Mann-Whitney U, Random Forest, XGBoost y SHAP',
   ],
   cover: null,
-  canvas: { x: 30, y: 150, w: 250 },
+  canvas: { x: 300, y: 110, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio (2.ª parte de la serie)', url: REPO }],

@@ -24,7 +24,7 @@ export const figuris: Project = {
     'Coste total inferior a 1 $',
   ],
   cover: null,
-  canvas: { x: 1060, y: 500, w: 250 },
+  canvas: { x: 1100, y: 590, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio Figuris', url: REPO }],

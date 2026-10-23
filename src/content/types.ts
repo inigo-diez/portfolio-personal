@@ -59,6 +59,8 @@ export interface Project {
   sources: Source[];
   /** Explicit TODO(content) items: missing real data, never invented. */
   todo: string[];
+  /** Language of its README when it is not Spanish (shown with a note on the canvas). */
+  readmeLang?: 'en';
   /** Honest notes that must accompany the project (e.g. AI-assisted development). */
   notes?: string[];
 }
@@ -70,11 +72,10 @@ export interface Collection {
   shortTitle: string;
   /** Uppercase tag line on the card. */
   kicker: string;
-  projectCount: number;
   /** Verified headline figure of the collection (from one of its projects). */
   headline: Headline & { from: string };
   canvas: CanvasPlacement;
-  /** Slugs of the projects already written up (E3: drafts only). */
+  /** Slugs of its projects, in reference order. */
   projects: string[];
 }
 

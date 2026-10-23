@@ -186,8 +186,8 @@
 .page--docked .page__footer {
   padding-left: var(--dock-clear);
 }
-/* During the transition the page is a fixed window over the home (it grows from the screen). */
-[data-transitioning] .docked__layer {
+/* During a transition the page is a fixed window over the page underneath (it grows from the screen or a card). */
+[data-transitioning] .layered__layer {
   position: fixed;
   left: 0;
   top: 0;

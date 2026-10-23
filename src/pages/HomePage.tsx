@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { setLeaveHomeHook } from '../app/leaveHome';
+import { OPEN_EVENT, type HomeIntent } from '../app/intent';
+import { setLeaveHook } from '../app/leave';
 import { href } from '../app/routes';
 import { navigate } from '../app/router';
 import { MOBILE, useMedia } from '../app/useMedia';
@@ -60,13 +61,25 @@ export function HomePage({ entry }: { entry?: SectionId }) {
     pluggedRef.current = plugged;
   });
   useEffect(() => {
-    setLeaveHomeHook(() => {
+    setLeaveHook('home', () => {
       if (!pluggedRef.current) return 0;
       setView('menu');
       setDir('back');
       return UNPLUG_MS;
     });
-    return () => setLeaveHomeHook(null);
+    return () => setLeaveHook('home', null);
+  }, []);
+
+  // Mi música chosen on a docked device: the screen transition has landed, now it opens (earbuds plug in).
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      if ((e as CustomEvent<HomeIntent>).detail === 'mi-musica' && musicAvailable()) {
+        setView('mi-musica');
+        setDir('fwd');
+      }
+    };
+    addEventListener(OPEN_EVENT, onOpen);
+    return () => removeEventListener(OPEN_EVENT, onOpen);
   }, []);
 
   const open = (i: number) => {

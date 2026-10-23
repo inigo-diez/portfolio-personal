@@ -19,7 +19,7 @@ export const estresPetroleoGdelt: Project = {
   headline: { value: '16 años', label: 'de noticias geopolíticas frente al WTI' },
   facts: ['Periodo 2010–2026: 4.059 días', '67 variables con control de fuga de información', 'F1 0,571 · AUC 0,615'],
   cover: null,
-  canvas: { x: 1060, y: 150, w: 250 },
+  canvas: { x: 1020, y: 100, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio oil-market-stress-gdelt', url: REPO }],

@@ -36,6 +36,9 @@ let installed = false;
 function install() {
   if (installed) return;
   installed = true;
+  // The stage decides the scroll of every page change (top, or the place a list was left), so the browser's
+  // own restoration on back / forward must not move it afterwards.
+  history.scrollRestoration = 'manual';
   addEventListener('popstate', emit);
   // Same-origin links under the base are handled in-app (no reload), so the shared transition can run.
   document.addEventListener('click', (e) => {

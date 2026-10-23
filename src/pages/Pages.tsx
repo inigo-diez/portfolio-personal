@@ -160,7 +160,7 @@ export function SectionPage({ id }: { id: PageId }) {
 export function ProjectPage({ slug }: { slug: string }) {
   const p = projectBySlug(slug)!;
   return (
-    <PageShell current="proyectos/">
+    <PageShell current="proyectos/" layered>
       <a className="back-link" href={href('proyectos/')}>
         ← {ui.backToProjects}
       </a>

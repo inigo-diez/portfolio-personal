@@ -82,6 +82,11 @@ Implementación: [src/device/Device.tsx](../../src/device/Device.tsx). Cada coma
 
 El dispositivo **se acopla abajo a la izquierda** (200 × 248 px, sin reflejo ni inclinación) y sigue funcionando: su lista de colecciones mueve la cámara del lienzo y su botón INICIO devuelve a la home. Es la base de la transición de E3: la pantalla crece hasta ser el lienzo mientras el cuerpo se encoge hacia la esquina, y al volver se invierte. **Aprobado.**
 
+E5 (2026-10-23):
+- Su lista: «Vista general» (cierra el proyecto abierto y muestra todo el universo), las 4 colecciones (la cámara encuadra esa colección) y, al final, **Mi música**, que vuelve a la home con la transición inversa y allí se abre y se conectan los auriculares (decidido el 2026-10-20; desactivada mientras no haya canciones). La lista del dispositivo acoplado en las páginas también lleva a Mi música así.
+- Solo recibe el teclado cuando tiene el foco (lienzo y páginas): las flechas del lienzo lo desplazan y las de una página, la página. Al llegar al lienzo, el foco queda en el lienzo.
+- En móvil no hay lienzo: la lista de proyectos lleva el dispositivo acoplado arriba, como las demás páginas.
+
 ## Marca de la trasera: "○/" (decidida 2026-10-20)
 
 Elegida **"○/"**: remite al anillo sin recuperar el punto sólido. Las propuestas que se compararon (siguen en `prototypes/E2/devices.html`):

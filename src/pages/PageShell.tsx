@@ -1,22 +1,32 @@
 import type { ReactNode } from 'react';
 import { href } from '../app/routes';
 import { person } from '../content/profile';
-import { openSections, topNav, ui, type PageId } from '../content/site';
+import { openSections, topNav, ui, type SectionId } from '../content/site';
 import { ScreenFrame } from '../transition/ScreenFrame';
 import { PageDock } from './PageDock';
 import './page.css';
 
 /**
  * Conventional page: name + top nav, content, and the full list of sections in the footer.
- * With `dock`, the page is one the device screen grows into: the device sits docked in the corner, and the
- * layer / world pair is what the transition scales (see transition/screenToCanvas.ts).
+ * `layered`: the page is one a transition grows into (the device screen, a canvas card): the layer / world
+ * pair is what it scales (transition/shared.ts). `dock` (implies layered): the device sits docked on it.
  */
-export function PageShell({ current, dock, children }: { current?: string; dock?: PageId; children: ReactNode }) {
+export function PageShell({
+  current,
+  dock,
+  layered = !!dock,
+  children,
+}: {
+  current?: string;
+  dock?: SectionId;
+  layered?: boolean;
+  children: ReactNode;
+}) {
   const page = (
     <div
       className={'page' + (dock ? ' page--docked' : '')}
-      data-page={dock ? undefined : 'page'}
-      data-world={dock ? '' : undefined}
+      data-page={layered ? undefined : 'page'}
+      data-world={layered ? '' : undefined}
     >
       <a className="skip" href="#contenido">
         {ui.skipToContent}
@@ -68,10 +78,10 @@ export function PageShell({ current, dock, children }: { current?: string; dock?
       </footer>
     </div>
   );
-  if (!dock) return page;
+  if (!layered) return page;
   return (
-    <div className="docked" data-page="page">
-      <div className="docked__layer" data-layer>
+    <div className="layered" data-page="page">
+      <div className="layered__layer" data-layer>
         {page}
       </div>
       <ScreenFrame />

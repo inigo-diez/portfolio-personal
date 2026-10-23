@@ -102,7 +102,13 @@ export const ui = {
     list: 'Lista',
     home: 'Inicio',
     listTitle: 'Lista de proyectos',
-    notWritten: 'caso de estudio en E6',
+    openProject: 'Página del proyecto',
+    about: 'De qué va',
+    highlight: 'Destacado',
+    github: 'Ver en GitHub',
+    loading: 'Cargando…',
+    readme: 'README',
+    readmeEn: 'Original en inglés',
   },
   device: {
     label: 'Pocket OS: flechas arriba y abajo para moverte, derecha o Intro para abrir, izquierda o Escape para volver',
@@ -126,6 +132,5 @@ export const ui = {
     cv: 'Currículum',
     home: 'Inicio',
     projectsWord: 'proyectos',
-    more: 'más',
   },
 };
