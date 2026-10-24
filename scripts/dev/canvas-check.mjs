@@ -282,7 +282,13 @@ const allInView = (page, sel) =>
 // ── Phone: the projects list ──
 {
   console.log('\n390 × 844');
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  // screen: large, so the page does not take the phone's desktop layout (index.html) and the 390 px layout is tested
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    screen: { width: 1200, height: 1200 },
+    hasTouch: true,
+    isMobile: true,
+  });
   const page = await ctx.newPage();
   await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
   const errs = watch(page);

@@ -53,6 +53,20 @@
     0 3cqw 3cqw -1.5cqw rgba(20, 24, 32, 0.16),
     0 9cqw 12cqw -6cqw rgba(20, 24, 32, 0.22);
 }
+/* Safari (WebKit) does not apply backface-visibility to parts that have their own layer (the ring's axes carry a
+   filter, its centre a transform): they showed through the back, mirrored. So the whole front also turns
+   `visibility: hidden` at the half turn (0.375 s of the 0.75 s flip), in both directions. A shared transition
+   keeps the front shown whatever the flip state. */
+.pocket__front {
+  transition: visibility 0s linear 0.375s;
+}
+.pocket__card.is-flipped .pocket__front {
+  visibility: hidden;
+}
+[data-transitioning] .pocket__card.is-flipped .pocket__front {
+  visibility: visible;
+  transition: none;
+}
 .pocket:focus-visible .pocket__front {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
@@ -359,6 +373,22 @@
     0 1.05cqw 0 0 #aeb3b9,
     0 3cqw 3cqw -1.5cqw rgba(20, 24, 32, 0.16),
     0 9cqw 12cqw -6cqw rgba(20, 24, 32, 0.22);
+}
+/* The same the other way round: the back is `visibility: hidden` until the half turn (see .pocket__front), so no
+   browser can show it over the front whatever it does with backface-visibility. */
+.pocket__back {
+  visibility: hidden;
+  transition: visibility 0s linear 0.375s;
+}
+.pocket__card.is-flipped .pocket__back {
+  visibility: visible;
+}
+[data-transitioning] .pocket__back {
+  visibility: hidden;
+  transition: none;
+}
+[data-transitioning] .pocket__card.is-flipped .pocket__back {
+  visibility: hidden;
 }
 .pocket__back .engr {
   text-shadow: 0 0.12cqw 0 rgba(255, 255, 255, 0.7);

@@ -19,6 +19,15 @@
         background: #fff;
       }
     </style>
+    <!-- Phones show the desktop version, scaled down to the screen (Iñigo, 2026-10-25): the page is laid out at
+         1024 px wide (above the 860 px breakpoint of the phone layout) and the browser fits it to the screen;
+         pinch zoom stays on. Only phones: the short side of the screen under 600 px, so tablets keep theirs. -->
+    <script>
+      try {
+        if (Math.min(screen.width, screen.height) < 600)
+          document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1024');
+      } catch (e) {}
+    </script>
     <script>
       try {
         if (location.pathname === '%BASE_URL%' && !sessionStorage.getItem('ido-welcome')) {

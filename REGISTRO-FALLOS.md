@@ -17,6 +17,11 @@ La entrada más reciente va arriba. Formato de cada entrada:
 
 Las tres primeras se apuntaron el 2026-10-21 y el 2026-10-23 en el registro del vault de Obsidian y se trasladaron aquí el 2026-10-23, sin cambiar su texto, al separar los registros por proyecto.
 
+## 2026-10-25 - La rueda se veía a través de la trasera del dispositivo en el móvil
+- Qué pasó: Iñigo, al ver la web en el móvil, avisó de que al girar el dispositivo «se queda el mando (la rueda)». En Safari/WebKit las flechas y el botón central de la rueda se ven espejadas a través de la cara trasera. Lo reproduje con WebKit de pruebas; en Edge no ocurre.
+- Por qué: el giro (E2–E4) se comprobó solo en Chromium (Edge): todos los scripts de `scripts/dev/` usan `channel: 'msedge'`. WebKit no aplica `backface-visibility: hidden` a piezas con capa propia (un filtro, una transformación).
+- Regla para no repetirlo: cualquier efecto 3D o de capas del dispositivo (giro, transiciones, sombras con filtro) se prueba también con WebKit (`webkit` de playwright-core, ya instalado) en tamaño de móvil, además de Edge; y no doy por verificado un efecto visual solo con Chromium.
+
 ## 2026-10-25 - Añadí Mis libros al menú y dejé una fila cortada en la pantalla inicial
 - Qué pasó: al añadir la novena entrada del menú entregué Mis libros dando por bueno que pasaba `device-check`. Iñigo avisó de que, al girar hasta Mis libros, la pantalla inicial se cortaba. Con 9 entradas la lista de escritorio dejaba «Mi música» a medias (81–86 % visible) al abrir, y la fila de arriba a medias al llegar al final; en móvil quedaba un residuo por redondear alturas.
 - Por qué: solo miré capturas de la pantalla del libro, no del menú ni de su última fila. Los comprobadores solo contaban entradas y no medían filas cortadas, y el CSS suponía 8 entradas («8 rows fit»).

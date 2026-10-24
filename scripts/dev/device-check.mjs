@@ -22,7 +22,13 @@ for (const [w, h, sfx, touch] of [
   [390, 844, '-movil', true],
 ]) {
   console.log(`\n${w} × ${h}`);
-  const ctx = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: touch, isMobile: touch });
+  // screen: large, so the page does not take the phone's desktop layout (index.html) and the 390 px layout is tested
+  const ctx = await browser.newContext({
+    viewport: { width: w, height: h },
+    screen: { width: 1200, height: 1200 },
+    hasTouch: touch,
+    isMobile: touch,
+  });
   const page = await ctx.newPage();
   await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
   const errs = [];
