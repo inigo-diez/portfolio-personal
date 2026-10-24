@@ -20,6 +20,7 @@ pages.sort();
 
 const browser = await chromium.launch({ channel: 'msedge' });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
 const internal = new Set();
 const external = new Map(); // url → pages
 let fails = 0;
@@ -53,7 +54,9 @@ for (const p of pages) {
         ...[...document.querySelectorAll('a[href]')].map((a) => a.href),
         ...[...document.querySelectorAll('link[href]:not([rel="canonical"])')].map((l) => l.href),
         ...[...document.querySelectorAll('img[src], source[srcset], img[srcset]')].flatMap((i) =>
-          (i.getAttribute('srcset') ?? i.src).split(',').map((s) => new URL(s.trim().split(' ')[0], location.href).href),
+          (i.getAttribute('srcset') ?? i.src)
+            .split(',')
+            .map((s) => new URL(s.trim().split(' ')[0], location.href).href),
         ),
       ],
     };
@@ -70,7 +73,8 @@ for (const p of pages) {
   if (info.canonical !== expected) fail(`${label}: canonical ${info.canonical} ≠ ${expected}`);
   if (info.ogUrl !== expected) fail(`${label}: og:url ${info.ogUrl}`);
   if (!info.ogImage) fail(`${label}: sin og:image`);
-  if ((BASE_PATH !== '/') !== (info.robots === 'noindex')) fail(`${label}: robots «${info.robots}» con base ${BASE_PATH}`);
+  if ((BASE_PATH !== '/') !== (info.robots === 'noindex'))
+    fail(`${label}: robots «${info.robots}» con base ${BASE_PATH}`);
   for (const s of info.noAlt) fail(`${label}: imagen sin alt ${s}`);
   for (const e of errs) fail(`${label}: consola: ${e}`);
   for (const r of info.refs) {

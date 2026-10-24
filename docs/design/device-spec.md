@@ -74,7 +74,7 @@ Implementación: [src/device/Device.tsx](../../src/device/Device.tsx). Cada coma
 
 ## En la home
 
-- Reflejo suave en el suelo (`-webkit-box-reflect`; en Firefox no aparece y no pasa nada).
+- Reflejo suave del cuerpo bajo el dispositivo, sin duplicar la pantalla, los símbolos del anillo ni la toma superior; funciona también en Firefox. Los botones «Girar» y «Sonido» quedan sobre esa zona. Una guía siempre visible explica +, −, ⏮, ⏭ y el botón central.
 - Inclinación de hasta ±4,5° hacia el ratón, con un brillo que acompaña. Desactivada en táctil y con `prefers-reduced-motion`. **Aprobada.**
 - Botón "Girar" para ver la trasera.
 

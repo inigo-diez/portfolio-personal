@@ -17,14 +17,23 @@ const pages = (): PageId[] => [
   'habilidades',
   'formacion',
   'contacto',
+  'cv',
   ...(musicAvailable() ? (['mi-musica'] as const) : []),
+  'mis-libros',
 ];
 
 /**
  * Sections whose screen grows into their page, with the device docked (decided 2026-10-23: the text is
- * read at web size, not inside the 4:3 screen). CV and Mi música stay inside the device.
+ * read at web size, not inside the 4:3 screen). Mi música and Mis libros stay inside the device.
  */
-export const DOCKED_PAGES: readonly PageId[] = ['sobre-mi', 'trayectoria', 'habilidades', 'formacion', 'contacto'];
+export const DOCKED_PAGES: readonly PageId[] = [
+  'sobre-mi',
+  'trayectoria',
+  'habilidades',
+  'formacion',
+  'contacto',
+  'cv',
+];
 export const isDocked = (id: PageId) => DOCKED_PAGES.includes(id);
 
 /** Routes the device screen grows into (and shrinks back from). */

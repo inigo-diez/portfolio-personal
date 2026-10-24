@@ -66,7 +66,7 @@ a {
 .topnav ul {
   list-style: none;
   display: flex;
-  gap: 24px;
+  gap: clamp(10px, 1.5vw, 20px);
   margin: 0;
   padding: 0;
   font-size: 13px;
@@ -80,8 +80,14 @@ a {
   color: var(--ink);
 }
 @media (max-width: 860px) {
-  .topnav {
-    display: none;
+  .topnav ul {
+    flex-wrap: wrap;
+    gap: 2px 14px;
+    font-size: 12px;
+  }
+  .topnav a {
+    display: inline-block;
+    padding: 5px 0;
   }
 }
 

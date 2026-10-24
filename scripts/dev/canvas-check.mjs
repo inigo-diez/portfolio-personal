@@ -45,6 +45,7 @@ const allInView = (page, sel) =>
   console.log('\n1440 × 900');
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
+  await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
   const errs = watch(page);
   const shot = (n) => page.screenshot({ path: `${OUT}/${n}.png` });
 
@@ -62,9 +63,15 @@ const allInView = (page, sel) =>
       return r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight;
     }).length,
   }));
-  check(start.covers === 13 && start.labels === 4 && start.open === 0, 'el universo: 13 proyectos en 4 colecciones, ninguno abierto');
+  check(
+    start.covers === 13 && start.labels === 4 && start.open === 0,
+    'el universo: 13 proyectos en 4 colecciones, ninguno abierto',
+  );
   check(start.seen >= 6, `al entrar se ven varios proyectos enteros (${start.seen})`);
-  check(await page.evaluate(() => document.activeElement?.hasAttribute('data-canvas-layer')), 'el foco queda en el lienzo');
+  check(
+    await page.evaluate(() => document.activeElement?.hasAttribute('data-canvas-layer')),
+    'el foco queda en el lienzo',
+  );
   await shot('01-universo');
 
   // keyboard: arrows pan, + / − zoom, 0 resets
@@ -88,7 +95,16 @@ const allInView = (page, sel) =>
     readme: document.querySelector('#detalle-figuris .readme')?.textContent.includes('Figuris') ?? false,
     github: document.querySelector('#detalle-figuris a[href^="https://github.com/inigo-diez/Figuris"]') !== null,
   }));
-  check(sats.facts === 4 && sats.cards === 6, `se despliega en «De qué va», ${sats.facts} destacados y el README`);
+  // E8: three highlights per project (src/content/projects/figuris.ts)
+  check(sats.facts === 3 && sats.cards === 5, `se despliega en «De qué va», ${sats.facts} destacados y el README`);
+  check(
+    await page.evaluate(() =>
+      [...document.querySelectorAll('.proj:not(.is-open), .zone__head')].every(
+        (e) => getComputedStyle(e).visibility === 'hidden' && (!e.matches('.proj') || e.inert),
+      ),
+    ),
+    'los demás proyectos y las colecciones se ocultan y no reciben clics ni foco',
+  );
   check(sats.readme && sats.github, 'el README completo se carga, con su enlace a GitHub');
   check(await allInView(page, '[data-project="figuris"] [data-card]'), 'la cámara encuadra el proyecto abierto entero');
   await shot('02-figuris-abierto');
@@ -99,19 +115,28 @@ const allInView = (page, sel) =>
   await page.mouse.move(rb.x + rb.width / 2, rb.y + rb.height / 2);
   await page.mouse.wheel(0, 400);
   await page.waitForTimeout(300);
-  check((await cam(page)) === c0 && (await readme.evaluate((e) => e.scrollTop)) > 0, 'la rueda sobre el README lo desplaza a él, no al lienzo');
+  check(
+    (await cam(page)) === c0 && (await readme.evaluate((e) => e.scrollTop)) > 0,
+    'la rueda sobre el README lo desplaza a él, no al lienzo',
+  );
   // Tab from the cover goes into its cards
   await page.locator('[data-slug="figuris"] .cover__open').focus();
   await page.keyboard.press('Tab');
-  check(await page.evaluate(() => !!document.activeElement?.closest('#detalle-figuris')), 'Tab pasa de la portada a sus tarjetas');
-  check(await page.evaluate(() => document.querySelector('#detalle-gcms, #detalle-analisis-metabolomico-gcms').inert), 'las tarjetas de los proyectos cerrados no reciben el foco');
+  check(
+    await page.evaluate(() => !!document.activeElement?.closest('#detalle-figuris')),
+    'Tab pasa de la portada a sus tarjetas',
+  );
+  check(
+    await page.evaluate(() => document.querySelector('#detalle-gcms, #detalle-analisis-metabolomico-gcms').inert),
+    'las tarjetas de los proyectos cerrados no reciben el foco',
+  );
   await page.keyboard.press('Escape');
   await page.waitForTimeout(800);
   check((await openProject(page)) === null, 'Esc cierra el proyecto');
   // open another, then a click on the background closes it
   await page.locator('[data-slug="precio-vehiculos"] .cover__open').click();
   await page.waitForTimeout(1200);
-  await page.mouse.click(1380, 140);
+  await page.mouse.click(150, 300); // background, left of the open project (E8: its columns reach the right edge)
   await page.waitForTimeout(800);
   check((await openProject(page)) === null, 'un clic en el fondo cierra el proyecto abierto');
 
@@ -120,14 +145,26 @@ const allInView = (page, sel) =>
   for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(800);
-  check(await allInView(page, '[data-cover][data-collection="04"]'), 'el dispositivo acoplado encuadra la colección 04');
+  check(
+    await allInView(page, '[data-cover][data-collection="04"]'),
+    'el dispositivo acoplado encuadra la colección 04',
+  );
 
   // touch: pinch zoom on the background
   c0 = await page.locator('.hud__zoom').textContent();
   await page.evaluate(() => {
     const el = document.querySelector('[data-canvas-layer]');
     const ev = (type, id, x, y) =>
-      el.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: id, pointerType: 'touch', clientX: x, clientY: y, isPrimary: id === 1 }));
+      el.dispatchEvent(
+        new PointerEvent(type, {
+          bubbles: true,
+          pointerId: id,
+          pointerType: 'touch',
+          clientX: x,
+          clientY: y,
+          isPrimary: id === 1,
+        }),
+      );
     ev('pointerdown', 1, 700, 130);
     ev('pointerdown', 2, 760, 130);
     for (let i = 1; i <= 10; i++) {
@@ -137,7 +174,10 @@ const allInView = (page, sel) =>
     ev('pointerup', 1, 620, 130);
     ev('pointerup', 2, 840, 130);
   });
-  check((await page.locator('.hud__zoom').textContent()) !== c0, `pellizcar con dos dedos cambia el zoom (${c0} → ${await page.locator('.hud__zoom').textContent()})`);
+  check(
+    (await page.locator('.hud__zoom').textContent()) !== c0,
+    `pellizcar con dos dedos cambia el zoom (${c0} → ${await page.locator('.hud__zoom').textContent()})`,
+  );
 
   // list view (and opening from it: a plain page change, the covers are behind the list)
   await page.locator('.hud__bar button', { hasText: 'Lista' }).click();
@@ -178,37 +218,58 @@ const allInView = (page, sel) =>
   await page.goBack();
   await page.waitForTimeout(1300);
   check(
-    page.url().endsWith('/proyectos/') && (await clean(page)) && (await openProject(page)) === 'figuris' && (await cam(page)) === camBefore,
+    page.url().endsWith('/proyectos/') &&
+      (await clean(page)) &&
+      (await openProject(page)) === 'figuris' &&
+      (await cam(page)) === camBefore,
     'atrás: la página se encoge en su portada y el lienzo sigue igual (misma cámara, Figuris abierto)',
   );
-  check(await page.evaluate(() => document.activeElement?.closest('[data-slug]')?.dataset.slug === 'figuris'), 'el foco vuelve a la portada');
+  check(
+    await page.evaluate(() => document.activeElement?.closest('[data-slug]')?.dataset.slug === 'figuris'),
+    'el foco vuelve a la portada',
+  );
   // interrupted: forward, then back mid-flight
   await page.locator('#detalle-figuris a', { hasText: 'Página del proyecto' }).click();
   await page.waitForTimeout(200);
   await page.goBack();
   await page.waitForTimeout(1300);
-  check(page.url().endsWith('/proyectos/') && (await clean(page)), 'atrás a mitad de camino: vuelve a la portada sin romperse');
+  check(
+    page.url().endsWith('/proyectos/') && (await clean(page)),
+    'atrás a mitad de camino: vuelve a la portada sin romperse',
+  );
 
   // home: the canvas closes the project and returns to its initial composition first, then the screen shrinks
   await page.locator('.hud__bar button', { hasText: 'Inicio' }).click();
   await page.waitForTimeout(200);
-  check((await openProject(page)) === null && (await page.locator('.stage > [data-page]').count()) === 1, 'Inicio: primero cierra el proyecto y vuelve a la composición inicial');
+  check(
+    (await openProject(page)) === null && (await page.locator('.stage > [data-page]').count()) === 1,
+    'Inicio: primero cierra el proyecto y vuelve a la composición inicial',
+  );
   await page.waitForTimeout(1500);
-  check(page.url().endsWith('/portfolio-personal/') && (await clean(page)), '…y después la pantalla se encoge hasta la home');
+  check(
+    page.url().endsWith('/portfolio-personal/') && (await clean(page)),
+    '…y después la pantalla se encoge hasta la home',
+  );
 
   // Mi música from the docked device (test data: only the dev server has them, a build ignores ?musica=prueba)
   await page.goto(B + 'proyectos/?musica=prueba', { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const musicRow = page.locator('[data-device="dock"]').first().getByRole('option', { name: /Mi música/ });
+  const musicRow = page
+    .locator('[data-device="dock"]')
+    .first()
+    .getByRole('option', { name: /Mi música/ });
   if ((await musicRow.getAttribute('aria-disabled')) === 'true') {
-    console.log('  info  Mi música desde el acoplado: sin datos de prueba en una build (pásalo con el servidor de desarrollo)');
+    console.log(
+      '  info  Mi música desde el acoplado: sin datos de prueba en una build (pásalo con el servidor de desarrollo)',
+    );
   } else {
     await page.locator('[data-device="dock"]').first().focus();
     for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
     await page.waitForTimeout(2600);
     check(
-      (await page.locator('[data-device="hero"] .os__title').textContent()) === 'Mi música' && (await page.locator('.acc.is-plugged').count()) === 1,
+      (await page.locator('[data-device="hero"] .os__title').textContent()) === 'Mi música' &&
+        (await page.locator('.acc.is-plugged').count()) === 1,
       'Mi música desde el acoplado: vuelve a la home, se abre y se conectan los auriculares',
     );
   }
@@ -223,6 +284,7 @@ const allInView = (page, sel) =>
   console.log('\n390 × 844');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   const page = await ctx.newPage();
+  await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
   const errs = watch(page);
   await page.goto(B, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
@@ -241,7 +303,10 @@ const allInView = (page, sel) =>
     scrolls: getComputedStyle(document.documentElement).overflow !== 'hidden',
   }));
   check(page.url().endsWith('/proyectos/') && (await clean(page)), 'la pantalla crece hasta la lista de proyectos');
-  check(list.canvas === 'none' && list.items === 13 && list.scrolls, 'en móvil: lista de 13 proyectos que se desplaza, sin lienzo');
+  check(
+    list.canvas === 'none' && list.items === 13 && list.scrolls,
+    'en móvil: lista de 13 proyectos que se desplaza, sin lienzo',
+  );
   await page.screenshot({ path: `${OUT}/06-movil-lista.png` });
   const fig = page.locator('.canvas-page__mobile a', { hasText: 'Figuris' });
   await fig.scrollIntoViewIfNeeded();

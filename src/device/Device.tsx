@@ -33,12 +33,12 @@ interface DeviceProps {
   onCommand: (c: Command, via: Via) => boolean | void;
   /** Listen to the keyboard on the whole document (home), not only when the device has focus. */
   globalKeys?: boolean;
+  /** Home only: the mouse wheel steps the list anywhere over the device, not only over the ring and the side key. */
+  wheelOnBody?: boolean;
   /** Ignore all input (e.g. while a transition owns the device). */
   inert?: boolean;
   /** Home only: lean towards the mouse, with a highlight that follows it. */
   tilt?: boolean;
-  /** Home only: soft reflection on the floor. */
-  reflect?: boolean;
   /** Show the engraved back face. */
   flipped?: boolean;
   /** Things that hang off the hardware (the earbuds' plug and cable), drawn in device units. */
@@ -53,9 +53,9 @@ export function Device({
   children,
   onCommand,
   globalKeys,
+  wheelOnBody,
   inert,
   tilt,
-  reflect,
   flipped,
   accessory,
   className,
@@ -243,6 +243,13 @@ export function Device({
     ring.addEventListener('pointerup', up);
     ring.addEventListener('pointercancel', up);
     ring.addEventListener('wheel', wheel, { passive: false });
+    // Anywhere else over the device (screen, plate, keys): the same wheel. The ring and the side key keep their own.
+    // Ctrl + wheel is the browser's zoom, and an inert device leaves the page to scroll.
+    const bodyWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || inertRef.current || (e.target as Element).closest('[data-ring], [data-side]')) return;
+      wheel(e);
+    };
+    if (wheelOnBody) el.addEventListener('wheel', bodyWheel, { passive: false });
     side.addEventListener('pointerdown', sideDown);
     side.addEventListener('pointermove', sideMove);
     side.addEventListener('pointerup', sideUp);
@@ -260,6 +267,7 @@ export function Device({
       ring.removeEventListener('pointerup', up);
       ring.removeEventListener('pointercancel', up);
       ring.removeEventListener('wheel', wheel);
+      el.removeEventListener('wheel', bodyWheel);
       side.removeEventListener('pointerdown', sideDown);
       side.removeEventListener('pointermove', sideMove);
       side.removeEventListener('pointerup', sideUp);
@@ -271,7 +279,7 @@ export function Device({
       screen.removeEventListener('pointercancel', swUp);
       screen.removeEventListener('click', swClick, true);
     };
-  }, [globalKeys]);
+  }, [globalKeys, wheelOnBody]);
 
   // Lean towards the mouse (never with touch or reduced motion), with a highlight that follows it.
   useEffect(() => {
@@ -308,7 +316,7 @@ export function Device({
   return (
     <div
       ref={root}
-      className={'pocket' + (reflect ? ' pocket--reflect' : '') + (className ? ' ' + className : '')}
+      className={'pocket' + (className ? ' ' + className : '')}
       style={style}
       tabIndex={0}
       role="group"

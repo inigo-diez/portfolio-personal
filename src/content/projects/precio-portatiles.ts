@@ -18,15 +18,30 @@ export const precioPortatiles: Project = {
   tags: ['Regresión', 'Feature engineering', 'Limpieza de datos'],
   stack: ['Python', 'scikit-learn', 'XGBoost'],
   headline: { value: 'R² 0,82', label: 'MAE 152 €' },
+  // README: «Resultados del modelo final» and «Conclusiones».
   facts: [
-    '1.033 portátiles de un dataset público de Kaggle, obtenido por scraping por su autor',
-    'XGBoost optimizado: MAE 152,32 € y R² 0,823',
-    'Solución de referencia del curso: MAE 175,31 € y R² 0,730',
+    {
+      value: '175 € → 152 €',
+      text: 'Error medio de la solución de referencia del curso frente al mío, sobre 1.033 portátiles reales: casi 10 puntos más de R² gracias a la ingeniería de variables.',
+    },
+    {
+      value: '3–6 niveles',
+      text: 'Reduje procesador, gráfica, webcam y sistema operativo a categorías de entre 3 y 6 niveles: la calidad de las variables pesó más que la complejidad del modelo.',
+    },
+    {
+      value: '~50 €',
+      text: 'Lo que se quedó atrás la regresión lineal frente a los modelos de árboles: GPU, procesador y RAM de gama alta se combinan en el precio de forma no lineal.',
+    },
   ],
-  cover: null,
-  canvas: { x: 600, y: 920, w: 260 },
+  // scripts/covers.py: the README figure fig_15, whole
+  cover: {
+    src: 'img/covers/precio-portatiles.webp',
+    alt: 'Precio predicho frente al precio real de los portátiles, con la diagonal de acierto',
+  },
+  canvas: { x: 800, y: 920, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio laptop-price-prediction-egypt', url: REPO }],
-  todo: ['Secciones del caso de estudio (E6)', 'Real frente a predicho (E6; no hay figura previa)'],
+  repoHasDetail: true, // README with methodology and results (2026-10-19 copy)
+  todo: ['Real frente a predicho (E6; no hay figura previa)'],
 };

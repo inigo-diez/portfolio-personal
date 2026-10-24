@@ -17,6 +17,26 @@ La entrada más reciente va arriba. Formato de cada entrada:
 
 Las tres primeras se apuntaron el 2026-10-21 y el 2026-10-23 en el registro del vault de Obsidian y se trasladaron aquí el 2026-10-23, sin cambiar su texto, al separar los registros por proyecto.
 
+## 2026-10-25 - Añadí Mis libros al menú y dejé una fila cortada en la pantalla inicial
+- Qué pasó: al añadir la novena entrada del menú entregué Mis libros dando por bueno que pasaba `device-check`. Iñigo avisó de que, al girar hasta Mis libros, la pantalla inicial se cortaba. Con 9 entradas la lista de escritorio dejaba «Mi música» a medias (81–86 % visible) al abrir, y la fila de arriba a medias al llegar al final; en móvil quedaba un residuo por redondear alturas.
+- Por qué: solo miré capturas de la pantalla del libro, no del menú ni de su última fila. Los comprobadores solo contaban entradas y no medían filas cortadas, y el CSS suponía 8 entradas («8 rows fit»).
+- Regla para no repetirlo: si añado o quito una entrada de una lista del dispositivo, miro la captura de esa lista al abrir y al llegar al final, a 1280, 1366 y 1440 px y en móvil, y mido qué fracción de cada fila se ve (script de una sola vez). No doy por buena una pantalla por haber pasado `device-check`.
+
+## 2026-10-24 - Rehice Habilidades con cápsulas cuando quería el diseño de su portfolio antiguo
+- Qué pasó: Iñigo pidió revisar https://inigo-diez.github.io/, coger los logos oficiales y colocarlos en Habilidades. Solo leí las rutas de los logos y los metí en las cápsulas que ya había, con nombres de grupo propios («Análisis y ML», «Métodos»…), sin los iconos de los métodos, y además recorté el margen de cuatro logos. Respondió que lo quería como en su portfolio: tarjetas, los iconos de los métodos y los mismos títulos.
+- Por qué: tomé «revisa mi portfolio» solo como fuente de los archivos, no como referencia de diseño, y no miré cómo se veía la sección antes de construir. Con una petición ambigua («los englobes en ese encapsulado blanco») elegí una lectura y la dije al final en vez de preguntar o enseñarle antes una captura de la sección antigua.
+- Regla para no repetirlo: si Iñigo señala una página suya como referencia, abro su HTML/CSS y hago una captura de esa sección antes de tocar nada, y reproduzco estructura, textos y material tal cual; lo que no sepa reproducir o choque con el sistema de diseño, se lo pregunto antes.
+
+## 2026-10-24 - Puse los enlaces donde decía «Sobre mí» en vez de donde estaban los títulos
+- Qué pasó: Iñigo pidió «en Sobre mí, añade el link dentro del título Afi y del Grado en Química». Lo tomé al pie de la letra y enlacé dos frases del texto de Sobre mí, sin comprobar dónde aparecen esos títulos. Los títulos «Máster en Ciencia de Datos e Inteligencia Artificial» y «Grado en Química» están en Trayectoria y Formación, no en Sobre mí. Respondió «No, quiero que si pinchas en Grado en Química te redirija al link», tuve que preguntarle dónde y rehacerlo.
+- Por qué: no busqué en el código dónde existían esas palabras exactas y la petición admitía dos lecturas (el texto de Sobre mí o los títulos de las secciones); elegí una sin preguntar.
+- Regla para no repetirlo: si Iñigo nombra un texto («título X», «el botón Y»), busco primero con Grep dónde aparece esa cadena exacta; si no está en la página que nombra, o hay más de un sitio, pregunto antes de construir.
+
+## 2026-10-24 - Fijé el umbral de la foto de Sobre mí a 1400 px suponiendo el ancho de su ventana
+- Qué pasó: al poner la foto a la derecha del texto la activé solo desde 1400 px de ancho, deduciendo que su pantalla medía 1440 px por el tamaño de una captura (2880 × 1800). Iñigo dijo «aún no está en Sobre mí»: su ventana mide menos, y hubo que rehacerlo para que funcione desde 1220 px.
+- Por qué: el tamaño en píxeles de una captura no es el ancho CSS de la ventana (depende de la escala de pantalla y de si el navegador está maximizado), y di por hecho el ancho en vez de pedírselo o diseñar para los anchos habituales de portátil (1280–1366).
+- Regla para no repetirlo: no deduzco el ancho de la ventana de Iñigo; compruebo cada diseño de escritorio como mínimo a 1280 y 1366 px, y si algo solo funciona por encima de cierto ancho, se lo digo con ese número y le pido el suyo antes de darlo por entregado.
+
 ## 2026-10-23 - Usé git stash para un «antes» y devolví un archivo con trabajo sin commit al último commit
 - Qué pasó: en E7, para comparar la maquetación antes y después de un cambio de CSS, ejecuté `git stash -- src/pages/page.css`. Eso no quitó solo mi cambio: devolvió el archivo entero a HEAD (sin el trabajo de E6 ni el de la sesión), así que la comparación medía otra cosa. Lo restauré con `git stash pop` y comprobé que el archivo estaba completo y el stash vacío; no se perdió nada, pero toqué trabajo de Iñigo sin commit y la medición no valía.
 - Por qué: usé una orden de git para un fin de medición sin pensar que el archivo ya tenía cambios sin commit anteriores a la sesión.

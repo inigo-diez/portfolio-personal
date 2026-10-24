@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">Propuesta de iconos para Trayectoria y Habilidades</title>
+  <desc id="desc">Trayectoria usa una ruta con dos hitos. Habilidades usa tres capas superpuestas. Ambos se muestran grandes y a tamaño de menú.</desc>
+  <rect width="960" height="480" fill="#fff"/>
+  <text x="40" y="53" fill="#252525" font-family="Geist, Segoe UI, sans-serif" font-size="26" font-weight="600">Iconos para la pantalla de inicio</text>
+  <text x="40" y="78" fill="#6b6b6b" font-family="Geist, Segoe UI, sans-serif" font-size="14">Mismo trazo que los controles del iDO Pocket · grafito en reposo, blanco al seleccionar</text>
+
+  <rect x="40" y="105" width="420" height="335" rx="20" fill="#f8f9fa" stroke="#e7e9ec"/>
+  <rect x="500" y="105" width="420" height="335" rx="20" fill="#f8f9fa" stroke="#e7e9ec"/>
+
+  <g transform="translate(197 135) scale(4)" fill="none" stroke="#5e636a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="18" r="2.2"/>
+    <circle cx="18" cy="6" r="2.2"/>
+    <path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/>
+  </g>
+  <g transform="translate(657 135) scale(4)" fill="none" stroke="#5e636a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 9l8-4 8 4-8 4z"/>
+    <path d="M4 13l8 4 8-4M4 17l8 4 8-4"/>
+  </g>
+
+  <text x="70" y="282" fill="#252525" font-family="Geist, Segoe UI, sans-serif" font-size="22" font-weight="600">Trayectoria</text>
+  <text x="70" y="305" fill="#6b6b6b" font-family="Geist, Segoe UI, sans-serif" font-size="14">Un camino que une hitos de formación y trabajo.</text>
+  <text x="530" y="282" fill="#252525" font-family="Geist, Segoe UI, sans-serif" font-size="22" font-weight="600">Habilidades</text>
+  <text x="530" y="305" fill="#6b6b6b" font-family="Geist, Segoe UI, sans-serif" font-size="14">Capas de métodos, herramientas y conocimientos.</text>
+
+  <rect x="70" y="334" width="360" height="58" rx="15" fill="#4f75ad"/>
+  <g transform="translate(86 350) scale(1.15)" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="18" r="2.2"/>
+    <circle cx="18" cy="6" r="2.2"/>
+    <path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/>
+  </g>
+  <text x="123" y="370" fill="#fff" font-family="Geist, Segoe UI, sans-serif" font-size="17" font-weight="600">Trayectoria</text>
+  <rect x="530" y="334" width="360" height="58" rx="15" fill="#4f75ad"/>
+  <g transform="translate(546 350) scale(1.15)" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 9l8-4 8 4-8 4z"/>
+    <path d="M4 13l8 4 8-4M4 17l8 4 8-4"/>
+  </g>
+  <text x="583" y="370" fill="#fff" font-family="Geist, Segoe UI, sans-serif" font-size="17" font-weight="600">Habilidades</text>
+</svg>

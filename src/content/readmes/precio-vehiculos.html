@@ -52,7 +52,7 @@
 <hr>
 <h6 class="readme__h2">3. Detección y tratamiento de outliers</h6>
 <h6 class="readme__h3">Boxplots — Primera ronda (variables numéricas)</h6>
-<p><span class="readme__img">[Figura: Boxplots inicial]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/01_boxplots_inicial.png" alt="Boxplots inicial" width="1032" height="790" loading="lazy" decoding="async"></figure>
 <p>Se generó una cuadrícula de boxplots para todas las variables numéricas (<code>Price</code>, <code>Levy</code>, <code>Prod. year</code>, <code>Engine volume</code>, <code>Mileage</code>, <code>Cylinders</code>, <code>Airbags</code>).</p>
 <blockquote>
 <p>Conclusión: se identificaron outliers severos en <code>Price</code>, <code>Mileage</code> y <code>Engine volume</code> que requerían tratamiento antes de entrenar cualquier modelo.</p>
@@ -92,19 +92,19 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">Boxplots — Tras eliminar outliers de precio</h6>
-<p><span class="readme__img">[Figura: Boxplots sin outliers precio]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/02_boxplots_sin_outliers_precio.png" alt="Boxplots sin outliers precio" width="1036" height="790" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: la distribución de <code>Price</code> mejora notablemente. Sin embargo, <code>Mileage</code> sigue mostrando valores extremos que requieren tratamiento adicional.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Histograma: fabricantes con coches a precio &lt; 500</h6>
-<p><span class="readme__img">[Figura: Fabricantes precio bajo]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/03_hist_fabricantes_precio_bajo.png" alt="Fabricantes precio bajo" width="1189" height="490" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: precios por debajo de 500 son anómalos en el contexto del dataset (errores o registros incompletos). Se eliminan para evitar ruido en la parte baja del rango de precios.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Boxplots — Tras eliminar precio &lt; 500</h6>
-<p><span class="readme__img">[Figura: Boxplots sin precio bajo]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/04_boxplots_sin_precio_bajo.png" alt="Boxplots sin precio bajo" width="1036" height="790" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: el rango de precios queda más contenido y representativo del mercado real de segunda mano.</p>
 </blockquote>
@@ -144,15 +144,15 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">Boxplots — Tras corregir Engine volume y Mileage</h6>
-<p><span class="readme__img">[Figura: Boxplots sin engine volume outliers]</span></p>
-<p><span class="readme__img">[Figura: Boxplots sin mileage outliers]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/05_boxplots_sin_engine_volume_outliers.png" alt="Boxplots sin engine volume outliers" width="1036" height="790" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/06_boxplots_sin_mileage_outliers.png" alt="Boxplots sin mileage outliers" width="1036" height="790" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: tras eliminar los registros con <code>Engine volume &gt; 10L</code> (desbordamiento físicamente imposible) y sustituir los kilometrajes extremos por Q3, las distribuciones son ya coherentes con el dominio del problema.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h2">4. Análisis exploratorio (EDA)</h6>
 <h6 class="readme__h3">Countplot: distribución de variables categóricas</h6>
-<p><span class="readme__img">[Figura: Countplot variables categóricas]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/07_countplot_variables_categoricas.png" alt="Countplot variables categóricas" width="1589" height="2111" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: <code>Hyundai</code> y <code>Toyota</code> dominan el dataset ampliamente. <code>Fuel type</code> muestra una mayoría de coches de gasolina, con categorías minoritarias como eléctricos o híbridos enchufables. <code>Model</code> con 1.533 valores únicos se elimina por su alta cardinalidad.</p>
 </blockquote>
@@ -164,9 +164,9 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">Boxplot: Price por cada variable categórica</h6>
-<p><span class="readme__img">[Figura: Boxplot precio por categórica v1]</span></p>
-<p><span class="readme__img">[Figura: Boxplot precio por categórica v2]</span></p>
-<p><span class="readme__img">[Figura: Boxplot precio por categórica v3]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/08_boxplot_precio_por_categorica_v1.png" alt="Boxplot precio por categórica v1" width="1584" height="2490" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/09_boxplot_precio_por_categorica_v2.png" alt="Boxplot precio por categórica v2" width="1583" height="2057" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/10_boxplot_precio_por_categorica_v3.png" alt="Boxplot precio por categórica v3" width="1583" height="2490" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: variables como <code>Category</code> (las limousines destacan claramente sobre el resto), <code>Gear box type</code> y <code>Fuel type</code> muestran diferencias notables en la distribución de precios, anticipando que serán variables relevantes para el modelo.</p>
 </blockquote>
@@ -182,13 +182,13 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">Heatmap de correlaciones — Primera versión</h6>
-<p><span class="readme__img">[Figura: Heatmap correlación v1]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/11_heatmap_correlacion_v1.png" alt="Heatmap correlación v1" width="616" height="508" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: <code>Cylinders</code> y <code>Engine volume</code> presentan alta correlación entre sí. Respecto a <code>Price</code>, ambas tienen una correlación modesta (~0.08). Se decide eliminar <code>Engine volume</code> para evitar multicolinealidad.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Heatmap de correlaciones — Segunda versión (sin Engine volume)</h6>
-<p><span class="readme__img">[Figura: Heatmap correlación v2]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/12_heatmap_correlacion_v2.png" alt="Heatmap correlación v2" width="583" height="418" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: <code>Prod. year</code> es la variable numérica con mayor correlación con <code>Price</code>. Los coches más nuevos tienden a valer más, lo que es coherente con el mercado real.</p>
 </blockquote>
@@ -253,13 +253,13 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">Scatter: Real vs Predicho — Regresión Lineal</h6>
-<p><span class="readme__img">[Figura: Scatter real vs predicho lineal]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/13_scatter_real_vs_predicho_lineal.png" alt="Scatter real vs predicho lineal" width="789" height="590" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: el modelo sobrestima el precio de los coches baratos e infraestima el de los caros. La nube de puntos no sigue bien la diagonal roja, confirmando que la relación entre variables y precio no es lineal.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Histograma de residuos — Regresión Lineal</h6>
-<p><span class="readme__img">[Figura: Histograma residuos lineal]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/14_hist_residuos_lineal.png" alt="Histograma residuos lineal" width="858" height="547" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: los residuos están aproximadamente centrados en 0 pero con colas largas, lo que indica que el modelo comete errores grandes en algunos casos concretos.</p>
 </blockquote>
@@ -281,7 +281,7 @@
 <td>0.4361</td>
 </tr>
 </tbody></table>
-<p><span class="readme__img">[Figura: Árbol de decisión]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/15_arbol_decision.png" alt="Árbol de decisión" width="1570" height="812" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: el árbol mejora ligeramente la regresión lineal y permite entender la lógica de decisión visualmente. <code>Prod. year</code> aparece como el primer nodo de división, confirmando que el año de fabricación es la variable más determinante.</p>
 </blockquote>
@@ -307,31 +307,31 @@
 <td>0.7688</td>
 </tr>
 </tbody></table>
-<p><span class="readme__img">[Figura: Importancia variables Random Forest]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/16_importancia_variables_random_forest.png" alt="Importancia variables Random Forest" width="1031" height="548" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: <code>Prod. year</code>, <code>Mileage</code> y <code>Levy</code> son las variables más influyentes. Random Forest supone un salto cualitativo, capturando el 77% de la varianza, aunque pierde la interpretabilidad directa de la regresión lineal.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Scatter: Real vs Predicho — Random Forest</h6>
-<p><span class="readme__img">[Figura: Scatter Random Forest]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/17_scatter_real_vs_predicho_random_forest.png" alt="Scatter Random Forest" width="876" height="547" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: los puntos siguen mucho mejor la diagonal roja que en la regresión lineal. Persiste cierta dispersión en los rangos de precio alto.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">KDE: distribución de errores — Lineal vs XGBoost</h6>
-<p><span class="readme__img">[Figura: KDE errores lineal vs XGBoost]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/18_kde_errores_lineal_vs_xgboost.png" alt="KDE errores lineal vs XGBoost" width="881" height="547" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: ambas curvas están centradas en 0, pero XGBoost presenta colas más ligeras, lo que indica que comete menos errores extremos que la regresión lineal.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">XGBoost — Importancia de variables (Gain)</h6>
-<p><span class="readme__img">[Figura: Importancia variables XGBoost]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/19_importancia_variables_xgboost.png" alt="Importancia variables XGBoost" width="768" height="455" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: XGBoost coincide con Random Forest en señalar <code>Prod. year</code> y <code>Mileage</code> como las variables de mayor ganancia, validando la consistencia de ambos modelos.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">XGBoost base — Scatter Real vs Predicho</h6>
-<p><span class="readme__img">[Figura: Scatter XGBoost base]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/20_scatter_xgboost_base.png" alt="Scatter XGBoost base" width="872" height="552" loading="lazy" decoding="async"></figure>
 <table>
 <thead>
 <tr>
@@ -357,7 +357,7 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">XGBoost optimizado (GridSearchCV) — Scatter Real vs Predicho</h6>
-<p><span class="readme__img">[Figura: Scatter XGBoost optimizado]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/21_scatter_xgboost_optimizado.png" alt="Scatter XGBoost optimizado" width="880" height="552" loading="lazy" decoding="async"></figure>
 <table>
 <thead>
 <tr>
@@ -381,21 +381,21 @@
 <h6 class="readme__h2">7. Segmentación de mercado — K-Means Clustering</h6>
 <p>Además de los modelos supervisados, se aplicó <strong>K-Means</strong> como técnica de aprendizaje no supervisado para segmentar los vehículos en grupos naturales según sus características numéricas (<code>Price</code>, <code>Mileage</code>, <code>Prod. year</code>, <code>Cylinders</code>, <code>Airbags</code>, <code>Levy</code>).</p>
 <h6 class="readme__h3">Scatter: segmentación Mileage vs Prod. year</h6>
-<p><span class="readme__img">[Figura: KMeans scatter Mileage vs Year]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/22_kmeans_scatter_mileage_vs_year.png" alt="KMeans scatter Mileage vs Year" width="704" height="471" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: se identifican 4 grupos bien diferenciados. Los vehículos más nuevos y con menos kilometraje se agrupan de forma natural, lo que confirma que estas dos variables son las más discriminantes para segmentar el mercado.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Scatter — Versiones adicionales de segmentación</h6>
-<p><span class="readme__img">[Figura: KMeans scatter v2]</span></p>
-<p><span class="readme__img">[Figura: KMeans scatter v3]</span></p>
-<p><span class="readme__img">[Figura: KMeans scatter v4]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/23_kmeans_scatter_v2.png" alt="KMeans scatter v2" width="704" height="471" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/24_kmeans_scatter_v3.png" alt="KMeans scatter v3" width="704" height="471" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/25_kmeans_scatter_v4.png" alt="KMeans scatter v4" width="704" height="471" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: las distintas representaciones de los clusters muestran consistencia en la segmentación. Los grupos se mantienen estables independientemente de las variables representadas en los ejes.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Boxplot: distribución de precio por cluster</h6>
-<p><span class="readme__img">[Figura: KMeans boxplot precio cluster]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/26_kmeans_boxplot_precio_cluster.png" alt="KMeans boxplot precio cluster" width="597" height="432" loading="lazy" decoding="async"></figure>
 <p><strong>Precio medio por cluster (4 grupos)</strong>:</p>
 <table>
 <thead>
@@ -426,7 +426,7 @@
 </blockquote>
 <hr>
 <h6 class="readme__h3">KDE: distribución de precio por cluster</h6>
-<p><span class="readme__img">[Figura: KMeans KDE precio cluster]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/27_kmeans_kde_precio_cluster.png" alt="KMeans KDE precio cluster" width="678" height="393" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: las curvas de densidad confirman que el cluster 0 tiene una distribución de precios desplazada claramente hacia la derecha respecto al resto. Los clusters 1, 2 y 3 se solapan en el rango de precios bajos, lo que indica que se diferencian principalmente por otras variables como el año o el kilometraje.</p>
 </blockquote>
@@ -434,13 +434,13 @@
 <h6 class="readme__h2">8. Red Neuronal (TensorFlow / Keras)</h6>
 <p>Se entrenó una red neuronal densa con capas <code>Dense</code> y <code>Dropout</code> como modelo adicional de comparación.</p>
 <h6 class="readme__h3">Curva de aprendizaje — Pérdida durante el entrenamiento</h6>
-<p><span class="readme__img">[Figura: Red neuronal curva aprendizaje]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/28_red_neuronal_curva_aprendizaje.png" alt="Red neuronal curva aprendizaje" width="554" height="455" loading="lazy" decoding="async"></figure>
 <blockquote>
 <p>Conclusión: las curvas de entrenamiento y validación convergen correctamente, sin señales de overfitting. Al inicio, el error de validación aparece por debajo del de entrenamiento debido al efecto del <strong>Dropout</strong> (durante el entrenamiento se apagan neuronas aleatoriamente, mientras que en validación todas están activas). A medida que avanzan las épocas, ambas curvas se estabilizan y convergen.</p>
 </blockquote>
 <hr>
 <h6 class="readme__h3">Scatter: Real vs Predicho — Red Neuronal</h6>
-<p><span class="readme__img">[Figura: Red neuronal scatter real vs predicho]</span></p>
+<figure><img src="%BASE%img/readmes/precio-vehiculos/29_red_neuronal_scatter_real_vs_predicho.png" alt="Red neuronal scatter real vs predicho" width="723" height="394" loading="lazy" decoding="async"></figure>
 <table>
 <thead>
 <tr>

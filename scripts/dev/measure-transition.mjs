@@ -59,6 +59,7 @@ async function session({ technique = 'flip', reduced = false, video = false } = 
     ...(video ? { recordVideo: { dir: OUT, size: { width: 1280, height: 800 } } } : {}),
   });
   const page = await ctx.newPage();
+  await page.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(`${B}?tecnica=${technique}`);
@@ -150,13 +151,19 @@ for (const technique of ['flip', 'vt']) {
   // one image with the 8 frames (2 × 4)
   const frames = [0, 60, 110, 200, 300, 420, 560, 730];
   const imgs = [];
-  for (const ms of frames) imgs.push((await fs.readFile(path.join(OUT, `strip-${String(ms).padStart(3, '0')}.png`))).toString('base64'));
+  for (const ms of frames)
+    imgs.push((await fs.readFile(path.join(OUT, `strip-${String(ms).padStart(3, '0')}.png`))).toString('base64'));
   const sheet = await ctx.newPage();
   await sheet.setViewportSize({ width: 1460, height: 520 });
   const cells = imgs
-    .map((b, i) => `<figure style="margin:0"><img style="width:100%;display:block;box-shadow:0 0 0 1px #0002" src="data:image/png;base64,${b}"><figcaption style="margin-top:4px">${frames[i]} ms</figcaption></figure>`)
+    .map(
+      (b, i) =>
+        `<figure style="margin:0"><img style="width:100%;display:block;box-shadow:0 0 0 1px #0002" src="data:image/png;base64,${b}"><figcaption style="margin-top:4px">${frames[i]} ms</figcaption></figure>`,
+    )
     .join('');
-  await sheet.setContent(`<body style="margin:0;padding:10px;background:#fff;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font:12px system-ui;color:#6b6b6b">${cells}</body>`);
+  await sheet.setContent(
+    `<body style="margin:0;padding:10px;background:#fff;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font:12px system-ui;color:#6b6b6b">${cells}</body>`,
+  );
   await sheet.screenshot({ path: path.join(OUT, 'tira-ida.png'), fullPage: true });
   await ctx.close();
 }
@@ -219,5 +226,10 @@ for (const [name, sc] of Object.entries(results.scenarios)) {
 results.summary = summary;
 await fs.writeFile(path.join(OUT, 'results.json'), JSON.stringify(results, null, 2));
 console.log('GPU:', results.gpu);
-console.table(Object.fromEntries(Object.entries(summary).map(([k, v]) => [k, { ...v, estadoFinal: JSON.stringify(v.estadoFinal) }])));
-for (const k of Object.keys(results.scenarios).filter((k) => k.includes('errores'))) console.log(k, results.scenarios[k]);
+console.table(
+  Object.fromEntries(
+    Object.entries(summary).map(([k, v]) => [k, { ...v, estadoFinal: JSON.stringify(v.estadoFinal) }]),
+  ),
+);
+for (const k of Object.keys(results.scenarios).filter((k) => k.includes('errores')))
+  console.log(k, results.scenarios[k]);

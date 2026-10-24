@@ -53,7 +53,7 @@ export const collections: Collection[] = [
     shortTitle: 'Geopolítica y Crudo WTI',
     kicker: 'GDELT · MONTE CARLO · RSJD',
     headline: { value: '2.000', label: 'trayectorias Monte Carlo por escenario', from: 'simulacion-wti-montecarlo' },
-    canvas: { x: 1020, y: 30, w: 560 },
+    canvas: { x: 1140, y: 30, w: 560 },
     projects: slugsOf('02'),
   },
   {
@@ -62,7 +62,7 @@ export const collections: Collection[] = [
     shortTitle: 'ML Aplicado · Kaggle',
     kicker: 'REGRESIÓN · CLASIFICACIÓN',
     headline: { value: 'F1 0,90', label: 'alerta temprana de morosidad', from: 'morosidad-crediticia' },
-    canvas: { x: 0, y: 860, w: 560 },
+    canvas: { x: 200, y: 860, w: 560 }, // x 200 (2026-10-24): its index numeral clear of the docked device
     projects: slugsOf('03'),
   },
   {

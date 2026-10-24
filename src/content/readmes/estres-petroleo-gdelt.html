@@ -509,59 +509,40 @@
 <hr>
 <h6 class="readme__h2">4. Análisis Exploratorio de Datos</h6>
 <h6 class="readme__h3">4.1 Auditoría de Cobertura Temporal</h6>
-<p><span class="readme__img">[Figura: Auditoría de cobertura temporal]</span></p>
-<p><em>Figura 1. Izquierda: porcentaje de valores nulos por bloque de variables. Derecha: días con datos disponibles por fuente y año. Se aprecia claramente la ausencia de GDELT antes de 2015 y la caída en su volumen post-2019.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_coverage_audit.png" alt="Auditoría de cobertura temporal" width="4152" height="1476" loading="lazy" decoding="async"><figcaption><em>Figura 1. Izquierda: porcentaje de valores nulos por bloque de variables. Derecha: días con datos disponibles por fuente y año. Se aprecia claramente la ausencia de GDELT antes de 2015 y la caída en su volumen post-2019.</em></figcaption></figure>
 <h6 class="readme__h3">4.2 Series Temporales Principales</h6>
-<p><span class="readme__img">[Figura: Series temporales principales]</span></p>
-<p><em>Figura 2. Cinco paneles sincronizados: (1) precio WTI en USD/barril; (2) OVX frente al VIX; (3) DXY con zona sombreada cuando supera su media histórica; (4) actividad noticiosa GDELT normalizada; (5) retorno absoluto diario del WTI coloreado por la variable objetivo (marrón = día normal, rojo = día de alta tensión al día siguiente).</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_timeseries_main_5panels.png" alt="Series temporales principales" width="4088" height="3910" loading="lazy" decoding="async"><figcaption><em>Figura 2. Cinco paneles sincronizados: (1) precio WTI en USD/barril; (2) OVX frente al VIX; (3) DXY con zona sombreada cuando supera su media histórica; (4) actividad noticiosa GDELT normalizada; (5) retorno absoluto diario del WTI coloreado por la variable objetivo (marrón = día normal, rojo = día de alta tensión al día siguiente).</em></figcaption></figure>
 <p>La figura condensa la narrativa del período. Son identificables la caída de 2014–2016, el precio negativo de abril 2020, la subida de 2022 por la guerra de Ucrania y la paradoja central del proyecto: el Panel 4 muestra actividad noticiosa GDELT baja en los meses previos al mayor shock del período (COVID-19), porque la pandemia fue un evento sanitario, no un conflicto geopolítico entre estados. El sistema CAMEO no está diseñado para capturar pandemias.</p>
 <h6 class="readme__h3">4.3 Distribuciones de las Variables de Mercado</h6>
-<p><span class="readme__img">[Figura: Distribuciones del mercado de crudo]</span></p>
-<p><em>Figura 3. Distribuciones del retorno logarítmico diario, retorno absoluto, cambio en OVX, volatilidad móvil a 10 días, diferencial WTI-Brent y nivel del OVX. n = 4.059 observaciones. La distribución de retornos presenta colas extremadamente gruesas (curtosis en exceso &gt; 10), rechazando la hipótesis de normalidad con p-valor &lt; 0,001.</em></p>
-<p><span class="readme__img">[Figura: Distribuciones de riesgo sistémico]</span></p>
-<p><em>Figura 4. Distribuciones del VIX y el DXY. El VIX presenta una cola derecha pronunciada reflejo de los episodios de pánico de 2020.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_distributions_market.png" alt="Distribuciones del mercado de crudo" width="4197" height="2358" loading="lazy" decoding="async"><figcaption><em>Figura 3. Distribuciones del retorno logarítmico diario, retorno absoluto, cambio en OVX, volatilidad móvil a 10 días, diferencial WTI-Brent y nivel del OVX. n = 4.059 observaciones. La distribución de retornos presenta colas extremadamente gruesas (curtosis en exceso &gt; 10), rechazando la hipótesis de normalidad con p-valor &lt; 0,001.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_distributions_risk_factors.png" alt="Distribuciones de riesgo sistémico" width="3552" height="2358" loading="lazy" decoding="async"><figcaption><em>Figura 4. Distribuciones del VIX y el DXY. El VIX presenta una cola derecha pronunciada reflejo de los episodios de pánico de 2020.</em></figcaption></figure>
 <p>La no-normalidad severa de los retornos del WTI justifica el uso de modelos no paramétricos (bosques aleatorios, XGBoost) y valida el uso de pruebas estadísticas como Mann-Whitney U.</p>
 <h6 class="readme__h3">4.4 Sesgos Temporales en el GDELT</h6>
-<p><span class="readme__img">[Figura: Sesgos temporales del GDELT]</span></p>
-<p><em>Figura 5. Barras azules (escala izquierda): volumen de eventos GDELT por año. Línea roja (escala derecha): tono medio anual ponderado. La caída post-2019 en el volumen es un artefacto de extracción, no un reflejo de menor actividad geopolítica real.</em></p>
-<p><span class="readme__img">[Figura: Distribuciones GDELT]</span></p>
-<p><em>Figura 6. Distribuciones de las variables GDELT principales: escala Goldstein, menciones, tono y recuento de eventos.</em></p>
-<p><span class="readme__img">[Figura: GDELT por región y tipo de evento]</span></p>
-<p><em>Figura 7. Actividad GDELT por región geopolítica y por tipo de evento CAMEO. El Golfo Pérsico concentra el mayor volumen.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_gdelt_bias.png" alt="Sesgos temporales del GDELT" width="4746" height="1329" loading="lazy" decoding="async"><figcaption><em>Figura 5. Barras azules (escala izquierda): volumen de eventos GDELT por año. Línea roja (escala derecha): tono medio anual ponderado. La caída post-2019 en el volumen es un artefacto de extracción, no un reflejo de menor actividad geopolítica real.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_gdelt_distributions.png" alt="Distribuciones GDELT" width="3552" height="2358" loading="lazy" decoding="async"><figcaption><em>Figura 6. Distribuciones de las variables GDELT principales: escala Goldstein, menciones, tono y recuento de eventos.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_gdelt_by_region_type.png" alt="GDELT por región y tipo de evento" width="3849" height="1476" loading="lazy" decoding="async"><figcaption><em>Figura 7. Actividad GDELT por región geopolítica y por tipo de evento CAMEO. El Golfo Pérsico concentra el mayor volumen.</em></figcaption></figure>
 <h6 class="readme__h3">4.5 Análisis de Correlaciones y Dependencias</h6>
-<p><span class="readme__img">[Figura: Matriz de correlación extendida]</span></p>
-<p><em>Figura 8. Matriz de correlaciones de Pearson entre todas las variables del dataset ML. OVX–VIX: ~0,65. DXY–WTI: ~−0,30. Variables GDELT–WTI: 0,02–0,08.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_correlation_matrix_extended.png" alt="Matriz de correlación extendida" width="3886" height="3435" loading="lazy" decoding="async"><figcaption><em>Figura 8. Matriz de correlaciones de Pearson entre todas las variables del dataset ML. OVX–VIX: ~0,65. DXY–WTI: ~−0,30. Variables GDELT–WTI: 0,02–0,08.</em></figcaption></figure>
 <h6 class="readme__h3">4.6 Análisis de Adelanto Temporal GDELT → Mercado</h6>
-<p><span class="readme__img">[Figura: Análisis de adelanto temporal]</span></p>
-<p><em>Figura 9. Correlaciones cruzadas entre variables GDELT y la variable objetivo para retardos de −5 a +5 días. Las barras rojas (retardo positivo) indican que el GDELT del pasado se correlaciona con el mercado actual. La señal en retardo +1 es ligeramente superior al retardo 0, pero la diferencia es pequeña (~0,01–0,03 puntos).</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_leadlag.png" alt="Análisis de adelanto temporal" width="4752" height="1182" loading="lazy" decoding="async"><figcaption><em>Figura 9. Correlaciones cruzadas entre variables GDELT y la variable objetivo para retardos de −5 a +5 días. Las barras rojas (retardo positivo) indican que el GDELT del pasado se correlaciona con el mercado actual. La señal en retardo +1 es ligeramente superior al retardo 0, pero la diferencia es pequeña (~0,01–0,03 puntos).</em></figcaption></figure>
 <h6 class="readme__h3">4.7 Días de Alta Tensión vs. Días Normales</h6>
-<p><span class="readme__img">[Figura: Días de estrés vs. normales]</span></p>
-<p><em>Figura 10. Comparativa mediante diagramas de violín entre días de alta tensión (rojo) y normales (verde) para las principales variables, con p-valor del test Mann-Whitney U.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_stress_vs_normal.png" alt="Días de estrés vs. normales" width="4751" height="2358" loading="lazy" decoding="async"><figcaption><em>Figura 10. Comparativa mediante diagramas de violín entre días de alta tensión (rojo) y normales (verde) para las principales variables, con p-valor del test Mann-Whitney U.</em></figcaption></figure>
 <p>El test de Mann-Whitney U es una prueba estadística no paramétrica que no asume distribución normal — supuesto que los retornos financieros violan sistemáticamente. Compara si los valores de una variable en días de alta tensión tienden sistemáticamente a ser superiores a los de días normales. Un p-valor inferior a 0,05 confirma que la diferencia es estadísticamente significativa y no atribuible al azar. El VIX y el OVX muestran diferencias altamente significativas; las variables GDELT también son significativas pero con menor tamaño del efecto.</p>
 <h6 class="readme__h3">4.8 Comparativo de Índices de Riesgo</h6>
-<p><span class="readme__img">[Figura: Comparativo de índices de riesgo]</span></p>
-<p><em>Figura 11. VIX, OVX y GPR normalizados (0-1) en el tiempo. La convergencia de los tres en 2020 indica crisis sistémica. En 2022, el GPR sube primero antes de que el OVX reaccione, patrón de shock geopolítico que se transmite al mercado energético.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_risk_indices_comparison.png" alt="Comparativo de índices de riesgo" width="4452" height="2946" loading="lazy" decoding="async"><figcaption><em>Figura 11. VIX, OVX y GPR normalizados (0-1) en el tiempo. La convergencia de los tres en 2020 indica crisis sistémica. En 2022, el GPR sube primero antes de que el OVX reaccione, patrón de shock geopolítico que se transmite al mercado energético.</em></figcaption></figure>
 <h6 class="readme__h3">4.9 Análisis de Autocorrelación y Agrupamiento de Volatilidad</h6>
-<p><span class="readme__img">[Figura: Función de autocorrelación]</span></p>
-<p><em>Figura 12. Función de autocorrelación del retorno logarítmico (izquierda) y de la volatilidad (derecha). Los retornos no se autocorrelacionan significativamente (el mercado es eficiente en media), pero la volatilidad sí: los períodos de alta volatilidad tienden a persistir, fenómeno conocido como agrupamiento de volatilidad.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_acf_volatility.png" alt="Función de autocorrelación" width="3852" height="2358" loading="lazy" decoding="async"><figcaption><em>Figura 12. Función de autocorrelación del retorno logarítmico (izquierda) y de la volatilidad (derecha). Los retornos no se autocorrelacionan significativamente (el mercado es eficiente en media), pero la volatilidad sí: los períodos de alta volatilidad tienden a persistir, fenómeno conocido como agrupamiento de volatilidad.</em></figcaption></figure>
 <h6 class="readme__h3">4.10 Top Días Extremos</h6>
-<p><span class="readme__img">[Figura: Top días extremos]</span></p>
-<p><em>Figura 13. Los 10 mayores shocks de mercado por retorno absoluto, marcados sobre el dataset completo. Se concentran en 2020 y 2022.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_top_extremes.png" alt="Top días extremos" width="4152" height="1476" loading="lazy" decoding="async"><figcaption><em>Figura 13. Los 10 mayores shocks de mercado por retorno absoluto, marcados sobre el dataset completo. Se concentran en 2020 y 2022.</em></figcaption></figure>
 <hr>
 <h6 class="readme__h2">5. Estudio de Eventos Geopolíticos</h6>
 <p>El estudio de eventos es una metodología clásica en economía financiera (MacKinlay, 1997) que aísla el impacto causal de un evento específico en una variable de interés. Para cada uno de los 35 hitos geopolíticos se define una ventana de análisis de [−5, +20] días hábiles. El <strong>Retorno Acumulado Anormal</strong> (RAA) se calcula como la suma de las diferencias entre el retorno observado y el retorno esperado sin el evento en cada día de la ventana posterior.</p>
-<p><span class="readme__img">[Figura: Catálogo de eventos]</span></p>
-<p><em>Figura 14. Catálogo de los 35 eventos geopolíticos por tipo y severidad. Los eventos de mayor severidad (≥9) corresponden a guerras, guerras de precios OPEP y ataques directos a infraestructura.</em></p>
-<p><span class="readme__img">[Figura: Trayectoria del WTI alrededor del evento]</span></p>
-<p><em>Figura 15. Trayectoria media del WTI en la ventana [−5, +20] días alrededor del evento, por tipo. Las líneas finas representan cada evento individual; la línea gruesa es la media del grupo; la banda sombreada es ±1 desviación típica. El precio está normalizado a 100 en el día 0.</em></p>
-<p><span class="readme__img">[Figura: Retorno acumulado anormal]</span></p>
-<p><em>Figura 16. Retorno acumulado anormal (RAA) medio por tipo de evento en los 10 días posteriores al hito.</em></p>
-<p><span class="readme__img">[Figura: Evolución del OVX alrededor del evento]</span></p>
-<p><em>Figura 17. Evolución normalizada del OVX en la ventana del evento. La volatilidad implícita empieza a subir en los días −2 y −1 (antes del evento), alcanza su máximo en torno al día +2 y revierte gradualmente en 10–15 días.</em></p>
-<p><span class="readme__img">[Figura: Mapa de calor de retornos por evento]</span></p>
-<p><em>Figura 18. Mapa de calor de retornos WTI por evento individual (filas) y día relativo al evento (columnas). Rojo = retornos positivos; azul = negativos. La dispersión pone de manifiesto la heterogeneidad de las reacciones.</em></p>
-<p><span class="readme__img">[Figura: Test de volatilidad]</span></p>
-<p><em>Figura 19. Test de Mann-Whitney U comparando la distribución de retornos absolutos del WTI dentro de la ventana del evento (días 0 a +20) frente a días fuera de la ventana (resto del período). Se comparan dos grupos: (1) retornos en los 20 días hábiles posteriores al hito geopolítico, y (2) retornos en días no vinculados a ningún evento. Un p-valor inferior a 0,05 confirma que el evento tuvo un impacto estadísticamente significativo en la volatilidad del mercado.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_catalogue.png" alt="Catálogo de eventos" width="3877" height="1173" loading="lazy" decoding="async"><figcaption><em>Figura 14. Catálogo de los 35 eventos geopolíticos por tipo y severidad. Los eventos de mayor severidad (≥9) corresponden a guerras, guerras de precios OPEP y ataques directos a infraestructura.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_wti_path.png" alt="Trayectoria del WTI alrededor del evento" width="4476" height="1336" loading="lazy" decoding="async"><figcaption><em>Figura 15. Trayectoria media del WTI en la ventana [−5, +20] días alrededor del evento, por tipo. Las líneas finas representan cada evento individual; la línea gruesa es la media del grupo; la banda sombreada es ±1 desviación típica. El precio está normalizado a 100 en el día 0.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_car.png" alt="Retorno acumulado anormal" width="3575" height="1473" loading="lazy" decoding="async"><figcaption><em>Figura 16. Retorno acumulado anormal (RAA) medio por tipo de evento en los 10 días posteriores al hito.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_ovx_path.png" alt="Evolución del OVX alrededor del evento" width="4476" height="1336" loading="lazy" decoding="async"><figcaption><em>Figura 17. Evolución normalizada del OVX en la ventana del evento. La volatilidad implícita empieza a subir en los días −2 y −1 (antes del evento), alcanza su máximo en torno al día +2 y revierte gradualmente en 10–15 días.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_heatmap.png" alt="Mapa de calor de retornos por evento" width="3172" height="2981" loading="lazy" decoding="async"><figcaption><em>Figura 18. Mapa de calor de retornos WTI por evento individual (filas) y día relativo al evento (columnas). Rojo = retornos positivos; azul = negativos. La dispersión pone de manifiesto la heterogeneidad de las reacciones.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_event_volatility_test.png" alt="Test de volatilidad" width="3851" height="1326" loading="lazy" decoding="async"><figcaption><em>Figura 19. Test de Mann-Whitney U comparando la distribución de retornos absolutos del WTI dentro de la ventana del evento (días 0 a +20) frente a días fuera de la ventana (resto del período). Se comparan dos grupos: (1) retornos en los 20 días hábiles posteriores al hito geopolítico, y (2) retornos en días no vinculados a ningún evento. Un p-valor inferior a 0,05 confirma que el evento tuvo un impacto estadísticamente significativo en la volatilidad del mercado.</em></figcaption></figure>
 <p><strong>Conclusiones del estudio de eventos:</strong></p>
 <ul>
 <li>Los conflictos bélicos y ataques a infraestructura generan un incremento medio del WTI de entre el 3% y el 5% en los primeros 5 días.</li>
@@ -572,8 +553,7 @@
 <hr>
 <h6 class="readme__h2">6. Ingeniería de Variables Predictoras</h6>
 <p>La ingeniería de variables predictoras es el proceso de construir nuevas variables a partir de los datos brutos para mejorar la capacidad predictiva de los modelos. Se construyeron <strong>67 variables predictoras</strong> en cinco grupos, todas con retardo temporal mínimo de 1 día respecto a la variable objetivo para garantizar que ninguna variable del día <code>t</code> incluye información de <code>t+1</code>.</p>
-<p><span class="readme__img">[Figura: Análisis de variables predictoras]</span></p>
-<p><em>Figura 20. Análisis de las 67 variables predictoras: importancia, correlación con la variable objetivo y distribuciones por grupo.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_feature_analysis.png" alt="Análisis de variables predictoras" width="4753" height="4761" loading="lazy" decoding="async"><figcaption><em>Figura 20. Análisis de las 67 variables predictoras: importancia, correlación con la variable objetivo y distribuciones por grupo.</em></figcaption></figure>
 <table>
 <thead>
 <tr>
@@ -614,26 +594,19 @@
 <td>Efectos no lineales combinados</td>
 </tr>
 </tbody></table>
-<p><span class="readme__img">[Figura: Correlación de variables con la variable objetivo]</span></p>
-<p><em>Figura 21. Correlación individual de cada variable predictora con la variable objetivo. Las variables de mercado presentan las correlaciones más altas; las GDELT, bajas pero positivas y consistentes.</em></p>
-<p><span class="readme__img">[Figura: Mapa de colinealidad entre variables]</span></p>
-<p><em>Figura 22. Mapa de calor de correlaciones entre variables predictoras. Permite identificar grupos redundantes antes del modelado.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_feature_target_corr.png" alt="Correlación de variables con la variable objetivo" width="2968" height="2066" loading="lazy" decoding="async"><figcaption><em>Figura 21. Correlación individual de cada variable predictora con la variable objetivo. Las variables de mercado presentan las correlaciones más altas; las GDELT, bajas pero positivas y consistentes.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_feature_correlation.png" alt="Mapa de colinealidad entre variables" width="3947" height="3266" loading="lazy" decoding="async"><figcaption><em>Figura 22. Mapa de calor de correlaciones entre variables predictoras. Permite identificar grupos redundantes antes del modelado.</em></figcaption></figure>
 <hr>
 <h6 class="readme__h2">7. Modelos de Referencia</h6>
-<p><span class="readme__img">[Figura: Resumen visual del baseline]</span>
-<em>Figura 23. Métricas de los modelos de referencia.</em></p>
-<p><span class="readme__img">[Figura: Resultados baseline clasificación]</span>
-<em>Figura 24. Puntuación F1 y AUC-ROC de los modelos de referencia en clasificación.</em></p>
-<p><span class="readme__img">[Figura: Resultados baseline regresión]</span>
-<em>Figura 25. Error absoluto medio (MAE) y R² de los modelos de referencia en regresión.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_baseline_summary.png" alt="Resumen visual del baseline" width="3878" height="1478" loading="lazy" decoding="async"><figcaption><em>Figura 23. Métricas de los modelos de referencia.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_baseline_clf.png" alt="Resultados baseline clasificación" width="4179" height="1344" loading="lazy" decoding="async"><figcaption><em>Figura 24. Puntuación F1 y AUC-ROC de los modelos de referencia en clasificación.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_baseline_reg.png" alt="Resultados baseline regresión" width="4180" height="1341" loading="lazy" decoding="async"><figcaption><em>Figura 25. Error absoluto medio (MAE) y R² de los modelos de referencia en regresión.</em></figcaption></figure>
 <p>Los modelos de regresión logística y regresión lineal regularizada sirven como cota inferior. Sus resultados (F1 ~ 0,38–0,55, AUC ~ 0,56–0,58, R² ~ 0,05) confirman que la relación es fundamentalmente no lineal y que los modelos de conjunto tienen margen real de mejora.</p>
 <hr>
 <h6 class="readme__h2">8. Modelos de Clasificación</h6>
 <p>Se entrenan y optimizan cuatro modelos: regresión logística, bosque aleatorio, XGBoost y LightGBM. La validación se realiza con división temporal en 5 particiones que respeta el orden cronológico de los datos.</p>
-<p><span class="readme__img">[Figura: Resultados de clasificación]</span></p>
-<p><em>Figura 26. Métricas en el conjunto de validación (2021–2026): puntuación F1, AUC-ROC, precisión y exhaustividad por modelo y conjunto de variables.</em></p>
-<p><span class="readme__img">[Figura: Importancia de variables]</span></p>
-<p><em>Figura 27. Importancia de las variables predictoras según el mejor modelo (bosque aleatorio con todas las variables).</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_clf_results.png" alt="Resultados de clasificación" width="4170" height="1485" loading="lazy" decoding="async"><figcaption><em>Figura 26. Métricas en el conjunto de validación (2021–2026): puntuación F1, AUC-ROC, precisión y exhaustividad por modelo y conjunto de variables.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_clf_feature_importance.png" alt="Importancia de variables" width="4168" height="1779" loading="lazy" decoding="async"><figcaption><em>Figura 27. Importancia de las variables predictoras según el mejor modelo (bosque aleatorio con todas las variables).</em></figcaption></figure>
 <table>
 <thead>
 <tr>
@@ -682,8 +655,7 @@
 </tbody></table>
 <hr>
 <h6 class="readme__h2">9. Modelos de Regresión</h6>
-<p><span class="readme__img">[Figura: Análisis de regresión]</span></p>
-<p><em>Figura 28. Predicciones frente a valores reales, distribución de residuos y métricas por modelo.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_reg_analysis.png" alt="Análisis de regresión" width="4168" height="2366" loading="lazy" decoding="async"><figcaption><em>Figura 28. Predicciones frente a valores reales, distribución de residuos y métricas por modelo.</em></figcaption></figure>
 <table>
 <thead>
 <tr>
@@ -723,30 +695,18 @@
 <h6 class="readme__h2">10. Interpretabilidad y Robustez</h6>
 <h6 class="readme__h3">Importancia mediante valores SHAP</h6>
 <p>Los valores SHAP (<em>SHapley Additive exPlanations</em>) asignan a cada variable predictora una contribución cuantificada a cada predicción individual, basándose en la teoría de juegos cooperativos de Shapley.</p>
-<p><span class="readme__img">[Figura: Importancia SHAP media]</span></p>
-<p><em>Figura 29. Importancia SHAP media absoluta. El eje horizontal representa la contribución media de cada variable para desplazar la predicción del modelo respecto al valor base (prevalencia media de días de alta tensión del 33,2%). Variables con SHAP alto son las que el modelo usa con mayor intensidad para discriminar.</em></p>
-<p><span class="readme__img">[Figura: Diagrama de enjambre SHAP]</span></p>
-<p><em>Figura 30. Diagrama de enjambre SHAP. Cada punto es una observación. Eje horizontal: valor SHAP (positivo = empuja hacia &quot;día de alta tensión&quot;; negativo = hacia &quot;día normal&quot;). Color: rojo = valor alto de la variable; azul = valor bajo. Una nube roja a la derecha indica que valores altos de esa variable se asocian con mayor probabilidad de alta tensión.</em></p>
-<p><span class="readme__img">[Figura: Estudio de ablación]</span></p>
-<p><em>Figura 31. Puntuación F1 y AUC-ROC por conjunto de variables en el estudio de ablación.</em></p>
-<p><span class="readme__img">[Figura: Estabilidad temporal]</span>
-<em>Figura 32. Puntuación F1 por año en el período de validación.</em></p>
-<p><span class="readme__img">[Figura: Sensibilidad al umbral de decisión]</span>
-<em>Figura 33. F1, precisión y exhaustividad en función del umbral de decisión del clasificador.</em></p>
-<p><span class="readme__img">[Figura: Robustez al percentil del objetivo]</span>
-<em>Figura 34. Rendimiento del modelo con distintos percentiles de definición de la variable objetivo (P70 a P90).</em></p>
-<p><span class="readme__img">[Figura: Importancia por permutación]</span>
-<em>Figura 35. Importancia por permutación: descenso en la puntuación F1 cuando se aleatoriza cada variable por separado.</em></p>
-<p><span class="readme__img">[Figura: Curvas de dependencia parcial]</span>
-<em>Figura 36. Curvas de dependencia parcial para las variables más importantes. Muestran la relación marginal entre cada variable y la probabilidad predicha.</em></p>
-<p><span class="readme__img">[Figura: Análisis por régimen de mercado]</span>
-<em>Figura 37. Rendimiento del modelo segmentado por régimen: alta volatilidad frente a baja volatilidad.</em></p>
-<p><span class="readme__img">[Figura: Análisis de errores]</span>
-<em>Figura 38. Perfil de los errores del modelo: falsos positivos y falsos negativos.</em></p>
-<p><span class="readme__img">[Figura: Calibración de probabilidades]</span>
-<em>Figura 39. Diagrama de calibración: compara probabilidades predichas con frecuencias observadas.</em></p>
-<p><span class="readme__img">[Figura: Robustez al horizonte temporal]</span>
-<em>Figura 40. Rendimiento del modelo a horizontes de 1, 2 y 3 días. La señal es útil solo a 1 día.</em></p>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_shap_importance.png" alt="Importancia SHAP media" width="4168" height="1484" loading="lazy" decoding="async"><figcaption><em>Figura 29. Importancia SHAP media absoluta. El eje horizontal representa la contribución media de cada variable para desplazar la predicción del modelo respecto al valor base (prevalencia media de días de alta tensión del 33,2%). Variables con SHAP alto son las que el modelo usa con mayor intensidad para discriminar.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_shap_beeswarm.png" alt="Diagrama de enjambre SHAP" width="1713" height="1375" loading="lazy" decoding="async"><figcaption><em>Figura 30. Diagrama de enjambre SHAP. Cada punto es una observación. Eje horizontal: valor SHAP (positivo = empuja hacia &quot;día de alta tensión&quot;; negativo = hacia &quot;día normal&quot;). Color: rojo = valor alto de la variable; azul = valor bajo. Una nube roja a la derecha indica que valores altos de esa variable se asocian con mayor probabilidad de alta tensión.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_ablation.png" alt="Estudio de ablación" width="3570" height="1340" loading="lazy" decoding="async"><figcaption><em>Figura 31. Puntuación F1 y AUC-ROC por conjunto de variables en el estudio de ablación.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_temporal_stability.png" alt="Estabilidad temporal" width="4169" height="1485" loading="lazy" decoding="async"><figcaption><em>Figura 32. Puntuación F1 por año en el período de validación.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_threshold_sensitivity.png" alt="Sensibilidad al umbral de decisión" width="3888" height="1338" loading="lazy" decoding="async"><figcaption><em>Figura 33. F1, precisión y exhaustividad en función del umbral de decisión del clasificador.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_robustness_percentile.png" alt="Robustez al percentil del objetivo" width="3271" height="1338" loading="lazy" decoding="async"><figcaption><em>Figura 34. Rendimiento del modelo con distintos percentiles de definición de la variable objetivo (P70 a P90).</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_permutation_importance.png" alt="Importancia por permutación" width="4169" height="1485" loading="lazy" decoding="async"><figcaption><em>Figura 35. Importancia por permutación: descenso en la puntuación F1 cuando se aleatoriza cada variable por separado.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_pdp.png" alt="Curvas de dependencia parcial" width="4770" height="1191" loading="lazy" decoding="async"><figcaption><em>Figura 36. Curvas de dependencia parcial para las variables más importantes. Muestran la relación marginal entre cada variable y la probabilidad predicha.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_regime_analysis.png" alt="Análisis por régimen de mercado" width="4170" height="1484" loading="lazy" decoding="async"><figcaption><em>Figura 37. Rendimiento del modelo segmentado por régimen: alta volatilidad frente a baja volatilidad.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_error_analysis.png" alt="Análisis de errores" width="3738" height="1755" loading="lazy" decoding="async"><figcaption><em>Figura 38. Perfil de los errores del modelo: falsos positivos y falsos negativos.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_calibration.png" alt="Calibración de probabilidades" width="4170" height="1338" loading="lazy" decoding="async"><figcaption><em>Figura 39. Diagrama de calibración: compara probabilidades predichas con frecuencias observadas.</em></figcaption></figure>
+<figure><img src="%BASE%img/readmes/estres-petroleo-gdelt/fig_robustness_horizon.png" alt="Robustez al horizonte temporal" width="3270" height="1338" loading="lazy" decoding="async"><figcaption><em>Figura 40. Rendimiento del modelo a horizontes de 1, 2 y 3 días. La señal es útil solo a 1 día.</em></figcaption></figure>
 <hr>
 <h6 class="readme__h2">11. Aplicación Práctica para el Inversor en Crudo</h6>
 <h6 class="readme__h3">Información disponible hoy</h6>

@@ -648,29 +648,21 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 </tbody></table>
 <hr>
 <h6 class="readme__h2">6. Resultados y figuras (Bloques 1–5)</h6>
-<h6 class="readme__h3">Figura 1: Snapshot de mercados financieros</h6>
-<p><span class="readme__img">[Figura: Market Snapshot]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/market_snapshot.png" alt="Market Snapshot" width="2968" height="3634" loading="lazy" decoding="async"><figcaption>Figura 1: Snapshot de mercados financieros</figcaption></figure>
 <p>Estado de los trece activos el 23 de marzo de 2026. El snapshot muestra una estructura coherente con un shock energético extremo pero con asimetría sectorial: WTI (+71,23% YTD), OVX (+204,44% YTD), XOM (+33,57% YTD) y CVX (+33,66% YTD) en zona de máximo estrés histórico; S&amp;P 500 (-4,95% YTD) y NASDAQ (-6,86% YTD) bajo presión moderada; DXY (+1,39% YTD) y Bitcoin (-22,47% YTD) en niveles relativamente normales. El perfil no es de crisis financiera global sino de shock sectorial con contagio parcial.</p>
-<h6 class="readme__h3">Figura 2: Impacto del evento Trump (pre vs. post)</h6>
-<p><span class="readme__img">[Figura: Pre/Post Trump]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/pre_post_trump.png" alt="Pre/Post Trump" width="2073" height="883" loading="lazy" decoding="async"><figcaption>Figura 2: Impacto del evento Trump (pre vs. post)</figcaption></figure>
 <p>Comparación de cada activo justo antes del tweet (11:05 UTC) y en su valor extremo intradiario. Es la ilustración más directa de las limitaciones del modelo: ningún indicador histórico puede anticipar la publicación de un post en una red social. Documentar su magnitud con precisión es, en sí mismo, una conclusión metodológica.</p>
-<h6 class="readme__h3">Figura 3: Heatmap de señales Polymarket</h6>
-<p><span class="readme__img">[Figura: Heatmap Polymarket]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/polymarket_heatmap.png" alt="Heatmap Polymarket" width="2234" height="1104" loading="lazy" decoding="async"><figcaption>Figura 3: Heatmap de señales Polymarket</figcaption></figure>
 <p>Probabilidades implícitas organizadas por categoría (eje Y) y horizonte temporal (eje X). La predominancia del color frío en las categorías geopolíticas directas (<code>supply_side</code>, <code>price_direct</code>) frente a la intensidad en <code>risk_assets</code> refleja la incertidumbre extrema sobre la evolución del conflicto.</p>
-<h6 class="readme__h3">Figura 4: Ranking por Signal Quality Score</h6>
-<p><span class="readme__img">[Figura: Ranking Polymarket]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/polymarket_ranking.png" alt="Ranking Polymarket" width="3045" height="2226" loading="lazy" decoding="async"><figcaption>Figura 4: Ranking por Signal Quality Score</figcaption></figure>
 <p>Ranking de los 717 mercados por SQS ajustado. Los primeros puestos corresponden a preguntas sobre cese el fuego, cierre del Estrecho de Ormuz, pausa de la Fed y niveles de precio del WTI —exactamente los mercados de mayor relevancia analítica para el proyecto.</p>
-<h6 class="readme__h3">Figura 5: Curvas de probabilidad implícita</h6>
-<p><span class="readme__img">[Figura: Implied Curves]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/polymarket_implied_curve.png" alt="Implied Curves" width="3096" height="1214" loading="lazy" decoding="async"><figcaption>Figura 5: Curvas de probabilidad implícita</figcaption></figure>
 <p>Curvas de probabilidad implícita agrupadas por dirección (above/below) y horizonte temporal para mercados con umbral numérico explícito. La asimetría entre curvas &quot;above&quot; y &quot;below&quot; refleja el sesgo del mercado hacia una eventual corrección del precio desde los niveles actuales, coherente con la divergencia detectada en el motor de inferencia.</p>
-<h6 class="readme__h3">Figura 6: Top mercados para inferencia</h6>
-<p><span class="readme__img">[Figura: Top Inference]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/polymarket_top_inference.png" alt="Top Inference" width="2387" height="1333" loading="lazy" decoding="async"><figcaption>Figura 6: Top mercados para inferencia</figcaption></figure>
 <p>Subconjunto curado de mercados seleccionados para el motor de inferencia (<code>selection_flag_for_inference = True</code>). El motor no trabaja con los 717 mercados sino con este subconjunto de mayor SQS ajustado y mayor relevancia geopolítica.</p>
-<h6 class="readme__h3">Figura 7: Mapa de inferencias</h6>
-<p><span class="readme__img">[Figura: Inference Map]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/inference_map.png" alt="Inference Map" width="2072" height="1483" loading="lazy" decoding="async"><figcaption>Figura 7: Mapa de inferencias</figcaption></figure>
 <p>Scatter plot de los doce escenarios: eje X = probabilidad implícita Polymarket; eje Y = <code>inference_confidence_score</code>; tamaño = SQS; color = categoría; tipo de marcador = alineación con el modelo. El cuadrante superior derecho (alta probabilidad + alto respaldo del modelo) contiene solo la pausa de la Fed —el único escenario con consenso total entre Polymarket y el historial empírico.</p>
-<h6 class="readme__h3">Figura 8: Intelligence Brief</h6>
-<p><span class="readme__img">[Figura: Intelligence Brief]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/intelligence_brief.png" alt="Intelligence Brief" width="1976" height="6312" loading="lazy" decoding="async"><figcaption>Figura 8: Intelligence Brief</figcaption></figure>
 <p>Informe ejecutivo estructurado que sintetiza la situación de mercado, las señales Polymarket, las inferencias del modelo, el dictamen por escenario, las divergencias clave y la tabla de canales de contagio sistémico. Es el entregable final del proyecto.</p>
 <hr>
 <h6 class="readme__h2">7. Conclusiones de la Parte 1</h6>
@@ -755,7 +747,7 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 <h6 class="readme__h2">11. Bloque 6 — Comparativa Ucrania 2022 vs. EEUU-Irán 2026</h6>
 <p>El precedente más cercano al escenario del 23 de marzo de 2026 es la invasión rusa de Ucrania (24 de febrero de 2022). Ambos son guerras activas con impacto directo en infraestructura energética y OVX/GPR en percentiles extremos. Este bloque construye una comparación estructurada que permite contrastar empíricamente si los parámetros del RSJD son realistas y qué diferencia estructural introduce el bloqueo del Estrecho de Ormuz.</p>
 <h6 class="readme__h3">11.1 Trayectoria normalizada WTI, OVX y VIX</h6>
-<p><span class="readme__img">[Figura: Trayectoria normalizada]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque6_trayectoria_normalizada.png" alt="Trayectoria normalizada" width="2084" height="2068" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Evolución de WTI, OVX y VIX en los 90 días de negociación siguientes al inicio de cada conflicto, normalizados a 100 en el día 0. La proyección RSJD con IC 80% (banda dorada) se añade desde el último dato observado del episodio actual (día 17, snapshot del 23 de marzo).</p>
 <p><strong>Qué lectura se extrae:</strong></p>
 <ul>
@@ -764,15 +756,15 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 <li>VIX: el episodio de 2026 muestra menor reacción del VIX que Ucrania, confirmando el patrón de shock sectorial sin crisis financiera global.</li>
 </ul>
 <h6 class="readme__h3">11.2 Trayectoria GPR: ambos episodios</h6>
-<p><span class="readme__img">[Figura: GPR comparativa]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque6_gpr_comparativa.png" alt="GPR comparativa" width="2083" height="728" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Índice de Riesgo Geopolítico (GPR) en los días siguientes a cada inicio de conflicto (base 100 en día 0). Las líneas discontinuas marcan el umbral crítico del modelo (GPR &gt; 120) relativizado a cada episodio.</p>
 <p><strong>Qué lectura se extrae:</strong> Ambos episodios superan el umbral crítico desde el día 0. La diferencia está en la estructura inicial: en Ucrania el GPR arrancó desde 370,7 (ya muy elevado), con un escalón brusco al inicio; en el episodio actual partía de 229,3, con una escalada más progresiva. El máximo en ambos casos alcanzó el percentil ~100 del histórico desde 1985.</p>
 <h6 class="readme__h3">11.3 Calibración empírica del RSJD: duración real del régimen en Ucrania 2022</h6>
-<p><span class="readme__img">[Figura: Calibración RSJD]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque6_rsjd_calibracion.png" alt="Calibración RSJD" width="2083" height="728" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> OVX durante los 90 días posteriores al inicio de la guerra de Ucrania. Se señala el umbral de salida del modelo (OVX &lt; 40 durante 5 días consecutivos), la duración esperada del RSJD (~43 días) y el OVX actual del episodio de 2026 como referencia.</p>
 <p><strong>Resultado crítico:</strong> El régimen de alta tensión en Ucrania <strong>no salió</strong> del umbral OVX &gt; 40 en los primeros 90 días de negociación. El RSJD predice una duración esperada de ~43 días, que resultó ser una subestimación significativa para el episodio ucraniano. Esto valida empíricamente la advertencia de la Parte 2: el error de magnitud del 136,9% en extrapolación no es teórico, es observable sobre el único precedente relevante.</p>
 <h6 class="readme__h3">11.4 Tabla comparativa de episodios</h6>
-<p><span class="readme__img">[Figura: Tabla comparativa]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque6_tabla_comparativa.png" alt="Tabla comparativa" width="2085" height="1033" loading="lazy" decoding="async"></figure>
 <table>
 <thead>
 <tr>
@@ -857,7 +849,7 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 <h6 class="readme__h2">12. Bloque 7 — Análisis de Correlaciones Rodantes</h6>
 <p>Las correlaciones entre activos financieros no son estables: cambian con el régimen. Un shock energético extremo reorganiza las relaciones entre el crudo, la volatilidad, el dólar y la renta variable de forma que los modelos calibrados sobre periodos tranquilos no anticipan. Este bloque cuantifica esa reorganización en tres sub-bloques.</p>
 <h6 class="readme__h3">12.1 Correlaciones rodantes (ventana 30 días, 2020–2026)</h6>
-<p><span class="readme__img">[Figura: Correlaciones rodantes]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque7_correlaciones_rodantes.png" alt="Correlaciones rodantes" width="2082" height="2386" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Correlación rodante de 30 días entre 5 pares clave, calculada sobre log-retornos diarios desde enero de 2020 hasta el snapshot. La zona sombreada en rojo marca el inicio de la guerra EEUU-Irán (27-feb-2026).</p>
 <p><strong>Rupturas cuantificadas:</strong></p>
 <table>
@@ -909,12 +901,12 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 <p>La cifra más llamativa es la del par WTI-OVX: <strong>el signo se invierte</strong>. Pre-guerra, en retornos diarios, cuando el crudo subía tendía a hacerlo mientras la volatilidad implícita caía (mercado alcista tranquilo). Durante la guerra, ambos suben y bajan juntos: el crudo y su volatilidad implícita se han sincronizado en el régimen de estrés extremo.</p>
 <p>La relación inversa estructural WTI-DXY (crudo en dólares: dólar fuerte → crudo caro para compradores externos → demanda cae → precio baja) también se debilita durante la guerra, cuando los movimientos de ambos activos pasan a estar co-determinados por el factor geopolítico común.</p>
 <h6 class="readme__h3">12.2 Matrices de correlación: pre-bélico vs. periodo bélico vs. delta</h6>
-<p><span class="readme__img">[Figura: Matrices correlación]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque7_matrices_correlacion.png" alt="Matrices correlación" width="2685" height="889" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Tres matrices de correlación (log-retornos diarios) lado a lado: periodo pre-bélico (2025-01-01 a 2026-02-26, 298 días), periodo bélico (2026-02-27 a 2026-03-23, 15 días), y delta (diferencia entre ambas).</p>
 <p><strong>Qué lectura se extrae del panel delta:</strong> Prácticamente todos los pares aumentan su correlación durante la guerra. La excepción notable es WTI-Brent, que ya era muy alta antes (+0,867) y se mantiene estable. El sistema financiero se comporta como un bloque más correlacionado en el régimen de estrés: cuando el crudo sube, todo sube; cuando cae (evento Trump), todo cae juntos. Esto reduce las posibilidades de diversificación intra-cartera durante el régimen de alta tensión.</p>
 <p>Las correlaciones más afectadas en el delta son precisamente las que cruzan el crudo con activos financieros: WTI-VIX (+0,784), Brent-VIX (+0,882), WTI-DXY (+0,332). El canal de transmisión energía → sistema financiero opera a través de estas correlaciones, que se activan de forma sincrónica.</p>
 <h6 class="readme__h3">12.3 Heatmap completo del periodo bélico (13 activos)</h6>
-<p><span class="readme__img">[Figura: Heatmap bélico completo]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque7_heatmap_belico_completo.png" alt="Heatmap bélico completo" width="1934" height="1628" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Matriz de correlación de los 13 activos del snapshot durante el periodo bélico completo (17 días de negociación), construida sobre log-retornos diarios de los parquets yfinance.</p>
 <p><strong>Correlaciones destacadas (|r| &gt; 0,60):</strong></p>
 <table>
@@ -1008,12 +1000,12 @@ Parte 2 ─── Regímenes RSJD ────── Estrategias ABM ───�
 </tbody></table>
 <p><strong>Criterio compuesto:</strong> todas las condiciones deben cumplirse durante 5 días hábiles consecutivos para declarar salida del régimen.</p>
 <h6 class="readme__h3">13.2 Semáforo visual: estado actual</h6>
-<p><span class="readme__img">[Figura: Semáforo de salida]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque4_6_semaforo_salida.png" alt="Semáforo de salida" width="2383" height="1039" loading="lazy" decoding="async"></figure>
 <p><strong>Exit Score: 18,8/100 → RÉGIMEN MÁXIMO ESTRÉS | 0 de 4 condiciones satisfechas</strong></p>
 <p><strong>Qué lectura se extrae:</strong> El indicador más cercano a su umbral es VIX (+1,78 puntos sobre el umbral de 25): el estrés financiero sistémico es moderado incluso con OVX en percentil 98,6. Esto es el patrón exacto de un shock sectorial sin crisis financiera global, coherente con el análisis de canales de contagio del Bloque 4.5. El indicador más alejado de su umbral es GPR: necesita reducirse un 52% desde su nivel actual para entrar en zona de transición.</p>
 <p>Para que el semáforo pase a amarillo (&quot;señales parciales&quot;) bastaría con que VIX cayese por debajo de 25. Para que pase a verde (&quot;salida inminente&quot;), OVX necesitaría caer de 91,85 a menos de 40 — una reducción del 56% desde el nivel del snapshot.</p>
 <h6 class="readme__h3">13.3 Precedente histórico: distribución de duraciones</h6>
-<p><span class="readme__img">[Figura: Duración del régimen]</span></p>
+<figure><img src="%BASE%img/readmes/contagio-eeuu-iran/bloque4_6_duracion_regimen.png" alt="Duración del régimen" width="2234" height="745" loading="lazy" decoding="async"></figure>
 <p><strong>Qué representa:</strong> Panel izquierdo: distribución histórica de la duración de episodios OVX &gt; 40 (57 episodios desde 2007). Panel derecho: scatter duración vs. OVX pico del episodio, con el episodio actual marcado.</p>
 <table>
 <thead>

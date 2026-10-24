@@ -19,16 +19,30 @@ export const contagioEeuuIran: Project = {
   tags: ['Series temporales', 'Clasificación', 'Integración de fuentes'],
   stack: ['Python', 'pandas', 'scikit-learn', 'yfinance', 'API de Polymarket'],
   headline: { value: '8 fuentes', label: 'y 67 variables, con datos desde 1986' },
+  // README: Resumen, §9 (Conclusiones de la Parte 3) and §10.
   facts: [
-    '8 fuentes de datos; precio diario del WTI desde enero de 1986 (FRED)',
-    '67 variables predictoras; Random Forest con AUC 0,615 fuera de muestra (2021–2026)',
-    '717 mercados de Polymarket filtrados y cruzados con el modelo histórico',
-    'Polymarket como fuente auxiliar de expectativas, nunca como validación independiente',
+    {
+      value: '23 de marzo de 2026',
+      text: 'Apliqué el modelo a un evento real extremo: guerra EE. UU.–Irán, Ormuz bloqueado, OVX en el percentil 98,6 y GPR en el 97,8. En los escenarios más extremos se declara fuera de dominio en vez de responder con falsa confianza.',
+    },
+    {
+      value: '717 mercados',
+      text: 'Filtré mercados de Polymarket y los crucé con el modelo histórico, como fuente auxiliar y nunca como validación. Las divergencias entre ambos, más que cada señal por separado, son lo más valioso del análisis.',
+    },
+    {
+      value: '+33,6 % frente a −4,95 %',
+      text: 'Exxon frente al S&P 500 en lo que iba de año (Chevron, +34,8 %): confirmé el desacoplamiento del sector energético que ya documentaba la guerra de Ucrania de 2022.',
+    },
   ],
-  cover: null,
-  canvas: { x: 1620, y: 90, w: 260 },
+  // scripts/covers.py: the README figure polymarket_heatmap, whole
+  cover: {
+    src: 'img/covers/contagio-eeuu-iran.webp',
+    alt: 'Mapa de convicción de los mercados de Polymarket por categoría y nivel de probabilidad',
+  },
+  canvas: { x: 1740, y: 90, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio (3.ª parte de la serie)', url: REPO }],
-  todo: ['Secciones del caso de estudio (E6)', 'Modelo frente a Polymarket (E6)'],
+  repoHasDetail: true, // README with methodology and results (2026-10-19 copy)
+  todo: ['Modelo frente a Polymarket (E6)'],
 };

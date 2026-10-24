@@ -1,19 +1,29 @@
-// Mi música: songs chosen by Iñigo, one personal sentence each (docs/PLAN.md, agreed 2026-10-20).
-// Nothing here is invented: the section is not published until `tracks` has real entries.
+// Mi música: the songs of Iñigo's public Spotify playlist, in its order (2026-10-24: he sent the playlist and
+// left the sentences for later). The list comes from scripts/music-playlist.py (music-playlist.json + the
+// official covers in public/img/music/); run it again when the playlist changes.
+import playlist from './music-playlist.json';
 
 export interface Track {
-  /** Spotify link to the track, as Iñigo sends it (https://open.spotify.com/track/…). */
+  /** Spotify link to the track (https://open.spotify.com/track/…). */
   url: string;
   title: string;
   artist: string;
-  /** Iñigo's sentence about the song (≤ 140 characters, fits in 3 lines on the device). */
-  note: string;
+  /** Iñigo's sentence about the song (≤ 140 characters, fits in 3 lines on the device); none yet. */
+  note?: string;
   /** Official cover image from Spotify, unmodified. null = placeholder. */
   cover: string | null;
 }
 
-// TODO(content): Iñigo's songs, in the order he wants them (new ones go at the end).
-export const tracks: Track[] = [];
+// TODO(content): Iñigo's sentence per song, by Spotify track id (he will write them later).
+const notes: Record<string, string> = {};
+
+export const tracks: Track[] = playlist.map((s) => ({
+  url: `https://open.spotify.com/track/${s.id}`,
+  title: s.title,
+  artist: s.artist,
+  note: notes[s.id],
+  cover: `${import.meta.env.BASE_URL}img/music/${s.id}.jpg`,
+}));
 
 /** Optional intro sentence for the section. TODO(content). */
 export const musicIntro: string | null = null;
@@ -67,4 +77,6 @@ export const musicUi = {
   playerFailed: 'No se ha podido cargar el reproductor.',
   controlsOff: 'Usa los controles del reproductor de Spotify.',
   announce: (t: Track) => `Pista seleccionada: ${t.title}, ${t.artist}`,
+  shuffle: 'Aleatorio',
+  shuffleHint: 'Aleatorio: actívalo o desactívalo (tecla +)',
 };

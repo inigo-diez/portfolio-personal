@@ -1,19 +1,30 @@
 .home {
+  --home-header-h: 46px; /* also the bottom margin of the main area, so the device sits in the middle of the window */
+  --home-lift: 3svh; /* how far above the exact middle of the window the device sits (Iñigo, 2026-10-24: "un poco más arriba") */
   min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr;
 }
 .home__header {
+  box-sizing: border-box;
+  height: var(--home-header-h);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: flex-start;
   padding: 28px var(--page-x) 0;
+}
+.home__brand {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 .home__main {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   column-gap: clamp(48px, 9vw, 160px);
-  padding: 0 var(--page-x) 9svh;
+  padding: 0 var(--page-x) calc(var(--home-header-h) + 2 * var(--home-lift));
 }
 .home__intro {
   justify-self: end;
@@ -25,6 +36,47 @@
   letter-spacing: -0.03em;
   white-space: nowrap;
 }
+.home__training {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.home__training-word {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.home__context {
+  max-width: 24em;
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-align: justify;
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+.home__context-emphasis {
+  color: #111;
+  font-weight: 700;
+}
+.home__training-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  background: currentColor;
+  animation: training-cursor-blink 0.8s steps(1) infinite;
+}
+@keyframes training-cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
 .home__stage {
   position: relative;
   display: grid;
@@ -33,33 +85,109 @@
 .home__stage {
   --w: clamp(300px, min(29vw, 46svh), 430px); /* device width; body is 100 × 124 */
 }
-.home__keys {
+/* Under the device but out of the flow, so that only the device is centred in the window (phones: back in the flow). */
+.home__under {
   position: absolute;
-  top: calc(100% + 18px);
-  margin: 0;
-  font-size: 12px;
+  top: 100%;
+  left: 50%;
+  width: var(--w);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+}
+.home__floor {
+  position: relative;
+  width: var(--w);
+  height: 74px;
+  display: grid;
+  place-items: center;
+}
+/* A soft reflection of the aluminium body, without mirroring the screen, ring labels or top socket. */
+.home__floor::before {
+  content: '';
+  position: absolute;
+  inset: 0 1% auto;
+  height: 150px;
+  border-radius: 0 0 40px 40px;
+  background: linear-gradient(180deg, rgba(151, 158, 168, 0.28), rgba(196, 201, 208, 0.13) 45%, transparent 100%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+.home__floor::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 7%;
+  width: 86%;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(78, 84, 93, 0.15);
+  filter: blur(9px);
+  pointer-events: none;
+}
+.home__floor-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.home__floor .ghost {
+  min-height: 26px;
+  padding: 3px 9px;
+  gap: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
   color: var(--ink-2);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s;
 }
-.home__stage:focus-within .home__keys {
-  opacity: 1;
-}
-kbd {
-  font: 500 11px/1 var(--font-sans);
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  border-radius: 4px;
-  padding: 2px 5px;
-  margin: 0 2px;
+.home__floor .ghost:hover,
+.home__floor .ghost[aria-pressed='true'] {
   color: var(--ink);
 }
-.home__cta {
-  justify-self: start;
+.home__floor .ghost svg {
+  width: 11px;
+  height: 11px;
+}
+.home__keys {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 12px;
+  width: var(--w);
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.home__keys > span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.home__control-symbol {
+  display: inline-grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  margin: 0 4px 0 0;
+  padding: 0 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--graphite);
+}
+.home__keys > span:first-child .home__control-symbol:not(:first-child) {
+  margin-left: 6px;
+}
+.home__control-symbol svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+.home__cta {
+  margin-top: 22px;
 }
 .ghost {
   display: inline-flex;
@@ -88,7 +216,14 @@ kbd {
 
 @media (max-width: 860px) {
   .home__header {
+    height: auto;
     padding-top: 18px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .home__under {
+    display: contents;
   }
   .home__main {
     grid-template-columns: 1fr;
@@ -104,11 +239,31 @@ kbd {
   .home__intro h1 {
     font-size: 24px;
   }
+  .home__intro {
+    text-align: center;
+  }
+  .home__training {
+    margin-top: 14px;
+    font-size: 15px;
+  }
+  .home__training-word {
+    font-size: 17px;
+  }
+  .home__context {
+    max-width: 27em;
+    margin: 16px auto 0;
+    font-size: 13px;
+  }
   .home__stage {
     --w: min(calc(100vw - 48px), 360px);
   }
+  .home__floor {
+    height: 68px;
+  }
   .home__keys {
-    display: none;
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 8px 14px;
   }
   .home__quick {
     display: block;
@@ -144,10 +299,12 @@ kbd {
     padding-top: 40px;
     padding-bottom: calc(var(--w) * 0.26);
   }
+  .home__stage.is-plugged .home__floor::before,
+  .home__stage.is-plugged .home__floor::after {
+    display: none;
+  }
   .home__cta {
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
+    justify-self: center;
   }
   .ghost {
     min-height: 44px;
@@ -156,5 +313,24 @@ kbd {
 @media (max-width: 860px) and (prefers-reduced-motion: reduce) {
   .home__stage {
     transition: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home__training {
+    white-space: normal;
+  }
+  .home__training-word {
+    font-size: inherit;
+  }
+  .home__training-cursor {
+    display: none;
+  }
+}
+@media (max-width: 360px) {
+  .home__training {
+    font-size: 14px;
+  }
+  .home__training-word {
+    font-size: 16px;
   }
 }

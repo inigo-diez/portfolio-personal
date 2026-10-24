@@ -6,6 +6,7 @@ import './transition/transition.css';
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { App } from './app/App';
+import { showWelcome } from './app/Welcome';
 import { usingTestTracks } from './content/music';
 import { readTestSwitches } from './transition/config';
 
@@ -24,3 +25,5 @@ else {
   root.replaceChildren();
   createRoot(root).render(app);
 }
+// the welcome screen, only when index.html asked for it (a session starting on the home)
+showWelcome();

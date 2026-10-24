@@ -1,0 +1,79 @@
+/* Welcome screen (Welcome.tsx): white, one black line in Geist Mono in the middle, a blinking cursor */
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483001; /* over everything, the white cover of index.html included */
+  display: grid;
+  place-items: center;
+  padding: 0 24px;
+  background: #fff;
+  opacity: 1;
+  transition: opacity 0.4s var(--ease-out);
+}
+.welcome.is-leaving {
+  opacity: 0;
+}
+.welcome__line {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #111;
+  text-align: center;
+  text-wrap: balance;
+  transition:
+    opacity 0.35s ease,
+    transform 0.5s var(--ease-out);
+}
+.welcome.is-exiting .welcome__line {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+.welcome.is-exiting .welcome__cursor {
+  animation: none;
+}
+@media (min-width: 861px) {
+  .welcome__line {
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+/* the cursor takes no room: it sits over the place of the next character, so the line does not shift */
+.welcome__cursor {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 1em;
+  vertical-align: -0.14em;
+  animation: welcome-blink 1s steps(1) infinite;
+}
+.welcome__cursor::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.12em;
+  height: 1em;
+  background: currentColor;
+}
+.welcome__rest {
+  visibility: hidden;
+}
+@keyframes welcome-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome {
+    transition: none;
+  }
+  .welcome__line {
+    transition: none;
+  }
+  .welcome__cursor {
+    animation: none;
+  }
+}

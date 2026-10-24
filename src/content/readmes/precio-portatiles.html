@@ -126,7 +126,7 @@
 </tr>
 </tbody></table>
 <p>El criterio de imputar VRAM con cero merece una mencion especial: el analisis confirmaba que los portatiles sin grafica dedicada (NaN en <code>Video_graphics_Memory_GB</code>) tenian precios consistentemente mas bajos que los que si la tenian. Sustituir esos NaN por 0 era semanticamente correcto: literalmente tienen 0 GB de VRAM dedicada.</p>
-<p><span class="readme__img">[Figura: Comparativa de precios con y sin VRAM dedicada]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_06.png" alt="Comparativa de precios con y sin VRAM dedicada" width="1189" height="590" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Conversion de precios</h6>
 <p>Los precios originales estaban en libras egipcias (EGP). Se convirtieron a euros aplicando el tipo de cambio de referencia utilizado en el dataset: <code>Precio_EUR = Precio_EGP * 0.018</code>.</p>
 <hr>
@@ -164,13 +164,13 @@
 </tbody></table>
 <h6 class="readme__h3">GPU_Tier (Nivel_GPU)</h6>
 <p>Se clasifico la tarjeta grafica en niveles de gama basandose en la serie numerica del modelo (RTX 4090, 5090 = Ultra; RTX 4070-4080 = Alta; RTX 3060-4060 = Media-Alta, etc.):</p>
-<p><span class="readme__img">[Figura: Distribucion de portatiles por nivel de GPU]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_01.png" alt="Distribucion de portatiles por nivel de GPU" width="850" height="525" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">GPU_Brand</h6>
 <p>Variable simple con tres valores posibles segun el fabricante de la GPU: <code>Nvidia</code>, <code>AMD</code>, <code>Intel</code> u <code>Other</code>.</p>
 <h6 class="readme__h3">Webcam_class</h6>
 <p>En lugar de trabajar con la descripcion libre del tipo de camara, se clasifico en gamas segun la resolucion: 1080p (Gama Alta), 720p (Gama Media), 480p (Gama Media-Baja), VGA (Gama Baja). El impacto en precio era apreciable:</p>
-<p><span class="readme__img">[Figura: Precio medio segun clase de webcam]</span>
-<span class="readme__img">[Figura: Distribucion de portatiles por clase de webcam]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_02.png" alt="Precio medio segun clase de webcam" width="589" height="433" loading="lazy" decoding="async"></figure>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_03.png" alt="Distribucion de portatiles por clase de webcam" width="571" height="433" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Has_Webcam y Has_Fingerprint (Webcam_Fingerprint)</h6>
 <p>Variables binarias (0/1) que indican si el portatil dispone de camara web y/o lector de huellas. Se construyeron a partir de la presencia o ausencia de texto en las columnas originales <code>Webcam</code> y <code>Finger Print</code>.</p>
 <h6 class="readme__h3">OS_Categoria (OS_Type)</h6>
@@ -188,24 +188,24 @@
 <h6 class="readme__h3">Distribucion de variables numericas (boxplots)</h6>
 <p>Antes y despues de la limpieza se generaron boxplots para todas las variables numericas, lo que permitio identificar los outliers extremos en <code>Weight_kg</code> y <code>Storage_GB</code>.</p>
 <p><strong>Antes del filtrado de outliers:</strong></p>
-<p><span class="readme__img">[Figura: Boxplots antes del filtrado]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_08.png" alt="Boxplots antes del filtrado" width="2059" height="989" loading="lazy" decoding="async"></figure>
 <p><strong>Despues del filtrado de outliers:</strong></p>
-<p><span class="readme__img">[Figura: Boxplots tras la limpieza definitiva]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_09.png" alt="Boxplots tras la limpieza definitiva" width="2450" height="989" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Distribucion por marca</h6>
 <p>El dataset esta dominado por unas pocas marcas (Lenovo, HP, ASUS, Acer, Dell) con una larga cola de fabricantes minoritarios. Los nulos en <code>Brand</code> se imputaron como &quot;Unknown&quot;.</p>
-<p><span class="readme__img">[Figura: Distribucion de portatiles por marca]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_07.png" alt="Distribucion de portatiles por marca" width="850" height="569" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Matriz de correlacion</h6>
 <p>El heatmap de correlaciones mostraba que las variables de ratio (<code>Screen_Weight_Ratio</code>, <code>RAM_Weight_Ratio</code>) estaban fuertemente correlacionadas con sus componentes originales, lo que sugeria que incluirlas todas a la vez podia ser redundante.</p>
-<p><span class="readme__img">[Figura: Matriz de correlacion entre variables numericas]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_10.png" alt="Matriz de correlacion entre variables numericas" width="709" height="618" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Relacion RAM con Precio</h6>
 <p>La RAM mostraba una relacion positiva clara con el precio, aunque con bastante variabilidad en los rangos altos, lo que indicaba que no es el unico factor determinante.</p>
-<p><span class="readme__img">[Figura: Dispersion RAM vs Precio]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_11.png" alt="Dispersion RAM vs Precio" width="559" height="394" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Relacion Peso con Precio</h6>
 <p>El peso no muestra una correlacion lineal fuerte con el precio, aunque los portatiles muy ligeros tienden a ser mas caros (ultrabooks de gama alta).</p>
-<p><span class="readme__img">[Figura: Dispersion Peso vs Precio]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_12.png" alt="Dispersion Peso vs Precio" width="549" height="394" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Variables categoricas vs Precio</h6>
 <p>Se generaron graficos de barra para comparar el precio medio segun cada variable categorica (Brand, CPU_Class, GPU_Tier, GPU_Brand, OS). El comportamiento era el esperado: CPU de gama alta y GPU dedicada de alto rendimiento se correlacionan claramente con precios superiores.</p>
-<p><span class="readme__img">[Figura: Variables categoricas vs Precio]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_13.png" alt="Variables categoricas vs Precio" width="1187" height="1790" loading="lazy" decoding="async"></figure>
 <hr>
 <h6 class="readme__h2">Entrenamiento de Modelos</h6>
 <h6 class="readme__h3">Preparacion</h6>
@@ -248,7 +248,7 @@
 </tr>
 </tbody></table>
 <p>XGBoost y Random Forest lideraron claramente el benchmark, confirmando que los modelos de ensamble basados en arboles son los mas adecuados para datos tabulares de este tipo.</p>
-<p><span class="readme__img">[Figura: Comparativa de MAE por modelo]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_14.png" alt="Comparativa de MAE por modelo" width="695" height="394" loading="lazy" decoding="async"></figure>
 <h6 class="readme__h3">Optimizacion con GridSearchCV</h6>
 <p>Se aplico una busqueda en rejilla (<code>GridSearchCV</code>, cv=3) sobre XGBoost con los siguientes hiperparametros:</p>
 <ul>
@@ -286,7 +286,7 @@
 <p>Para referencia, el notebook de solucion del instructor (P10 - Regresion.ipynb) obtenia un MAE de 175.31 euros y un R2 de 0.730 con un preprocesado algo mas simplificado. El trabajo adicional de feature engineering en <code>Ordenador_Comparativa.ipynb</code> permitio reducir el error en aproximadamente 23 euros y ganar casi 10 puntos en R2.</p>
 <h6 class="readme__h3">Analisis de residuos</h6>
 <p>El grafico de residuos muestra la distribucion de los errores del modelo final, con el histograma centrado en cero y las predicciones vs valores reales bien alineadas en torno a la diagonal perfecta.</p>
-<p><span class="readme__img">[Figura: Predicciones vs realidad y distribucion de errores]</span></p>
+<figure><img src="%BASE%img/readmes/precio-portatiles/fig_15.png" alt="Predicciones vs realidad y distribucion de errores" width="1489" height="490" loading="lazy" decoding="async"></figure>
 <hr>
 <h6 class="readme__h2">Conclusiones</h6>
 <p>El modelo final de XGBoost optimizado alcanza un R2 de 0.823, lo que significa que explica aproximadamente el 82% de la varianza en los precios de los portatiles del mercado egipcio. El error medio absoluto de 152 euros sobre precios que van desde unos 100 hasta mas de 3.000 euros representa un margen razonablemente competitivo para un tasador automatico.</p>

@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { href } from '../app/routes';
 import { os } from '../content/device';
 import type { Track } from '../content/music';
-import { musicUi } from '../content/music';
 import { isAvailable, ui, type Section } from '../content/site';
-import { Battery, Icon, type IconName } from '../device/icons';
+import { Battery, BrandLogo, Icon, type IconName } from '../device/icons';
+import { Monogram } from '../device/Monogram';
 import './os.css';
 
 function useClock() {
@@ -52,8 +53,10 @@ export function useKeepInView(sel: number) {
     const ul = list.current!,
       row = ul.children[sel] as HTMLElement | undefined;
     if (!row) return;
-    const h = row.offsetHeight,
-      n = ul.children.length;
+    const n = ul.children.length;
+    // Row pitch from the total height: offsetHeight is rounded to whole pixels and that error piled up row by
+    // row, leaving a sliver of the row above the top one visible at the end of a long list.
+    const h = ul.scrollHeight / n;
     const visible = Math.max(1, Math.floor(ul.clientHeight / h + 0.01));
     bar.current!.hidden = n <= visible;
     if (n <= visible) {
@@ -64,7 +67,7 @@ export function useKeepInView(sel: number) {
     if (sel < top.current) top.current = sel;
     if (sel >= top.current + visible) top.current = sel - visible + 1;
     top.current = Math.min(top.current, n - visible);
-    ul.scrollTop = top.current * h;
+    ul.scrollTop = Math.round(top.current * h); // a whole pixel: truncating it left a sliver of the row above
     bar.current!.style.setProperty('--p', ((100 * (top.current + visible)) / n).toFixed(1) + '%');
   });
   return { list, bar };
@@ -122,28 +125,24 @@ export function Cover({ track, className }: { track: Track | undefined; classNam
   );
 }
 
-function Peek({ id, track }: { id: Section['id']; track?: Track }) {
+function Peek({ id }: { id: Section['id'] }) {
   const p = os.peek;
   switch (id) {
     case 'sobre-mi':
       return (
         <>
-          <div className="peek__mono">{p['sobre-mi'].mono}</div>
-          <div className="peek__label">
-            {p['sobre-mi'].lines[0]}
-            <br />
-            {p['sobre-mi'].lines[1]}
+          <div className="peek__mono">
+            <Monogram />
           </div>
+          <ul className="peek__list">
+            {p['sobre-mi'].lines.map((l) => (
+              <li key={l}>{l}</li>
+            ))}
+          </ul>
         </>
       );
     case 'trayectoria':
-      return (
-        <>
-          <div className="peek__kicker">{p.trayectoria.kicker}</div>
-          <div className="peek__title">{p.trayectoria.title}</div>
-          <Chips items={p.trayectoria.chips} />
-        </>
-      );
+      return <Icon name="route" className="peek__icon" />;
     case 'proyectos':
       return (
         <>
@@ -163,7 +162,7 @@ function Peek({ id, track }: { id: Section['id']; track?: Track }) {
         </>
       );
     case 'habilidades':
-      return <Chips items={p.habilidades.chips} />;
+      return <Icon name="stack" className="peek__icon" />;
     case 'formacion':
       return (
         <>
@@ -178,48 +177,21 @@ function Peek({ id, track }: { id: Section['id']; track?: Track }) {
       );
     case 'contacto':
       return (
-        <>
-          <Icon name="mail" className="peek__icon" />
-          <div className="peek__label">
-            {p.contacto.lines[0]}
-            <br />
-            {p.contacto.lines[1]}
-          </div>
-        </>
+        <div className="peek__brands">
+          <BrandLogo name="gmail" />
+          <BrandLogo name="linkedin" />
+          <BrandLogo name="github" />
+        </div>
       );
     case 'cv':
       return (
-        <>
-          <div className="peek__doc">
-            {Array.from({ length: 7 }, (_, i) => (
-              <i key={i} />
-            ))}
-          </div>
-          <div className="peek__label">{p.cv.lines[0]}</div>
-        </>
+        <img className="peek__cv" src={href('img/cv-preview.png')} alt="" width="793" height="1124" draggable={false} />
       );
     case 'mi-musica':
-      return track ? (
-        <>
-          <div className="peek__kicker pm__k">{musicUi.selected}</div>
-          <Cover track={track} className="pm__cov" />
-          <div className="pm__t">{track.title}</div>
-          <div className="pm__a">{track.artist}</div>
-        </>
-      ) : (
-        <div className="peek__label">{p['mi-musica'].soon}</div>
-      );
+      return <Icon name="music" className="peek__icon" />;
+    case 'mis-libros':
+      return <Icon name="book" className="peek__icon" />;
   }
-}
-
-function Chips({ items }: { items: string[] }) {
-  return (
-    <div className="peek__chips">
-      {items.map((t) => (
-        <span key={t}>{t}</span>
-      ))}
-    </div>
-  );
 }
 
 /** Home menu: list (52 %) + preview of the selected entry. */
@@ -227,25 +199,23 @@ export function MenuScreen({
   items,
   sel,
   onPick,
-  track,
   dir,
 }: {
   items: Section[];
   sel: number;
   onPick: (i: number) => void;
-  /** Selected song (preview of Mi música). */
-  track?: Track;
   dir: Dir;
 }) {
-  const rows: Row[] = items.map((s) => ({ label: s.label, disabled: !isAvailable(s.id) }));
-  const live = ui.device.position(items[sel].label, sel + 1, items.length);
+  const name = (s: Section) => s.label; // the menu and page use the same section name
+  const rows: Row[] = items.map((s) => ({ label: name(s), disabled: !isAvailable(s.id) }));
+  const live = ui.device.position(name(items[sel]), sel + 1, items.length);
   return (
     <Frame title={os.name} live={live} dir={dir} split>
       <div className="os__main os__menu">
         <RowList rows={rows} sel={sel} label="Menú" onPick={onPick} />
       </div>
       <div className="os__peek" key={items[sel].id} aria-hidden="true">
-        <Peek id={items[sel].id} track={track} />
+        <Peek id={items[sel].id} />
       </div>
     </Frame>
   );

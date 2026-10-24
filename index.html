@@ -8,6 +8,27 @@
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- welcome screen (src/app/Welcome.tsx): when the session starts on the home, white from the first paint
+         until it takes over (and never longer than 8 s, should the script not load) -->
+    <style>
+      html.welcome-pending body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        background: #fff;
+      }
+    </style>
+    <script>
+      try {
+        if (location.pathname === '%BASE_URL%' && !sessionStorage.getItem('ido-welcome')) {
+          document.documentElement.classList.add('welcome-pending');
+          setTimeout(function () {
+            document.documentElement.classList.remove('welcome-pending');
+          }, 8000);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"><!--app-html--></div>

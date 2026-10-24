@@ -191,19 +191,19 @@
 <h6 class="readme__h2">Analisis exploratorio</h6>
 <h6 class="readme__h3">Distribucion de variables numericas — Boxplots por clase de mora</h6>
 <p>Los boxplots permiten comparar la distribucion de cada variable numerica entre clientes morosos (1) y no morosos (0), revelando diferencias en medianas, dispersion y presencia de valores extremos.</p>
-<p><span class="readme__img">[Figura: Boxplots variables numericas]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_00.png" alt="Boxplots variables numericas" width="1515" height="790" loading="lazy" decoding="async"></figure>
 <p>Se observa que variables como <code>atraso</code>, <code>deuda_sf</code> y <code>score</code> presentan diferencias notables entre ambas clases, lo que anticipa su relevancia predictiva. La presencia de outliers es significativa en varias de ellas.</p>
 <h6 class="readme__h3">Distribucion de variables categoricas</h6>
 <p>Se analizo la frecuencia de cada categoria en las tres variables cualitativas del dataset.</p>
 <p><strong>Tipo de vivienda:</strong></p>
-<p><span class="readme__img">[Figura: Distribucion vivienda]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_03.png" alt="Distribucion vivienda" width="859" height="599" loading="lazy" decoding="async"></figure>
 <p><strong>Zona geografica:</strong></p>
-<p><span class="readme__img">[Figura: Distribucion zona]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_04.png" alt="Distribucion zona" width="874" height="614" loading="lazy" decoding="async"></figure>
 <p><strong>Nivel educativo:</strong></p>
-<p><span class="readme__img">[Figura: Distribucion nivel educativo]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_05.png" alt="Distribucion nivel educativo" width="859" height="622" loading="lazy" decoding="async"></figure>
 <p>La mayoria de clientes residen en Lima y declaran vivienda familiar. Se aprecia una concentracion importante en pocas zonas geograficas, lo que motiva el tratamiento posterior de zonas con baja representacion.</p>
 <h6 class="readme__h3">Tasa de morosidad por zona geografica</h6>
-<p><span class="readme__img">[Figura: Morosidad por zona]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_06.png" alt="Morosidad por zona" width="2318" height="1240" loading="lazy" decoding="async"></figure>
 <p>El grafico muestra la tasa media de mora por region. Zonas como Amazonas, Loreto y San Martin presentan las tasas mas elevadas, mientras que Huancavelica y Arequipa se situan en los valores mas bajos.</p>
 <p><strong>Distribucion de registros por zona antes de la agrupacion:</strong></p>
 <table>
@@ -293,12 +293,12 @@
 </tbody></table>
 <h6 class="readme__h3">Tasa de morosidad por variables categoricas</h6>
 <p>Los barplots muestran la tasa media de mora desagregada por cada variable categorica, facilitando la interpretacion del impacto de cada grupo sobre la probabilidad de impago.</p>
-<p><span class="readme__img">[Figura: Barplots categoricas vs mora]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_07.png" alt="Barplots categoricas vs mora" width="1590" height="490" loading="lazy" decoding="async"></figure>
 <hr>
 <h6 class="readme__h2">Tratamiento de datos</h6>
 <h6 class="readme__h3">Eliminacion de outliers</h6>
 <p>Se aplico el criterio del rango intercuartilico (IQR x 1.5) para eliminar valores extremos en las variables numericas. Los boxplots siguientes muestran la distribucion tras la limpieza, con una reduccion notable de valores atipicos.</p>
-<p><span class="readme__img">[Figura: Boxplots tras eliminacion de outliers]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_01.png" alt="Boxplots tras eliminacion de outliers" width="1512" height="790" loading="lazy" decoding="async"></figure>
 <p>La dispersion se reduce de forma considerable, especialmente en <code>deuda_sf</code>, <code>linea_sf</code> e <code>ingreso</code>, lo que favorece la estabilidad de los modelos posteriores.</p>
 <h6 class="readme__h3">Eliminacion de la variable nivel_ahorro</h6>
 <p>La variable <code>nivel_ahorro</code> fue descartada al presentar un unico valor (<code>12.0</code>) en el 100% de los registros, careciendo de cualquier capacidad discriminativa.</p>
@@ -334,7 +334,7 @@
 <h6 class="readme__h2">Preprocesamiento</h6>
 <h6 class="readme__h3">Normalizacion</h6>
 <p>Las variables numericas se transformaron con <code>StandardScaler</code> (media = 0, desviacion tipica = 1) para evitar que diferencias de escala distorsionen los modelos. Adicionalmente, <code>ingreso</code> y <code>linea_sf</code> recibieron una transformacion previa de raiz cuadrada y logaritmica respectivamente, dada su distribucion original muy sesgada.</p>
-<p><span class="readme__img">[Figura: Distribucion tras normalizacion]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_02.png" alt="Distribucion tras normalizacion" width="1512" height="790" loading="lazy" decoding="async"></figure>
 <p>Tras la estandarizacion, todas las variables numericas operan en el mismo rango, con medias proximas a 0 y desviaciones tipicas proximas a 1.</p>
 <h6 class="readme__h3">Codificacion y split</h6>
 <p>Las variables categoricas se codificaron mediante <code>get_dummies</code> con <code>drop_first=True</code>. El dataset se dividio en:</p>
@@ -460,15 +460,15 @@
 <p>El modelo optimizado por recall captura el <strong>96% de los morosos</strong> reales, aunque a costa de una menor precision en la clase no morosa. Este trade-off es deliberado: en un contexto crediticio, identificar a todos los clientes de riesgo tiene mas valor que evitar falsas alarmas puntuales.</p>
 <h6 class="readme__h3">Curva ROC</h6>
 <p>La curva ROC ilustra la capacidad del modelo logistico para distinguir entre clientes morosos y no morosos a distintos umbrales de decision. El area bajo la curva (AUC) obtenida es de <strong>0.71</strong>.</p>
-<p><span class="readme__img">[Figura: Curva ROC]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_08.png" alt="Curva ROC" width="790" height="590" loading="lazy" decoding="async"></figure>
 <p>Un AUC de 0.71 indica una capacidad discriminativa moderada-buena, claramente superior al clasificador aleatorio (AUC = 0.50).</p>
 <h6 class="readme__h3">Separacion de clientes por probabilidad de impago</h6>
 <p>El grafico de densidad muestra como el modelo asigna probabilidades distintas a clientes morosos (salmon) y no morosos (verde). Cuanto menor sea el solapamiento entre ambas distribuciones, mejor es la separacion del modelo.</p>
-<p><span class="readme__img">[Figura: Separacion de clientes]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_09.png" alt="Separacion de clientes" width="889" height="490" loading="lazy" decoding="async"></figure>
 <p>Se aprecia que los clientes morosos concentran sus probabilidades en valores altos (0.7-1.0), mientras que los buenos pagadores tienden a valores medios-bajos, aunque con solapamiento considerable, coherente con el AUC de 0.71.</p>
 <h6 class="readme__h3">Analisis del umbral de decision</h6>
 <p>El siguiente grafico muestra como evolucionan la precision (Accuracy), la tasa de verdaderos positivos (TPR) y la tasa de falsos positivos (FPR) al variar el umbral de decision entre 0 y 1.</p>
-<p><span class="readme__img">[Figura: Metricas segun umbral]</span></p>
+<figure><img src="%BASE%img/readmes/morosidad-crediticia/img_10.png" alt="Metricas segun umbral" width="989" height="590" loading="lazy" decoding="async"></figure>
 <p>El umbral estandar de 0.5 supone un equilibrio razonable, pero bajarlo hacia 0.4 permite capturar mas morosos reales a costa de aumentar ligeramente las falsas alarmas. La entidad puede ajustar este parametro segun su tolerancia al riesgo.</p>
 <hr>
 <h6 class="readme__h2">Conclusiones</h6>

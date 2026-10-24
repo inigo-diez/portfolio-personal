@@ -18,20 +18,31 @@ export const optimizacionMlVsRsm: Project = {
   tags: ['Diseño de experimentos', 'Comparación de modelos', 'Interpretabilidad'],
   stack: ['Python', 'scikit-learn', 'XGBoost', 'SHAP', 'statsmodels'],
   headline: { value: '~70 %', label: 'de la importancia en un solo factor' },
+  // README (Spanish translation): «ML supervisado», «Optimización final» and «Conclusiones» C1, C4, C5.
   facts: [
-    'N = 17: RSM frente a PLS, Random Forest, XGBoost y Gaussian Process, validados con LOOCV',
-    'Random Forest y XGBoost atribuyen ~70 % de la importancia a un solo factor: el tiempo de extracción (x₁)',
-    'Random Forest, el más equilibrado: primero del ranking global (36,0 puntos)',
-    'Con 17 puntos la generalización es limitada: solo XGBoost logra un R² de validación positivo en Y_detected (0,136)',
+    {
+      value: '8 métodos',
+      text: 'El tiempo de extracción (x₁) domina sea cual sea el análisis: lo confirman ocho métodos distintos, de las correlaciones y el RSM a SHAP y las curvas PDP.',
+    },
+    {
+      value: 'R² CV 0,306 frente a −0,122',
+      text: 'Comparé RSM con PLS, Random Forest, XGBoost y Gaussian Process dejando un experimento fuera cada vez: Random Forest generaliza mejor que el RSM y es el más equilibrado.',
+    },
+    {
+      value: '85–120 min',
+      text: 'Pasé los óptimos de los modelos a minutos reales y propuse una región para la campaña confirmatoria: extracción de 85–120 min, desorción de 1–2,5 min e incubación de 5–15 min.',
+    },
   ],
-  cover: null,
+  // scripts/covers.py: the README figure 05_03_rsm_surface_contour, whole
+  cover: {
+    src: 'img/covers/optimizacion-ml-vs-rsm.webp',
+    alt: 'Mapas de contorno de los modelos RSM sobre el espacio de factores',
+  },
   canvas: { x: 450, y: 470, w: 260 },
   links: { repo: REPO },
   readmeTranslated: true,
   sections: [],
   sources: [{ label: 'README del repositorio (en inglés)', url: REPO }],
-  todo: [
-    'Secciones del caso de estudio (E6)',
-    'Importancia de factores por modelo (E6)',
-  ],
+  repoHasDetail: true, // README with methodology and results (2026-10-19 copy)
+  todo: ['Importancia de factores por modelo (E6)'],
 };

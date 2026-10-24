@@ -10,12 +10,16 @@ const favicon = await fs.readFile('public/favicon.svg', 'utf8');
 const mark = favicon.replace(/<rect[^>]*\/>/, '').replace('viewBox="0 0 64 64"', 'viewBox="5 16.6 54 30.8"');
 const dataUri = (mime, buf) => `data:${mime};base64,${Buffer.from(buf).toString('base64')}`;
 // Inlined: a page made with setContent cannot load file:// fonts.
-const geist = dataUri('font/woff2', await fs.readFile('node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2'));
+const geist = dataUri(
+  'font/woff2',
+  await fs.readFile('node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2'),
+);
 
 const browser = await chromium.launch({ channel: 'msedge' });
 
 // 1. The device, as on the home page (fixed clock so the image does not depend on when it was made).
 const home = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+await home.addInitScript(() => sessionStorage.setItem('ido-welcome', '1')); // no welcome screen (app/Welcome.tsx)
 await home.clock.setFixedTime(new Date('2026-10-23T10:00:00'));
 await home.goto(B);
 await home.evaluate(() => document.fonts.ready);

@@ -48,6 +48,15 @@ export interface CaseSection {
   source: string;
 }
 
+/**
+ * A highlight of a project: its figure or short result, and one or two sentences on what Iñigo did, what came of
+ * it and why it matters, as far as the README says so. Only verified content.
+ */
+export interface Fact {
+  value: string;
+  text: string;
+}
+
 export interface Project {
   slug: string;
   /** Reference number inside its collection, e.g. "04.1" (Geist Mono). */
@@ -66,8 +75,8 @@ export interface Project {
   tags: string[];
   stack: string[];
   headline: Headline;
-  /** Extra verified facts shown on the case study. */
-  facts: string[];
+  /** Highlights: the cards of the open project on the canvas, and the list of a compact case study. */
+  facts: Fact[];
   cover: { src: string; alt: string } | null;
   canvas: CanvasPlacement;
   links: { repo?: string; demo?: string; paper?: string };
@@ -77,8 +86,15 @@ export interface Project {
   todo: string[];
   /** README written in English: the canvas shows its Spanish translation (with a note); the original stays on GitHub. */
   readmeTranslated?: true;
+  /** A note shown over its README on the project page (e.g. figures the README has not caught up with). */
+  readmeNote?: string;
   /** Honest notes that must accompany the project (e.g. AI-assisted development). */
   notes?: string[];
+  /**
+   * Its README holds both the methodology and the results (checked on the 2026-10-19 copy). A project without
+   * a case study is then a compact card that sends to the repository (Iñigo, 2026-10-23); otherwise no notice.
+   */
+  repoHasDetail?: true;
 }
 
 export interface Collection {

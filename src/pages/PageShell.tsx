@@ -1,25 +1,31 @@
 import type { ReactNode } from 'react';
 import { href } from '../app/routes';
 import { person } from '../content/profile';
-import { openSections, topNav, ui, type SectionId } from '../content/site';
+import { topNav, ui, type SectionId } from '../content/site';
 import { ScreenFrame } from '../transition/ScreenFrame';
 import { PageDock } from './PageDock';
 import './page.css';
 
 /**
- * Conventional page: name + top nav, content, and the full list of sections in the footer.
+ * Conventional page: name + top nav and content.
  * `layered`: the page is one a transition grows into (the device screen, a canvas card): the layer / world
  * pair is what it scales (transition/shared.ts). `dock` (implies layered): the device sits docked on it.
+ * `wide`: a wider column, for a project page and its full README.
  */
 export function PageShell({
   current,
   dock,
   layered = !!dock,
+  wide = false,
+  about = false,
   children,
 }: {
   current?: string;
   dock?: SectionId;
   layered?: boolean;
+  wide?: boolean;
+  /** Sobre mí: the text with the portrait to its right. */
+  about?: boolean;
   children: ReactNode;
 }) {
   const page = (
@@ -40,9 +46,8 @@ export function PageShell({
             {topNav().map((n) => (
               <li key={n.label}>
                 <a
-                  href={n.href ?? href(n.path!)}
+                  href={href(n.path)}
                   aria-current={n.path === current ? 'page' : undefined}
-                  {...(n.href ? { target: '_blank', rel: 'noopener' } : {})}
                 >
                   {n.label}
                 </a>
@@ -52,30 +57,13 @@ export function PageShell({
         </nav>
       </header>
       {dock && <PageDock id={dock} />}
-      <main id="contenido" className="page__main" tabIndex={-1}>
+      <main
+        id="contenido"
+        className={'page__main' + (wide ? ' page__main--wide' : '') + (about ? ' page__main--about' : '')}
+        tabIndex={-1}
+      >
         {children}
       </main>
-      <footer className="page__footer">
-        <nav aria-label={ui.allSections}>
-          <ul>
-            {openSections().map((s) => (
-              <li key={s.id}>
-                <a
-                  href={href(s.path)}
-                  aria-current={s.path === current ? 'page' : undefined}
-                  {...(s.id === 'cv' ? { target: '_blank', rel: 'noopener' } : {})}
-                >
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <p>
-          <a href={`mailto:${person.email}`}>{person.email}</a> · <a href={person.github}>GitHub</a> ·{' '}
-          <a href={person.linkedin}>LinkedIn</a>
-        </p>
-      </footer>
     </div>
   );
   if (!layered) return page;

@@ -46,9 +46,12 @@ export function SongsScreen({
   );
 }
 
-/** What the device can ask of the player (centre button). */
+/** What the device can ask of the player. */
 export interface PlayerHandle {
+  /** Centre button: play / pause. */
   toggle(): void;
+  /** A track is playing (or about to): the next one chosen with ⏮ ⏭ keeps playing. */
+  playing(): boolean;
 }
 
 const mmss = (ms: number) => {
@@ -66,6 +69,7 @@ type Status = 'loading' | 'ready' | 'failed';
 
 // paused: last state reported for the loaded track · want: what the centre asked for (true = playing)
 // wanted: the track on screen · loaded: the track in the player (they differ while the player starts)
+// autoplay: the loaded track follows one that ended, so it starts playing · over: the loaded track has ended
 interface PlayerState {
   ready: boolean;
   paused: boolean | null;
@@ -73,34 +77,55 @@ interface PlayerState {
   waiting: number;
   wanted: string;
   loaded: string;
+  autoplay: boolean;
+  over: boolean;
 }
+
+// The end of a track, as the embed reports it (measured 2026-10-24): it does not pause; its last updates say
+// "playing" with the position equal to the duration, then they stop. Margin for rounding.
+const END_EPS_MS = 250;
 
 function load(s: PlayerState, c: EmbedController, url: string) {
   s.loaded = url;
   s.paused = null; // the new track starts paused, whatever the previous one was doing
+  s.over = false;
   c.loadEntity(url);
 }
 
 /**
- * «Sonando»: the chosen track and the official Spotify player, loaded only now (never autoplay) and
+ * «Sonando»: the chosen track and the official Spotify player, loaded only now (never autoplay on arrival) and
  * destroyed when this screen closes, so the music always stops with it. The device controls the player
  * through the iFrame API: if the API does not answer, the device controls are switched off and the
- * official player (and the direct link) remain.
+ * official player (and the direct link) remain. Once the visitor has played a song, it continues by itself:
+ * when a song ends, `onEnded` picks the next one (shuffled or in order) and it starts playing.
  */
 export function NowPlayingScreen({
   tracks,
   index,
   dir,
   playerRef,
+  shuffle,
+  onShuffle,
+  onEnded,
+  autoplayRef,
 }: {
   tracks: Track[];
   index: number;
   dir: Dir;
   playerRef: RefObject<PlayerHandle | null>;
+  shuffle: boolean;
+  onShuffle: () => void;
+  onEnded: () => void;
+  /** Set by the caller just before it moves to the song that follows an ended one. */
+  autoplayRef: RefObject<boolean>;
 }) {
   const t = tracks[index];
   const host = useRef<HTMLDivElement>(null);
   const ctl = useRef<EmbedController | null>(null);
+  const ended = useRef(onEnded);
+  useEffect(() => {
+    ended.current = onEnded;
+  });
   const state = useRef<PlayerState>({
     ready: false,
     paused: null,
@@ -108,6 +133,8 @@ export function NowPlayingScreen({
     waiting: 0,
     wanted: t.url,
     loaded: t.url,
+    autoplay: false,
+    over: false,
   });
   const [status, setStatus] = useState<Status>('loading');
   const [playback, setPlayback] = useState<PlaybackUpdate | null>(null);
@@ -131,17 +158,31 @@ export function NowPlayingScreen({
             if (!alive) return;
             s.ready = true;
             setStatus('ready');
-            if (s.wanted !== s.loaded) load(s, c, s.wanted); // ⏮ ⏭ pressed while the player was starting
+            if (s.wanted !== s.loaded)
+              load(s, c, s.wanted); // ⏮ ⏭ pressed while the player was starting
+            else if (s.autoplay) c.play(); // the embed says "ready" again for each track it loads
           });
           c.addListener('playback_update', (e) => {
             // ignore late updates from the previous track
             if (!alive || e.data.playingURI !== uriOf(s.loaded)) return;
-            if (s.waiting && !e.data.isPaused === s.want) {
+            const d = e.data;
+            if (s.waiting && !d.isPaused === s.want) {
               clearTimeout(s.waiting);
               s.waiting = 0;
             }
-            s.paused = e.data.isPaused;
-            setPlayback(e.data);
+            s.paused = d.isPaused;
+            setPlayback(d);
+            // a song that follows an ended one: play it as soon as it is loaded
+            if (s.autoplay) {
+              if (!d.isPaused) s.autoplay = false;
+              else if (!d.isBuffering) c.play();
+              return;
+            }
+            // the end of a song: once per track, the next one follows
+            if (!s.over && d.duration > 0 && d.position >= d.duration - END_EPS_MS) {
+              s.over = true;
+              ended.current();
+            }
           });
         }),
       )
@@ -156,14 +197,18 @@ export function NowPlayingScreen({
     };
   }, []);
 
-  // ⏮ ⏭ load the previous / next track (agreed 2026-10-21: they load it; playing is the centre's job).
+  // ⏮ ⏭ load the previous / next track; if music was playing, it keeps playing (Iñigo, 2026-10-24; until then
+  // they only loaded it). A song that follows an ended one plays too. Both arrive as `autoplayRef`, set by the
+  // caller just before the track changes.
   useEffect(() => {
     const s = state.current;
     s.wanted = t.url;
     clearTimeout(s.waiting); // a pending play / pause retry belongs to the previous track
     s.waiting = 0;
+    s.autoplay = autoplayRef.current;
+    autoplayRef.current = false;
     if (ctl.current && s.ready && s.loaded !== t.url) load(s, ctl.current, t.url);
-  }, [t.url]);
+  }, [t.url, autoplayRef]);
 
   // Centre button = play / pause, only while the API answers. A command can be lost while a track loads,
   // so with no answer in 2.5 s it is sent once more; a second silence switches the device controls off
@@ -183,6 +228,10 @@ export function NowPlayingScreen({
           s.waiting = window.setTimeout(() => setControlsOff(true), 2500);
         }, 2500);
       },
+      playing() {
+        const s = state.current;
+        return s.paused === false || s.autoplay || (!!s.waiting && s.want);
+      },
     };
     return () => {
       playerRef.current = null;
@@ -200,22 +249,34 @@ export function NowPlayingScreen({
             <span className="np__k">{musicUi.of(index + 1, tracks.length)}</span>
             <span className="np__t">{t.title}</span>
             <span className="np__a">{t.artist}</span>
-            <span className="np__q">«{t.note}»</span>
-            <a className="np__link" href={t.url} target="_blank" rel="noopener">
-              {musicUi.open}
-            </a>
+            {t.note && <span className="np__q">«{t.note}»</span>}
           </div>
         </div>
-        {known && !controlsOff && (
-          <div className="np__prog" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d={playback.isPaused ? STATE_PATHS.pause : STATE_PATHS.play} />
-            </svg>
-            <span>{mmss(playback.position)}</span>
-            <i style={{ ['--p' as string]: `${(100 * playback.position) / playback.duration}%` }} />
-            <span>{mmss(playback.duration)}</span>
-          </div>
-        )}
+        {/* the progress line (real position, once known) and, at its end, the shuffle icon (blue when on) */}
+        <div className="np__prog">
+          {known && !controlsOff && (
+            <>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d={playback.isPaused ? STATE_PATHS.pause : STATE_PATHS.play} />
+              </svg>
+              <span aria-hidden="true">{mmss(playback.position)}</span>
+              <i
+                aria-hidden="true"
+                style={{ ['--p' as string]: `${(100 * playback.position) / playback.duration}%` }}
+              />
+              <span aria-hidden="true">{mmss(playback.duration)}</span>
+            </>
+          )}
+          <button
+            className="np__mode"
+            aria-pressed={shuffle}
+            aria-label={musicUi.shuffle}
+            title={musicUi.shuffleHint}
+            onClick={onShuffle}
+          >
+            <Icon name="shuffle" />
+          </button>
+        </div>
         {(status === 'failed' || controlsOff) && (
           <p className="np__note" role="status">
             {status === 'failed' ? musicUi.playerFailed : musicUi.controlsOff}

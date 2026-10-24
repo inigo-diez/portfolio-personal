@@ -3,18 +3,25 @@ import { musicAvailable } from './music';
 import { person } from './profile';
 
 /** Conventional pages (each one is a real, prerendered route). */
-export type PageId = 'sobre-mi' | 'trayectoria' | 'habilidades' | 'formacion' | 'contacto' | 'mi-musica';
+export type PageId =
+  'sobre-mi' | 'trayectoria' | 'habilidades' | 'formacion' | 'contacto' | 'cv' | 'mi-musica' | 'mis-libros';
 
-export type SectionId = PageId | 'proyectos' | 'cv';
+export type SectionId = PageId | 'proyectos';
 
 export interface Section {
   id: SectionId;
   label: string;
-  /** Route path relative to the base (trailing slash), or the CV file. */
+  /** Route path relative to the base (trailing slash). */
   path: string;
 }
 
-// Device menu and mobile link list: the 7 sections of the old portfolio, in their order, + Mi música (last).
+export interface NavItem {
+  id: SectionId | 'inicio';
+  label: string;
+  path: string;
+}
+
+// Device menu and mobile link list: the 7 sections of the old portfolio, in their order, + Mi música and Mis libros (last).
 export const sections: Section[] = [
   { id: 'sobre-mi', label: 'Sobre mí', path: 'sobre-mi/' },
   { id: 'trayectoria', label: 'Trayectoria', path: 'trayectoria/' },
@@ -22,8 +29,9 @@ export const sections: Section[] = [
   { id: 'habilidades', label: 'Habilidades', path: 'habilidades/' },
   { id: 'formacion', label: 'Formación', path: 'formacion/' },
   { id: 'contacto', label: 'Contacto', path: 'contacto/' },
-  { id: 'cv', label: 'CV', path: person.cv },
+  { id: 'cv', label: 'CV', path: 'cv/' },
   { id: 'mi-musica', label: 'Mi música', path: 'mi-musica/' },
+  { id: 'mis-libros', label: 'Mis libros', path: 'mis-libros/' },
 ];
 
 export const labelOf = (id: SectionId) => sections.find((s) => s.id === id)!.label;
@@ -31,17 +39,14 @@ export const labelOf = (id: SectionId) => sections.find((s) => s.id === id)!.lab
 /** Mi música is not published without Iñigo's songs (content/music.ts): until then it is disabled. */
 export const isAvailable = (id: SectionId) => id !== 'mi-musica' || musicAvailable();
 
-/** The sections that can be opened right now (link lists, footer). */
+/** The sections that can be opened right now (navigation and link lists). */
 export const openSections = () => sections.filter((s) => isAvailable(s.id));
 
-// Desktop top nav: approved selection (2026-10-20). Mi música only once the section exists.
-export const topNav = (): { label: string; path?: string; href?: string }[] => [
-  { label: 'Proyectos', path: 'proyectos/' },
-  { label: 'Sobre mí', path: 'sobre-mi/' },
-  { label: 'Contacto', path: 'contacto/' },
-  { label: 'CV', path: person.cv },
-  { label: 'GitHub ↗', href: person.github },
-  ...(musicAvailable() ? [{ label: 'Mi música', path: 'mi-musica/' }] : []),
+// Top nav: every section but Mi música (2026-10-25: Iñigo took it out), with Contacto as the final destination.
+const topNavOrder: SectionId[] = ['sobre-mi', 'proyectos', 'trayectoria', 'habilidades', 'formacion', 'cv', 'contacto'];
+export const topNav = (): NavItem[] => [
+  { id: 'inicio', label: 'Inicio', path: '' },
+  ...topNavOrder.map((id) => sections.find((s) => s.id === id)!).filter((s) => isAvailable(s.id)),
 ];
 
 const suffix = ` · ${person.name}`;
@@ -60,7 +65,8 @@ export const meta = {
   'sobre-mi': { title: `Sobre mí${suffix}`, description: 'Quién soy, qué estudio y cómo trabajo con datos.' },
   trayectoria: {
     title: `Trayectoria${suffix}`,
-    description: 'Grado en Química (EHU) y Trabajo Fin de Grado con datos metabolómicos.',
+    description:
+      'Máster en Ciencia de Datos e Inteligencia Artificial en curso (Afi), Grado en Química (EHU) y TFG de modelización de datos metabolómicos.',
   },
   habilidades: {
     title: `Habilidades${suffix}`,
@@ -70,16 +76,22 @@ export const meta = {
     title: `Formación${suffix}`,
     description: 'Máster en Ciencia de Datos e IA (Afi), Grado en Química (EHU) y cursos complementarios.',
   },
+  cv: { title: `CV${suffix}`, description: 'Consulta o descarga el currículum de Iñigo Díez Osúa en PDF.' },
   contacto: { title: `Contacto${suffix}`, description: 'Correo, LinkedIn y GitHub de Iñigo Díez Osúa.' },
   'mi-musica': {
     title: `Mi música${suffix}`,
     description: 'Canciones elegidas por Iñigo Díez Osúa, cada una con una frase suya.',
+  },
+  'mis-libros': {
+    title: `Mis libros${suffix}`,
+    description: 'Libros elegidos por Iñigo Díez Osúa: portada, autor y de qué trata cada uno.',
   },
   notFound: { title: `Página no encontrada${suffix}`, description: 'Esta dirección no existe.' },
 } satisfies Record<string, PageMeta>;
 
 export const ui = {
   skipToContent: 'Saltar al contenido',
+  welcome: 'Bienvenido al portfolio de', // + the full name (app/Welcome.tsx)
   primaryNav: 'Principal',
   allSections: 'Secciones',
   seeProjects: 'Ver proyectos',
@@ -90,7 +102,8 @@ export const ui = {
   repo: 'Repositorio',
   sources: 'Fuentes',
   status: { terminado: 'Terminado', 'en-curso': 'En curso' },
-  draftNotice: 'Borrador: el caso de estudio completo llega en E6.',
+  // wording chosen by Iñigo (2026-10-23), only for projects whose README has methodology and results
+  summaryNotice: 'Ficha resumida. Consulta la metodología y los resultados en el repositorio.',
   canvas: {
     title: 'Proyectos',
     label: 'Lienzo de proyectos',
@@ -116,7 +129,7 @@ export const ui = {
     select: 'Seleccionar',
     back: 'Atrás',
     home: 'Inicio',
-    keysHint: { move: 'moverse', open: 'abrir', back: 'volver' },
+    controlsHint: { prev: 'anterior', next: 'siguiente', back: 'volver', open: 'abrir' },
     soon: 'Próximamente',
     flip: 'Girar',
     sound: 'Sonido',
@@ -125,13 +138,8 @@ export const ui = {
   notFound: { title: 'Esta página no existe', body: 'Puede que el enlace haya cambiado. Prueba desde aquí:' },
   labels: {
     languages: 'Idiomas',
-    courses: 'Cursos complementarios',
     facts: 'Datos verificados',
     stack: 'Stack',
-    email: 'Correo',
-    profile: 'Perfil',
-    code: 'Código',
-    cv: 'Currículum',
     home: 'Inicio',
     projectsWord: 'proyectos',
     chartData: 'Ver los datos',

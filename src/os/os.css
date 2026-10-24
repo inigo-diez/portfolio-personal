@@ -113,6 +113,41 @@
   flex: 0 0 52%;
   border-right: 0.2cqw solid rgba(0, 0, 0, 0.1);
 }
+/* home menu (Iñigo, 2026-10-24): the entries start at the top left of the column, as a list (not centred: changed
+   after seeing it); the selection is a blue pill in bold, the other entries a dark grey (available) or a light
+   grey (disabled: Mi música without songs), so the selection leads without the rest looking switched off */
+.os__menu {
+  padding: 1.2cqw 1.6cqw;
+}
+.os__menu .os__item {
+  position: relative;
+  padding: 0 4.4cqw 0 2.4cqw;
+  border-radius: 99cqw;
+  color: #4a4f55;
+  font-weight: 450;
+}
+.os__menu .os__item .chev {
+  position: absolute;
+  right: 1.6cqw;
+  margin: 0;
+}
+.os__menu .os__item.is-sel {
+  background: linear-gradient(180deg, #5b81b9, #3f649c);
+  box-shadow:
+    inset 0 0.15cqw 0 rgba(255, 255, 255, 0.22),
+    0 0.5cqw 1.1cqw -0.6cqw rgba(35, 60, 105, 0.65);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.os__menu .os__item.is-disabled {
+  color: #a6abb1;
+}
+.os__menu .os__item.is-disabled.is-sel {
+  background: linear-gradient(180deg, #8a8f96, #767b82);
+  box-shadow: none;
+  color: #fff;
+}
 .os__peek {
   flex: 1;
   min-width: 0;
@@ -122,6 +157,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; /* the preview sits in the middle of its panel (Iñigo, 2026-10-24) */
+  text-align: center;
   padding: 3cqw;
 }
 .peek__big {
@@ -164,8 +201,8 @@
   box-shadow: none;
 }
 .peek__mono {
-  width: 13cqw;
-  height: 13cqw;
+  width: 19cqw;
+  height: 19cqw;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -187,58 +224,69 @@
   font-size: 2.2cqw;
   color: var(--ink-2);
 }
-.peek__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2cqw;
+.peek__mono svg {
+  width: 62%;
+  height: auto;
 }
-.peek__chips span {
-  padding: 0.7cqw 1.6cqw;
-  border-radius: 3cqw;
-  background: #fff;
-  box-shadow: 0 0 0 0.18cqw rgba(0, 0, 0, 0.12);
-  font-size: 2.3cqw;
-  font-weight: 500;
+.peek__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9cqw;
+  font-size: 2.4cqw;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+.peek__list li::before {
+  content: '•';
+  margin-right: 0.6em;
 }
 .peek__icon {
+  width: 22cqw;
+  height: 22cqw;
+  color: var(--ink);
+  stroke-width: 1.9;
+}
+.peek__brands {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4cqw;
+}
+.peek__brands svg {
   width: 9cqw;
   height: 9cqw;
-  margin-bottom: 2.4cqw;
 }
-.peek__doc {
-  width: 15cqw;
-  aspect-ratio: 1 / 1.3;
-  background: #fff;
-  border-radius: 0.6cqw;
-  padding: 1.8cqw 1.6cqw;
-  margin-bottom: 2.4cqw;
-  box-shadow:
-    0 0 0 0.18cqw rgba(0, 0, 0, 0.1),
-    0 0.8cqw 1.6cqw -0.6cqw rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  gap: 0.9cqw;
-}
-.peek__doc i {
+.peek__cv {
   display: block;
-  height: 0.55cqw;
-  border-radius: 1cqw;
-  background: rgba(0, 0, 0, 0.14);
-}
-.peek__doc i:first-child {
-  width: 60%;
-  height: 0.9cqw;
-  background: rgba(0, 0, 0, 0.45);
-  margin-bottom: 0.6cqw;
-}
-.peek__doc i:nth-child(3n) {
-  width: 75%;
+  width: 24cqw;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 0.2cqw;
+  box-shadow:
+    0 0 0 0.2cqw rgba(0, 0, 0, 0.12),
+    0 1.2cqw 2.4cqw -0.9cqw rgba(0, 0, 0, 0.25);
 }
 
-/* menu: 8 rows of 6.6 fit on desktop; on mobile rows stay at 7 and the menu scrolls (decided 2026-10-20) */
+/* menu: exactly eight whole rows on desktop (6.3 each; with Mis libros the menu has nine entries and scrolls) and,
+   on mobile, seven rows of 7 (decided 2026-10-20). Everything is in cqw, so it holds at any size: no half row at
+   either end and the grey position bar sits under the last visible row, never over it */
+.os__menu {
+  --row-h: 6.3cqw;
+}
+.os__menu .os__list {
+  flex: 0 0 calc(var(--row-h) * 8);
+}
 @media (max-width: 860px) {
   .os__menu {
     --row-h: 7cqw;
+  }
+  .os__menu .os__list {
+    flex: 0 0 calc(var(--row-h) * 7);
   }
 }
 
@@ -352,6 +400,143 @@
   visibility: visible;
 }
 
+/* ── Mis libros: the cover (turns over to its back), title and author under it, then Anterior / Siguiente ── */
+.bk {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4cqw;
+  padding: 1.6cqw 3cqw;
+}
+.bk__card {
+  flex: none;
+  height: 34cqw;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: 0;
+  background: none;
+  perspective: 120cqw;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bk__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.bk__inner.is-back {
+  transform: rotateY(180deg);
+}
+.bk__face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.8cqw;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow:
+    0 0 0 0.18cqw rgba(0, 0, 0, 0.14),
+    0 1cqw 2cqw -0.8cqw rgba(0, 0, 0, 0.3);
+}
+.bk__front {
+  display: block;
+  object-fit: cover;
+}
+.bk__back {
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 1.4cqw;
+  overflow: hidden;
+  background: var(--back, #111);
+  color: #f2f1ee;
+  font-size: max(2.4cqw, 9px);
+  line-height: 1.3;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+.bk__meta {
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+.bk__meta b,
+.bk__meta small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bk__meta b {
+  font-size: 3cqw;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.bk__meta small {
+  margin-top: 0.3cqw;
+  font-size: max(2.4cqw, 10px);
+  color: var(--ink-2);
+}
+.bk__nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2cqw;
+  width: 100%;
+  font-size: max(2.4cqw, 10px);
+}
+.bk__nav > span {
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.bk__nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8cqw;
+  padding: 0.9cqw 1.8cqw;
+  border: 0.18cqw solid rgba(0, 0, 0, 0.18);
+  border-radius: 99cqw;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.bk__nav button:first-child {
+  justify-self: end;
+}
+.bk__nav button:last-child {
+  justify-self: start;
+}
+.bk__nav button:disabled {
+  color: var(--ink-2);
+  opacity: 0.45;
+  cursor: default;
+}
+.bk__nav svg {
+  width: 2.4cqw;
+  height: 2.4cqw;
+}
+.bk__card:focus-visible,
+.bk__nav button:focus-visible {
+  outline: 0.4cqw solid #4f75ad;
+  outline-offset: 0.4cqw;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bk__inner {
+    transition: none;
+  }
+}
+
 /* «Sonando» */
 .np {
   flex: 1;
@@ -412,14 +597,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.np__link {
-  margin-top: auto;
-  flex: none;
-  font-size: max(2.3cqw, 10px);
-  color: var(--accent-ink);
-  text-decoration: underline;
-  text-underline-offset: 0.3em;
-}
 /* real position from the player (playback_update): grey, not blue */
 .np__prog {
   flex: none;
@@ -440,6 +617,33 @@
   height: 0.6cqw;
   border-radius: 1cqw;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) var(--p, 0%), rgba(0, 0, 0, 0.1) var(--p, 0%));
+}
+/* shuffle on / off (+ key or a click): an icon at the end of the progress line, grey when off and blue when on
+   (a selected state); its hit area reaches beyond the icon */
+.np__mode {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.np__mode::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+.np__mode svg {
+  width: max(3cqw, 13px);
+  height: max(3cqw, 13px);
+  color: inherit; /* not the play / pause glyph's ink (.np__prog svg) */
+}
+.np__mode[aria-pressed='true'] {
+  color: var(--accent);
 }
 .np__note {
   flex: none;
@@ -520,8 +724,12 @@
 [data-device='hero'] .pm__a {
   font-size: max(2.4cqw, 11px);
 }
-[data-device='hero'] .peek__chips span {
-  font-size: max(2.3cqw, 11px);
+[data-device='hero'] .peek__list {
+  font-size: max(2.4cqw, 11px);
+}
+[data-device='hero'] .peek__brands svg {
+  width: max(9cqw, 28px);
+  height: max(9cqw, 28px);
 }
 [data-device='hero'] .peek__kicker {
   font-size: max(2.2cqw, 11px);

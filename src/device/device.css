@@ -22,9 +22,6 @@
   transform: perspective(1600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform 0.6s var(--ease-out);
 }
-.pocket--reflect .pocket__tilt {
-  -webkit-box-reflect: below 2.4cqw linear-gradient(transparent 80%, rgba(255, 255, 255, 0.16));
-}
 .pocket__card {
   position: relative;
   transform-style: preserve-3d;
@@ -38,7 +35,6 @@
 [data-transitioning] .pocket__card {
   transform: none;
   transition: none;
-  -webkit-box-reflect: none;
 }
 
 .pocket__front {

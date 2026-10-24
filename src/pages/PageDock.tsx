@@ -1,9 +1,9 @@
-import { href } from '../app/routes';
+import { useRef } from 'react';
 import { openOnHome } from '../app/intent';
 import { navigate } from '../app/router';
-import { person } from '../content/profile';
 import { isAvailable, labelOf, sections, ui, type SectionId } from '../content/site';
 import { Device, type Command } from '../device/Device';
+import { useDraggable } from '../device/useDraggable';
 import { ListScreen, useListNav, type Row } from '../os/Screen';
 
 /**
@@ -12,6 +12,8 @@ import { ListScreen, useListNav, type Row } from '../os/Screen';
  * when it has focus, so the arrows still scroll the page.
  */
 export function PageDock({ id }: { id: SectionId }) {
+  const dock = useRef<HTMLElement>(null);
+  useDraggable(dock);
   // computed on render: Mi música's availability is only known after start-up (content/music.ts)
   const rows: Row[] = sections.map((s) => ({ label: s.label, disabled: !isAvailable(s.id) }));
   const nav = useListNav(
@@ -22,9 +24,8 @@ export function PageDock({ id }: { id: SectionId }) {
   const open = (i: number) => {
     const s = sections[i];
     if (!isAvailable(s.id)) return false;
-    if (s.id === 'cv') window.open(href(person.cv), '_blank', 'noopener');
-    else if (s.id === 'mi-musica') {
-      openOnHome('mi-musica'); // it lives in the home device: back home, and it opens there
+    if (s.id === 'mi-musica' || s.id === 'mis-libros') {
+      openOnHome(s.id); // they live in the home device: back home, and they open there
       navigate('');
     } else navigate(s.path);
     return true;
@@ -38,7 +39,7 @@ export function PageDock({ id }: { id: SectionId }) {
   };
 
   return (
-    <aside className="page-dock" aria-label={ui.device.dock}>
+    <aside className="page-dock" aria-label={ui.device.dock} ref={dock}>
       <Device data-device="dock" onCommand={onCommand}>
         <ListScreen title={labelOf(id)} rows={rows} sel={nav.sel} onPick={(i) => (nav.setSel(i), open(i))} />
       </Device>

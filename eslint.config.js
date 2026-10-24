@@ -19,7 +19,7 @@ export default tseslint.config(
   },
   {
     // dev checks and the brand images run part of their code inside the page (page.evaluate)
-    files: ['scripts/dev/**/*.mjs', 'scripts/brand.mjs'],
+    files: ['scripts/dev/**/*.mjs', 'scripts/brand.mjs', 'scripts/covers-capture.mjs'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 );

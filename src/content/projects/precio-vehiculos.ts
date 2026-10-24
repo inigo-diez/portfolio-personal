@@ -18,15 +18,30 @@ export const precioVehiculos: Project = {
   tags: ['Regresión', 'Clustering', 'Feature engineering'],
   stack: ['Python', 'scikit-learn', 'XGBoost', 'TensorFlow · Keras'],
   headline: { value: 'R² 0,77', label: 'sobre 19.237 vehículos' },
+  // README: §6 (Modelos), §7 (K-Means) and §9 (Comparativa final).
   facts: [
-    '19.237 vehículos y 18 variables (dataset público de Kaggle)',
-    'XGBoost optimizado con GridSearchCV: R² 0,7712',
-    'K-Means: 4 segmentos de precio, uno de gama alta',
+    {
+      value: 'Error a la mitad',
+      text: 'XGBoost optimizado y Random Forest reducen el error medio a la mitad frente a la regresión lineal, el árbol de decisión y la red neuronal.',
+    },
+    {
+      value: 'Año y kilometraje',
+      text: 'Las variables que más pesan en todos los modelos: los coches más nuevos y menos usados valen más, como en el mercado real de segunda mano.',
+    },
+    {
+      value: '4 segmentos',
+      text: 'Segmenté el mercado con K-Means: uno de los grupos es de gama alta, con un precio medio de unos 46.000, frente a entre 10.000 y 15.000 en los otros tres.',
+    },
   ],
-  cover: null,
-  canvas: { x: 300, y: 970, w: 260 },
+  // scripts/covers.py: the README figure 22_kmeans_scatter_mileage_vs_year, whole
+  cover: {
+    src: 'img/covers/precio-vehiculos.webp',
+    alt: 'Segmentación K-Means de los vehículos por kilometraje y año de producción',
+  },
+  canvas: { x: 500, y: 970, w: 260 },
   links: { repo: REPO },
   sections: [],
   sources: [{ label: 'README del repositorio car-price-prediction-ml', url: REPO }],
-  todo: ['Secciones del caso de estudio (E6)', 'Importancia de variables o los clusters (E6)'],
+  repoHasDetail: true, // README with methodology and results (2026-10-19 copy)
+  todo: ['Importancia de variables o los clusters (E6)'],
 };
