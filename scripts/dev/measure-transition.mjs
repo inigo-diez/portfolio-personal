@@ -65,10 +65,14 @@ async function session({ technique = 'flip', reduced = false, video = false } = 
   await page.goto(`${B}?tecnica=${technique}`);
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);
+  // the menu opens on Sobre mí: two steps down select Proyectos, which the scenarios below open with →
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(300);
   return { ctx, page, errors };
 }
 
-// 1 · Forward with the device (Proyectos is selected on open → →) and back with the browser's Back button.
+// 1 · Forward with the device (Proyectos selected by session() → →) and back with the browser's Back button.
 for (const technique of ['flip', 'vt']) {
   for (const reduced of [false, true]) {
     if (technique === 'vt' && reduced) continue;

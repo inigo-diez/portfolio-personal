@@ -9,7 +9,9 @@ import { chromium } from 'playwright-core';
 const B = process.argv[2] ?? 'http://localhost:5173/portfolio-personal/';
 const OUT = process.argv[3] ?? '_reference/e4';
 // the songs of Mi música (scripts/music-playlist.py)
-const SONGS = JSON.parse(readFileSync(new URL('../../src/content/music-playlist.json', import.meta.url), 'utf8')).length;
+const SONGS = JSON.parse(
+  readFileSync(new URL('../../src/content/music-playlist.json', import.meta.url), 'utf8'),
+).length;
 const browser = await chromium.launch({ channel: 'msedge', args: ['--enable-gpu', '--ignore-gpu-blocklist'] });
 let failed = 0;
 const check = (ok, what) => {
@@ -46,7 +48,7 @@ for (const [w, h, sfx, touch] of [
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(400);
   await shot('01-menu');
-  check((await sel()) === 'Proyectos', 'el menú se abre en Proyectos');
+  check((await sel()) === 'Sobre mí', 'el menú se abre en Sobre mí');
   check((await page.locator('[data-device="hero"] .os__item').count()) === 9, 'menú de 9 entradas');
   const rowPx = await page
     .locator('[data-device="hero"] .os__item')
@@ -54,15 +56,15 @@ for (const [w, h, sfx, touch] of [
     .evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
   check(rowPx >= 12, `letra del menú ≥ 12 px (${rowPx.toFixed(1)})`);
 
-  // every section, with the keyboard (↑ from Proyectos = Trayectoria, ↑↑ = Sobre mí).
+  // every section, with the keyboard (the menu opens on Sobre mí: ↓ = Trayectoria, ↓↓ = Proyectos…).
   // The menu and the pages use the same section names.
   const sectionsByKeys = [
-    ['ArrowUp', 2, 'Sobre mí', 'sobre-mi'],
-    ['ArrowUp', 1, 'Trayectoria', 'trayectoria'],
-    ['ArrowDown', 1, 'Habilidades', 'habilidades'],
-    ['ArrowDown', 2, 'Formación', 'formacion'],
-    ['ArrowDown', 3, 'Contacto', 'contacto'],
-    ['ArrowDown', 4, 'CV', 'cv'],
+    ['ArrowDown', 0, 'Sobre mí', 'sobre-mi'],
+    ['ArrowDown', 1, 'Trayectoria', 'trayectoria'],
+    ['ArrowDown', 3, 'Habilidades', 'habilidades'],
+    ['ArrowDown', 4, 'Formación', 'formacion'],
+    ['ArrowDown', 5, 'Contacto', 'contacto'],
+    ['ArrowDown', 6, 'CV', 'cv'],
   ];
   for (const [k, n, label, slug] of sectionsByKeys) {
     await key('Home');
@@ -161,7 +163,7 @@ for (const [w, h, sfx, touch] of [
     r = ring.width * 0.35;
   await page.mouse.click(cx, cy + r); // − = next
   await page.waitForTimeout(150);
-  check((await sel()) === 'Habilidades', 'tocar − baja una fila');
+  check((await sel()) === 'Trayectoria', 'tocar − baja una fila');
   await page.mouse.move(cx, cy - r);
   await page.mouse.down();
   for (let a = -90; a <= 0; a += 5) {
@@ -170,7 +172,7 @@ for (const [w, h, sfx, touch] of [
   }
   await page.mouse.up();
   await page.waitForTimeout(150);
-  check((await sel()) === 'Contacto' || (await sel()) === 'CV', `girar 90° en sentido horario avanza (${await sel()})`);
+  check((await sel()) === 'Formación', `girar 90° en sentido horario avanza (${await sel()})`);
   await page.mouse.move(cx, cy);
   await page.mouse.wheel(0, -100);
   await page.waitForTimeout(150);
@@ -198,7 +200,7 @@ for (const [w, h, sfx, touch] of [
     const mx = scr.x + scr.width / 2,
       my = scr.y + scr.height / 2;
     await swipe(mx, my + 40, mx, my - 40);
-    check((await sel()) !== 'Proyectos', `deslizar hacia arriba avanza (${await sel()})`);
+    check((await sel()) !== 'Sobre mí', `deslizar hacia arriba avanza (${await sel()})`);
     await page.locator('[data-device="hero"] .os__item', { hasText: 'CV' }).tap();
     await page.waitForTimeout(1000);
     check(page.url().endsWith('/cv/'), 'tocar una fila justo después de deslizar la abre (CV es una página)');
@@ -206,7 +208,7 @@ for (const [w, h, sfx, touch] of [
     await page.waitForTimeout(1000);
     await key('Home');
     await swipe(mx + 60, my, mx - 60, my);
-    check((await title()) === 'Proyectos' || page.url().includes('proyectos'), 'deslizar a la izquierda abre');
+    check((await title()) === 'Sobre mí' || page.url().includes('sobre-mi'), 'deslizar a la izquierda abre');
     await page.goto(B + '?musica=no');
     await page.waitForTimeout(400);
     await page.locator('[data-device="hero"] .os__item', { hasText: 'Sobre mí' }).tap();
@@ -236,12 +238,12 @@ for (const [w, h, sfx, touch] of [
   await key('ArrowDown');
   await page.waitForTimeout(900);
   check(!(await page.locator('.pocket__card.is-flipped').count()), 'cualquier control lo vuelve a poner de frente');
-  check((await sel()) === 'Proyectos', 'ese control no mueve la selección');
+  check((await sel()) === 'Sobre mí', 'ese control no mueve la selección');
 
   // Mi música («Sonando»: shuffle on by default; + toggles it)
   await page.goto(B + '?musica=no');
   await page.waitForTimeout(400);
-  await key('ArrowUp', 3); // Proyectos → Trayectoria → Sobre mí → (stays) Sobre mí
+  await key('ArrowUp', 3); // already on Sobre mí: stays there
   check((await sel()) === 'Sobre mí', 'la lista no pasa de la primera entrada (sin vuelta)');
   await key('ArrowDown', 7); // Sobre mí → … → Mi música
   check((await sel()) === 'Mi música', 'Mi música activa');

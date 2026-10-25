@@ -50,7 +50,7 @@ Implementación: [src/device/Device.tsx](../../src/device/Device.tsx). Cada coma
 - Barra de estado: hora real, título (`Pocket OS` en el menú, el nombre de la sección dentro) y batería.
 - Tipografía: Geist, no monoespaciada.
 - **Menú de 8 entradas:** las 7 de la web antigua en su orden (Sobre mí · Trayectoria · Proyectos · Habilidades · Formación · Contacto · CV) y **Mi música** al final. Filas de 6,6 en escritorio (caben las 8); en móvil, de 7, y el menú se desplaza para mantener visible la selección. Mi música aparece desactivada mientras no tenga canciones.
-  - Al abrirse (y al pulsar INICIO) la selección empieza en **Proyectos**, el destino principal, aunque no sea la primera entrada (decidido 2026-10-20).
+  - Al abrirse (y al pulsar INICIO) la selección empieza en **Sobre mí**, la primera entrada (decidido 2026-10-25; antes empezaba en Proyectos, decidido 2026-10-20).
 - **Menú partido**: lista a la izquierda (52 %) y vista previa de la entrada seleccionada a la derecha, solo con contenido real:
 
 | Entrada | Vista previa | Fuente |

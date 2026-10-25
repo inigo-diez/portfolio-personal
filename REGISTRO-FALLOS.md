@@ -17,6 +17,11 @@ La entrada más reciente va arriba. Formato de cada entrada:
 
 Las tres primeras se apuntaron el 2026-10-21 y el 2026-10-23 en el registro del vault de Obsidian y se trasladaron aquí el 2026-10-23, sin cambiar su texto, al separar los registros por proyecto.
 
+## 2026-10-25 - Dije que un enlace del CV «se rompería» sin comprobarlo
+- Qué pasó: al cambiar el enlace «Visita mi portfolio» del CV, afirmé que el del certificado de LangChain (`/assets/certificates/...`) se rompería. Iñigo preguntó por qué. Al comprobarlo, hoy responde 200 con el PDF correcto; solo dejaría de funcionar cuando el portfolio antiguo deje de publicarse (E8). Además, tras dar por «publicado» el portfolio nuevo, el CV de la web seguía con el enlace antiguo porque mi cambio estaba solo en local.
+- Por qué: deduje el efecto de la estructura de rutas del sitio nuevo sin hacer una petición al enlace, y presenté un riesgo futuro como un fallo actual.
+- Regla para no repetirlo: antes de decir que un enlace o una URL falla, hago la petición (`curl -I`) y cuento lo que responde hoy; separo «falla ahora» de «fallará cuando cambie X». Y no doy por desplegado un cambio local: comparo con lo que sirve la web.
+
 ## 2026-10-25 - La rueda se veía a través de la trasera del dispositivo en el móvil
 - Qué pasó: Iñigo, al ver la web en el móvil, avisó de que al girar el dispositivo «se queda el mando (la rueda)». En Safari/WebKit las flechas y el botón central de la rueda se ven espejadas a través de la cara trasera. Lo reproduje con WebKit de pruebas; en Edge no ocurre.
 - Por qué: el giro (E2–E4) se comprobó solo en Chromium (Edge): todos los scripts de `scripts/dev/` usan `channel: 'msedge'`. WebKit no aplica `backface-visibility: hidden` a piezas con capa propia (un filtro, una transformación).

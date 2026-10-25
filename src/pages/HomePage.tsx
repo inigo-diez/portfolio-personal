@@ -18,8 +18,8 @@ import { NowPlayingScreen, SongsScreen, type PlayerHandle } from '../os/Music';
 import { MenuScreen, useListNav, type Dir } from '../os/Screen';
 import './home.css';
 
-// The menu opens (and INICIO returns) with Proyectos selected: it is the main destination.
-const DEFAULT_ENTRY = sections.findIndex((s) => s.id === 'proyectos');
+// The menu opens (and INICIO returns) with the first entry, Sobre mí, selected (Iñigo, 2026-10-25; it was Proyectos).
+const DEFAULT_ENTRY = sections.findIndex((s) => s.id === 'sobre-mi');
 const UNPLUG_MS = 300;
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
 

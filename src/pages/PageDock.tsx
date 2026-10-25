@@ -40,7 +40,7 @@ export function PageDock({ id }: { id: SectionId }) {
 
   return (
     <aside className="page-dock" aria-label={ui.device.dock} ref={dock}>
-      <Device data-device="dock" onCommand={onCommand}>
+      <Device data-device="dock" onCommand={onCommand} wheelOnBody>
         <ListScreen title={labelOf(id)} rows={rows} sel={nav.sel} onPick={(i) => (nav.setSel(i), open(i))} />
       </Device>
     </aside>
